@@ -1,0 +1,15 @@
+Debug/
+Release/
+*.elf
+*.map
+*.o
+*.d
+*.su
+*.hex
+*.bin
+*.log
+.settings/
+*.launch
+.cproject
+.mxproject
+.project
