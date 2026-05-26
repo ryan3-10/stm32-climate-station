@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <weather_station.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +98,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  auto& ws = WeatherStation::getInstance();
+	  printf("Temperature: %i Humidity: %i\n", (int)ws.getTemperature(), (int)ws.getHumidity());
+	  ws.update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
