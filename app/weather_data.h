@@ -1,7 +1,7 @@
 #ifndef WEATHER_DATA_H_
 #define WEATHER_DATA_H_
 
-#include <sht31_sensor.h>
+#include "sht31_sensor.h"
 #include <stdint.h>
 
 class WeatherData {
