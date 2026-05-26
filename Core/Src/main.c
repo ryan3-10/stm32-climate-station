@@ -90,7 +90,7 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  run_app(&hi2c1);
+  run_app(&hi2c1);		// program entry point
   /* USER CODE END 2 */
 
   /* Infinite loop */
