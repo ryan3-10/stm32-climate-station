@@ -21,8 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <weather_station.h>
-#include <stdio.h>
+#include <app.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -91,16 +90,13 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
+  run_app(&hi2c1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  auto& ws = WeatherStation::getInstance();
-	  printf("Temperature: %i Humidity: %i\n", (int)ws.getTemperature(), (int)ws.getHumidity());
-	  ws.update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
