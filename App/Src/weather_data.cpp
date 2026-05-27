@@ -1,8 +1,8 @@
+#include "sht31_sensor.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stm32f4xx_hal.h>
 #include <weather_data.h>
-#include "../../Middleware/Inc/sht31_sensor.h"
 
 constexpr static uint32_t readWriteInterval = 1000;
 
