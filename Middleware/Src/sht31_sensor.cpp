@@ -1,4 +1,5 @@
-#include "sht31_sensor.h"
+#include "../../Middleware/Inc/sht31_sensor.h"
+
 #include <stdio.h>
 #include <stm32f4xx_hal.h>
 
