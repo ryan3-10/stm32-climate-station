@@ -56,9 +56,9 @@ extern "C" {
  * @brief  SSD1306 color enumeration
  */
 typedef enum {
-	SSD1306_COLOR_BLACK = 0x00, /*!< Black color, no pixel */
-	SSD1306_COLOR_WHITE = 0x01  /*!< Pixel is set. Color depends on LCD */
-} SSD1306_COLOR_t;
+	SSD1306_HIGHLIGHTED = 0x00, /*!< Black color, no pixel */
+	SSD1306_NOT_HIGHLIGHTED = 0x01  /*!< Pixel is set. Color depends on LCD */
+} SSD1306_HIGHLIGHT_t;
 
 
 #define SSD1306_RIGHT_HORIZONTAL_SCROLL              0x26
@@ -100,20 +100,20 @@ void SSD1306_ToggleInvert(void);
 /**
  * @brief  Fills entire LCD with desired color
  * @note   @ref SSD1306_UpdateScreen() must be called after that in order to see updated LCD screen
- * @param  Color: Color to be used for screen fill. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  Color: Color to be used for screen fill. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_Fill(SSD1306_COLOR_t Color);
+void SSD1306_Fill(SSD1306_HIGHLIGHT_t Color);
 
 /**
  * @brief  Draws pixel at desired location
  * @note   @ref SSD1306_UpdateScreen() must called after that in order to see updated LCD screen
  * @param  x: X location. This parameter can be a value between 0 and SSD1306_WIDTH - 1
  * @param  y: Y location. This parameter can be a value between 0 and SSD1306_HEIGHT - 1
- * @param  color: Color to be used for screen fill. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  color: Color to be used for screen fill. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawPixel(uint16_t x, uint16_t y, SSD1306_COLOR_t color);
+void SSD1306_DrawPixel(uint16_t x, uint16_t y, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Sets cursor pointer to desired location for strings
@@ -128,20 +128,20 @@ void SSD1306_GotoXY(uint16_t x, uint16_t y);
  * @note   @ref SSD1306_UpdateScreen() must be called after that in order to see updated LCD screen
  * @param  ch: Character to be written
  * @param  *Font: Pointer to @ref FontDef_t structure with used font
- * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval Character written
  */
-char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_COLOR_t color);
+char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Puts string to internal RAM
  * @note   @ref SSD1306_UpdateScreen() must be called after that in order to see updated LCD screen
  * @param  *str: String to be written
  * @param  *Font: Pointer to @ref FontDef_t structure with used font
- * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval Zero on success or character value when function failed
  */
-char SSD1306_Puts(const char* str, FontDef_t* Font, SSD1306_COLOR_t color);
+char SSD1306_Puts(const char* str, FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Draws line on LCD
@@ -150,10 +150,10 @@ char SSD1306_Puts(const char* str, FontDef_t* Font, SSD1306_COLOR_t color);
  * @param  y0: Line Y start point. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  x1: Line X end point. Valid input is 0 to SSD1306_WIDTH - 1
  * @param  y1: Line Y end point. Valid input is 0 to SSD1306_HEIGHT - 1
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, SSD1306_COLOR_t c);
+void SSD1306_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, SSD1306_HIGHLIGHT_t c);
 
 /**
  * @brief  Draws rectangle on LCD
@@ -162,10 +162,10 @@ void SSD1306_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, SSD130
  * @param  y: Top left Y start point. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  w: Rectangle width in units of pixels
  * @param  h: Rectangle height in units of pixels
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, SSD1306_COLOR_t c);
+void SSD1306_DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, SSD1306_HIGHLIGHT_t c);
 
 /**
  * @brief  Draws filled rectangle on LCD
@@ -174,10 +174,10 @@ void SSD1306_DrawRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, SSD13
  * @param  y: Top left Y start point. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  w: Rectangle width in units of pixels
  * @param  h: Rectangle height in units of pixels
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, SSD1306_COLOR_t c);
+void SSD1306_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h, SSD1306_HIGHLIGHT_t c);
 
 /**
  * @brief  Draws triangle on LCD
@@ -188,10 +188,10 @@ void SSD1306_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
  * @param  y2: Second coordinate Y location. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  x3: Third coordinate X location. Valid input is 0 to SSD1306_WIDTH - 1
  * @param  y3: Third coordinate Y location. Valid input is 0 to SSD1306_HEIGHT - 1
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, SSD1306_COLOR_t color);
+void SSD1306_DrawTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Draws circle to STM buffer
@@ -199,10 +199,10 @@ void SSD1306_DrawTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, ui
  * @param  x: X location for center of circle. Valid input is 0 to SSD1306_WIDTH - 1
  * @param  y: Y location for center of circle. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  r: Circle radius in units of pixels
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t c);
+void SSD1306_DrawCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_HIGHLIGHT_t c);
 
 /**
  * @brief  Draws filled circle to STM buffer
@@ -210,10 +210,10 @@ void SSD1306_DrawCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t c);
  * @param  x: X location for center of circle. Valid input is 0 to SSD1306_WIDTH - 1
  * @param  y: Y location for center of circle. Valid input is 0 to SSD1306_HEIGHT - 1
  * @param  r: Circle radius in units of pixels
- * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_COLOR_t enumeration
+ * @param  c: Color to be used. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval None
  */
-void SSD1306_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_COLOR_t c);
+void SSD1306_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, SSD1306_HIGHLIGHT_t c);
 
 
 
