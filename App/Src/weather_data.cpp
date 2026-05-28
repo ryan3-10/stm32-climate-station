@@ -4,7 +4,9 @@
 #include <stm32f4xx_hal.h>
 #include <weather_data.h>
 
-constexpr static uint32_t readWriteInterval = 1000;
+namespace {
+constexpr uint32_t readWriteInterval = 1000;
+}
 
 WeatherData::WeatherData(Sht31Sensor& s) : sensor(s) {
 	readWriteData();

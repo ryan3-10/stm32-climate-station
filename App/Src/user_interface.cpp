@@ -4,54 +4,67 @@
 #include <cmath>
 #include <stdio.h>
 
-static constexpr float NOISE_THRESHOLD = 1;
-
-UserInterface::UserInterface() :
-	displayedLogEnabled(false),
-	needsUpdate(true),
-	engine(),
-	displayedHum(0),
-	displayedTemp(0),
-	currSelection(0),
-	displayedLogMin(0),
-	displayedLogHour(0)
-{
-	displayHome();
+UserInterface::UserInterface() {
+	tempAlertsConfig();
 }
 
-void UserInterface::displayHome() {
+void UserInterface::alertsConfigHelper(int16_t max, int16_t min, char sign, bool isEn) {
+	char line1[16];
+	char line2[16];
+	const char* line3 = isEn ? "Enabled" : "Disabled";
+
+	snprintf(line1, sizeof(line1), "Max: %03i%c", max, sign);
+	snprintf(line2, sizeof(line2), "Min: %03i%c", min, sign);
+
+	configHelper(line1, line2, line3);
+}
+
+void UserInterface::configHelper(const char* l1, const char* l2, const char* l3) {
+	engine.setFont(FONT_SIZE::MED);
+	engine.printLine(l1, currSelection == 0);
+	engine.printLine(l2, currSelection == 1);
+
+	engine.setFont(FONT_SIZE::SMALL);
+	engine.printLine(l3, currSelection == 2);
+	engine.draw();
+}
+
+void UserInterface::home() {
 	engine.printHeader("HOME");
 	engine.setFont(FONT_SIZE::MED);
 
 	// Display temperature
-	snprintf(buffer, sizeof(buffer), "%.1fF", displayedTemp);
+	snprintf(buffer, sizeof(buffer), "%.1fF", temp);
 	engine.printLine(buffer);
 
 	// Display humidity
-	snprintf(buffer, sizeof(buffer), "%.1f%%", displayedHum);
+	snprintf(buffer, sizeof(buffer), "%.1f%%", hum);
 	engine.printLine(buffer);
 
 	engine.draw();
 }
 
-void UserInterface::displayLogConfig() {
+void UserInterface::logConfig() {
 	engine.clear();
 	engine.printHeader("LOG CONFIG");
-	engine.setFont(FONT_SIZE::MED);
 
-	snprintf(buffer, sizeof(buffer), "%02uh", displayedLogHour);
-	engine.printLine(buffer, currSelection == 0);
+	char line1[16];
+	char line2[16];
+	const char* line3 = logEnabled ? "Enabled" : "Disabled";
 
-	snprintf(buffer, sizeof(buffer), "%02um", displayedLogMin);
-	engine.printLine(buffer, currSelection == 1);
+	snprintf(line1, sizeof(line1), "%02uh", logHour);
+	snprintf(line2, sizeof(line2), "%02um", logminute);
 
-	engine.setFont(FONT_SIZE::SMALL);
-	engine.printLine(displayedLogEnabled ? "Enabled" : "Disabled", currSelection == 2);
-	engine.draw();
+	configHelper(line1, line2, line3);
 }
 
-void UserInterface::displayMenu() {
-	static std::array<const char*, 3> options { "Home", "Log Config", "Alert Config" };
+void UserInterface::menu() {
+	std::array<const char*, 4> options {
+		"Home",
+		"Log Config",
+		"Temp Alerts",
+		"Humidity Alerts"
+	};
 
 	engine.clear();
 	engine.printHeader("MENU");
@@ -64,11 +77,17 @@ void UserInterface::displayMenu() {
 	engine.draw();
 }
 
-bool UserInterface::weatherChanged(float temp, float hum) const {
-	return (
-		std::abs(temp - displayedTemp) >= NOISE_THRESHOLD ||
-		std::abs(hum - displayedHum) >= NOISE_THRESHOLD
-	);
+void UserInterface::humAlertsConfig() {
+	engine.clear();
+	engine.printHeader("HUM ALERTS");
+	alertsConfigHelper(maxHum, minHum, '%', humAlertEnabled);
+}
+
+void UserInterface::tempAlertsConfig() {
+	engine.clear();
+	engine.printHeader("TEMP ALERTS");
+
+	alertsConfigHelper(maxTemp, minTemp, 'F', tempAlertEnabled);
 }
 
 
