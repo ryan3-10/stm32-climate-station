@@ -192,7 +192,7 @@ void SSD1306_GotoXY(uint16_t x, uint16_t y) {
 	SSD1306.CurrentY = y;
 }
 
-char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_HIGHLIGHT_t color) {
+char SSD1306_Putc(char ch, const FontDef_t* Font, SSD1306_HIGHLIGHT_t color) {
 	uint32_t i, b, j;
 
 	/* Check available space in LCD */
@@ -223,7 +223,7 @@ char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_HIGHLIGHT_t color) {
 	return ch;
 }
 
-char SSD1306_Puts(const char* str, FontDef_t* Font, SSD1306_HIGHLIGHT_t color) {
+char SSD1306_Puts(const char* str, const FontDef_t* Font, SSD1306_HIGHLIGHT_t color) {
 	/* Write characters */
 	while (*str) {
 		/* Write character by character */

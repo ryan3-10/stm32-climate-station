@@ -116,7 +116,7 @@ void SSD1306_Fill(SSD1306_HIGHLIGHT_t Color);
 void SSD1306_DrawPixel(uint16_t x, uint16_t y, SSD1306_HIGHLIGHT_t color);
 
 /**
- * @brief  Sets cursor pointer to desired location for strings
+ * @brief  Sets cursor pointer to location for strings
  * @param  x: X location. This parameter can be a value between 0 and SSD1306_WIDTH - 1
  * @param  y: Y location. This parameter can be a value between 0 and SSD1306_HEIGHT - 1
  * @retval None
@@ -131,7 +131,7 @@ void SSD1306_GotoXY(uint16_t x, uint16_t y);
  * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval Character written
  */
-char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
+char SSD1306_Putc(char ch, const FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Puts string to internal RAM
@@ -141,7 +141,7 @@ char SSD1306_Putc(char ch, FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
  * @param  color: Color used for drawing. This parameter can be a value of @ref SSD1306_HIGHLIGHT_t enumeration
  * @retval Zero on success or character value when function failed
  */
-char SSD1306_Puts(const char* str, FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
+char SSD1306_Puts(const char* str, const FontDef_t* Font, SSD1306_HIGHLIGHT_t color);
 
 /**
  * @brief  Draws line on LCD

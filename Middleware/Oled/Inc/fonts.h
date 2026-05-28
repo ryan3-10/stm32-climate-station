@@ -106,7 +106,7 @@ extern FontDef_t Font_16x26;
  * @param  *Font: Pointer to @ref FontDef_t font used for calculations
  * @retval Pointer to string used for length and height
  */
-char* FONTS_GetStringSize(char* str, FONTS_SIZE_t* SizeStruct, FontDef_t* Font);
+const char* FONTS_GetStringSize(const char* str, FONTS_SIZE_t* SizeStruct, const FontDef_t* Font);
 
 /**
  * @}

@@ -1,13 +1,16 @@
 #ifndef INC_USER_INTERFACE_H_
 #define INC_USER_INTERFACE_H_
 
+#include "display_engine.h"
+
 class UserInterface {
 private:
 	float displayedHum;
 	float displayedTemp;
+	DisplayEngine engine;
 	bool needsUpdate;
 
-	void displayHome() const;
+	void displayHome();
 	bool weatherChanged(float temp, float hum) const;
 
 public:

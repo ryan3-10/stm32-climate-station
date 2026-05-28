@@ -1,33 +1,33 @@
-#include "sht31_sensor.h"
-#include "ssd1306.h"
+#include "display_engine.h"
 #include "user_interface.h"
 #include <cmath>
 #include <stdio.h>
 
-static constexpr float noiseThreshold = 1;
+static constexpr float NOISE_THRESHOLD = 1;
 
-UserInterface::UserInterface() : displayedHum(0), displayedTemp(0), needsUpdate(true) {
+UserInterface::UserInterface() :
+		displayedHum(0),
+		displayedTemp(0),
+		engine(),
+		needsUpdate(true)
+{
 
 }
 
-void UserInterface::displayHome() const {
-	char buffer[8];
+void UserInterface::displayHome() {
+	static char buffer[16];
+
+	engine.printHeader("Home");
 
 	// Display temperature
-	sprintf(buffer, "%.1f", displayedTemp);
-	SSD1306_GotoXY (10, 15);
-	SSD1306_Puts (buffer, &Font_11x18, SSD1306_NOT_HIGHLIGHTED);
-	SSD1306_DrawCircle(75, 18, 2, SSD1306_NOT_HIGHLIGHTED);
-	SSD1306_GotoXY (80, 16);
-	SSD1306_Puts ("F", &Font_7x10, SSD1306_NOT_HIGHLIGHTED);
+	snprintf(buffer, sizeof(buffer), "%.1fF", displayedTemp);
+	engine.printLine(buffer);
 
 	// Display humidity
-	sprintf(buffer, "%.1f", displayedHum);
-	SSD1306_GotoXY (10, 35);
-	SSD1306_Puts (buffer, &Font_11x18, SSD1306_NOT_HIGHLIGHTED);
-	SSD1306_GotoXY (72, 35);
-	SSD1306_Puts ("%", &Font_7x10, SSD1306_NOT_HIGHLIGHTED);
-	SSD1306_UpdateScreen();
+	snprintf(buffer, sizeof(buffer), "%.1f%%", displayedHum);
+	engine.printLine(buffer);
+
+	engine.draw();
 }
 
 void UserInterface::update(float temp, float hum) {
@@ -45,8 +45,8 @@ void UserInterface::update(float temp, float hum) {
 
 bool UserInterface::weatherChanged(float temp, float hum) const {
 	return (
-		std::abs(temp - displayedTemp) >= noiseThreshold ||
-		std::abs(hum - displayedHum) >= noiseThreshold
+		std::abs(temp - displayedTemp) >= NOISE_THRESHOLD ||
+		std::abs(hum - displayedHum) >= NOISE_THRESHOLD
 	);
 }
 
