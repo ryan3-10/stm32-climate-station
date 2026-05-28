@@ -13,6 +13,7 @@ UserInterface::UserInterface() : displayedHum(0), displayedTemp(0), needsUpdate(
 void UserInterface::displayHome() const {
 	char buffer[8];
 
+	// Display temperature
 	sprintf(buffer, "%.1f", displayedTemp);
 	SSD1306_GotoXY (10, 15);
 	SSD1306_Puts (buffer, &Font_11x18, SSD1306_NOT_HIGHLIGHTED);
@@ -20,6 +21,7 @@ void UserInterface::displayHome() const {
 	SSD1306_GotoXY (80, 16);
 	SSD1306_Puts ("F", &Font_7x10, SSD1306_NOT_HIGHLIGHTED);
 
+	// Display humidity
 	sprintf(buffer, "%.1f", displayedHum);
 	SSD1306_GotoXY (10, 35);
 	SSD1306_Puts (buffer, &Font_11x18, SSD1306_NOT_HIGHLIGHTED);
