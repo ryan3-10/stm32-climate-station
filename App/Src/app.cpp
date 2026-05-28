@@ -1,18 +1,17 @@
 #include "app.h"
-#include "fonts.h"
-#include "sht31_sensor.h"
 #include "ssd1306.h"
 #include "weather_data.h"
-#include <stdio.h>
-#include <stm32f4xx_hal.h>
+#include "user_interface.h"
 
 void run_app(I2C_HandleTypeDef* hi2c) {
+	SSD1306_Init();
 	Sht31Sensor sensor(hi2c);
+	UserInterface ui;
 	WeatherData wd(sensor);
 
 	while (true) {
-		printf("Temp: %i Hum: %i\n", (int)wd.getTemperature(), (int)wd.getHumidity());
 		wd.update();
+		ui.update(wd.getTemperature(), wd.getHumidity());
 	}
 }
 
