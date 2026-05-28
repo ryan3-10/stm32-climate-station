@@ -5,14 +5,22 @@
 
 class UserInterface {
 private:
-	char buffer[16];
-	uint8_t currSelection;
-	float displayedHum;
-	float displayedTemp;
-	DisplayEngine engine;
+	bool displayedLogEnabled;
 	bool needsUpdate;
 
+	char buffer[16];
+
+	DisplayEngine engine;
+
+	float displayedHum;
+	float displayedTemp;
+
+	uint8_t currSelection;
+	uint8_t displayedLogMin;
+	uint8_t displayedLogHour;
+
 	void displayHome();
+	void displayLogConfig();
 	void displayMenu();
 	bool weatherChanged(float temp, float hum) const;
 
@@ -22,8 +30,6 @@ public:
 	UserInterface& operator=(const UserInterface&) = delete;
 	UserInterface(UserInterface&&) = delete;
 	UserInterface& operator=(UserInterface&&) = delete;
-
-	void update(float temp, float hum);
 };
 
 
