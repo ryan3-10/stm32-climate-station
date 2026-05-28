@@ -14,7 +14,3 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 		ui.update(wd.getTemperature(), wd.getHumidity());
 	}
 }
-
-
-
-
