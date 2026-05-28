@@ -30,7 +30,7 @@ extern "C" {
 
 #include "main.h"
 
-#include "../../Middleware/Inc/fonts.h"
+#include "fonts.h"
 
 #include "stdlib.h"
 #include "string.h"
