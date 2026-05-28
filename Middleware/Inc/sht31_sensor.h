@@ -5,7 +5,6 @@
 
 class Sht31Sensor {
 private:
-	constexpr static uint8_t address = 0x44 << 1;
 	I2C_HandleTypeDef* hi2c;
 
 	float rawToHumidity(uint8_t byte1, uint8_t byte2);
