@@ -4,6 +4,12 @@
 #include "fonts.h"
 #include <stdint.h>
 
+enum class FONT_SIZE : uint8_t {
+	SMALL,
+	MED,
+	LARGE
+};
+
 class DisplayEngine {
 private:
 	FontDef_t font;
@@ -19,9 +25,10 @@ public:
 	void draw() const;
 	void jumpToBodyStart();
 	void newLine();
-	void print(const char* buffer) const;
+	void print(const char* buffer, bool highlight=false) const;
 	void printHeader(const char* buffer);
-	void printLine(const char* str);
+	void printLine(const char* str, bool highlight=false);
+	void setFont(const FONT_SIZE fontSize);
 };
 
 

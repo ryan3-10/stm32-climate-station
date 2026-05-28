@@ -5,12 +5,15 @@
 
 class UserInterface {
 private:
+	char buffer[16];
+	uint8_t currSelection;
 	float displayedHum;
 	float displayedTemp;
 	DisplayEngine engine;
 	bool needsUpdate;
 
 	void displayHome();
+	void displayMenu();
 	bool weatherChanged(float temp, float hum) const;
 
 public:

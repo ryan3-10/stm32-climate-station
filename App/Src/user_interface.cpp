@@ -1,11 +1,13 @@
 #include "display_engine.h"
 #include "user_interface.h"
+#include <array>
 #include <cmath>
 #include <stdio.h>
 
 static constexpr float NOISE_THRESHOLD = 1;
 
 UserInterface::UserInterface() :
+		currSelection(00),
 		displayedHum(0),
 		displayedTemp(0),
 		engine(),
@@ -15,9 +17,8 @@ UserInterface::UserInterface() :
 }
 
 void UserInterface::displayHome() {
-	static char buffer[16];
-
 	engine.printHeader("Home");
+	engine.setFont(FONT_SIZE::MED);
 
 	// Display temperature
 	snprintf(buffer, sizeof(buffer), "%.1fF", displayedTemp);
@@ -30,6 +31,20 @@ void UserInterface::displayHome() {
 	engine.draw();
 }
 
+void UserInterface::displayMenu() {
+	static std::array<const char*, 3> options { "Home", "Log Config", "Alert Config" };
+
+	engine.clear();
+	engine.printHeader("Menu");
+	engine.setFont(FONT_SIZE::SMALL);
+
+	for (uint8_t i = 0; i < options.size(); ++i) {
+		engine.printLine(options[i], currSelection == i);
+	}
+
+	engine.draw();
+}
+
 void UserInterface::update(float temp, float hum) {
 	if (weatherChanged(temp, hum)) {
 		needsUpdate = true;
@@ -38,7 +53,7 @@ void UserInterface::update(float temp, float hum) {
 	}
 
 	if (needsUpdate) {
-		displayHome();
+		displayMenu();
 		needsUpdate = false;
 	}
 }
