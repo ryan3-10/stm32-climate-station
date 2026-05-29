@@ -1,60 +1,23 @@
 #ifndef USER_INTERFACE_H_
 #define USER_INTERFACE_H_
 
+#include "app_config.h"
 #include "display_engine.h"
 #include "observer.h"
 #include "weather_station.h"
 
 class UserInterface : public Observer {
 public:
-	UserInterface(const WeatherData& wd);
+	UserInterface(const APP_CONFIG& ac, const WeatherData& wd)
+		: appConfig(ac), weatherData(wd)
+	{}
 	void render();
+	void update();
 
 private:
-	enum class DISPLAY : uint8_t {
-		HOME,
-		LOG_CONFIG,
-		MENU,
-		HUM_ALERTS,
-		TEMP_ALERTS,
-		ERROR
-	};
+	const APP_CONFIG& appConfig;
 	const WeatherData& weatherData;
-
-	bool humAlertEnabled	= false;
-	bool logEnabled			= false;
-	bool tempAlertEnabled 	= false;
-	bool needsUpdate 		= false;
-
-	char buffer[16];
-
-	DISPLAY currDisplay = DISPLAY::HOME;
-
-	DisplayEngine engine;
-
-	float hum	= 0.0f;
-	float temp	= 0.0f;
-
-	uint8_t currSelection	= 0;
-	uint8_t logminute		= 0;
-	uint8_t logHour			= 0;
-
-	int8_t maxHum	= 0;
-	int8_t minHum	= 0;
-
-	int16_t maxTemp	= 0;
-	int16_t minTemp	= 0;
-
-	void alertsConfigHelper(int16_t max, int16_t min, char sign, bool isEnabled);
-	void configHelper(const char* l1, const char* l2, const char* l3);
-	void error();
-	void home();
-	void logConfig();
-	void menu();
-	void humAlertsConfig();
-	void tempAlertsConfig();
-	virtual void update() override;
 };
 
 
-#endif /* INC_USER_INTERFACE_H_ */
+#endif /* USER_INTERFACE_H_ */

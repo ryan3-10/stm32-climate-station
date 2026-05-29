@@ -8,6 +8,7 @@ public:
 	ConfigScreen(const CONFIG& c, const char* header, const char* label) :
 		Screen(header, label), editConfig(c), masterConfig(c)
 	{}
+	virtual ~ConfigScreen() = default;
 
 protected:
 	void configHelper(const char* l1, const char* l2, const char* l3) const;
@@ -25,6 +26,7 @@ public:
 	LogConfigScreen(const CONFIG& config)
 		: ConfigScreen(config, "LOG CONFIG", "Log Config")
 	{}
+	virtual ~LogConfigScreen() = default;
 
 private:
 	 void renderHelper() const override;
@@ -35,6 +37,7 @@ public:
 	AlertsConfigScreen(const CONFIG& c, const char* header, const char* label)
 		: ConfigScreen(c, header, label)
 	{}
+	virtual ~AlertsConfigScreen() = default;
 
 protected:
 	 void alertsConfigHelper(uint16_t max, uint16_t min, char sign) const;

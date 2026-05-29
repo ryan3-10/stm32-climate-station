@@ -12,7 +12,7 @@ public:
 		: header(h), label(l)
 	{}
 
-	virtual ~Screen();
+	virtual ~Screen() = default;
 	const char* getHeader() const { return header; }
 	const char* getLabel() const { return label; }
 	void render(bool freshRender);

@@ -7,7 +7,7 @@ namespace {
 AppController::AppController(I2C_HandleTypeDef* hi2c) :
 	sensor(hi2c),
 	ws(sensor),
-	ui(ws.getLiveData())
+	ui(config, ws.getLiveData())
 {
 	ws.subscribe(&ui);
 	ws.update();
