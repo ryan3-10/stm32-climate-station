@@ -11,7 +11,7 @@ struct SENSOR_DATA {
 
 class Sht31Sensor {
 public:
-	Sht31Sensor(I2C_HandleTypeDef* h);
+	Sht31Sensor(I2C_HandleTypeDef* h) : hi2c(h) {}
 	SENSOR_DATA getLiveData();
 
 private:
