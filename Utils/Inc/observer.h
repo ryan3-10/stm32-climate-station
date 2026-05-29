@@ -8,20 +8,15 @@ namespace {
 	constexpr uint8_t ARRAY_SIZE = 3;
 }
 
-enum class STATUS_CODE : uint8_t {
-	OK,
-	ERROR
-};
-
 class Observer {
 public:
 	Observer() = default;
 	virtual ~Observer() = default;
-	virtual void update(float temp, float hum, bool statusOk) = 0;
+	virtual void update() = 0;
 };
 
 class Subject {
-protected:
+private:
 	std::array<Observer*, ARRAY_SIZE> observers;
 	uint8_t observerCount = 0;
 
@@ -30,7 +25,7 @@ public:
 	virtual ~Subject() = default;
 
 	void subscribe(Observer* observer);
-	virtual void notify() = 0;
+	virtual void notify();
 };
 
 

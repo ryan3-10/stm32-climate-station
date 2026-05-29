@@ -3,8 +3,13 @@
 
 #include "display_engine.h"
 #include "observer.h"
+#include "weather_station.h"
 
 class UserInterface : public Observer {
+public:
+	UserInterface(const WeatherData& wd);
+	void render();
+
 private:
 	enum class DISPLAY : uint8_t {
 		HOME,
@@ -14,6 +19,7 @@ private:
 		TEMP_ALERTS,
 		ERROR
 	};
+	const WeatherData& weatherData;
 
 	bool humAlertEnabled	= false;
 	bool logEnabled			= false;
@@ -47,11 +53,7 @@ private:
 	void menu();
 	void humAlertsConfig();
 	void tempAlertsConfig();
-	virtual void update(float newTemp, float newH, bool statusOk) override;
-
-public:
-	UserInterface();
-	void render();
+	virtual void update() override;
 };
 
 

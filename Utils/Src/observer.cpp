@@ -10,4 +10,10 @@ void Subject::subscribe(Observer* observer) {
 	observers.at(observerCount++) = observer;
 }
 
+void Subject::notify() {
+	for (uint8_t i = 0; i < observerCount; ++i) {
+		observers.at(i)->update();
+	}
+}
+
 #endif /* SRC_OBSERVER_CPP_ */

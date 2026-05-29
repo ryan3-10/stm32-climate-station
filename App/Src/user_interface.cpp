@@ -1,10 +1,11 @@
 #include "display_engine.h"
 #include "user_interface.h"
+#include "weather_station.h"
 #include <array>
 #include <cmath>
 #include <stdio.h>
 
-UserInterface::UserInterface() {
+UserInterface::UserInterface(const WeatherData& wd) : weatherData(wd) {
 
 }
 
@@ -121,16 +122,6 @@ void UserInterface::tempAlertsConfig() {
 	alertsConfigHelper(maxTemp, minTemp, 'F', tempAlertEnabled);
 }
 
-void UserInterface::update(float newTemp, float newHum, bool statusOk) {
-	if (!statusOk) {
-		error();
-		currDisplay = DISPLAY::ERROR;
-	}
+void UserInterface::update() {
 
-	temp = newTemp;
-	hum = newHum;
-
-	if (currDisplay == DISPLAY::HOME) {
-		home();
-	}
 }

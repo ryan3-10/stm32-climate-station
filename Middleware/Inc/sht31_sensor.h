@@ -4,9 +4,9 @@
 #include <stm32f4xx_hal.h>
 
 struct SENSOR_DATA {
+	bool statusOk;
 	float humidity;
 	float temperature;
-	bool statusOk;
 };
 
 class Sht31Sensor {
