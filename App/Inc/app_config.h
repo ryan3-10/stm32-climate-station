@@ -5,18 +5,18 @@
 
 struct APP_CONFIG {
 	struct LOG_CONFIG {
-		bool enabled;
-		uint8_t hourInterval;
-		uint8_t minuteInterval;
+		bool enabled = false;
+		uint8_t hourInterval = 0;
+		uint8_t minuteInterval = 0;
 	};
 
 	struct ALERT_CONFIG {
-		bool humAlertsEnabled;
-		bool tempAlertsEnabled;
-		int16_t maxTemp;
-		int16_t minTemp;
-		uint8_t maxHum;
-		uint8_t minHum;
+		bool humAlertsEnabled = false;
+		bool tempAlertsEnabled = false;
+		int16_t maxTemp = 0;
+		int16_t minTemp = 0;
+		uint8_t maxHum = 0;
+		uint8_t minHum = 0;
 	};
 };
 
