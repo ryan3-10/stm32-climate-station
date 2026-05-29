@@ -15,6 +15,11 @@ WeatherData::WeatherData(Sht31Sensor& s) : sensor(s) {
 }
 
 bool WeatherData::meaningfulChange(SENSOR_DATA newData) const {
+	// If statusOk was and still is false, ignore potential garbage values in weather data
+	if (!newData.statusOk && !statusOk) {
+		return false;
+	}
+
 	return (
 		newData.statusOk != statusOk ||
 		abs(newData.temperature - temperature) >= NOISE_THRESHOLD ||
