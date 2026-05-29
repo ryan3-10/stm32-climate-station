@@ -4,7 +4,6 @@
 #include "user_interface.h"
 
 void run_app(I2C_HandleTypeDef* hi2c) {
-	SSD1306_Init();
 	Sht31Sensor sensor(hi2c);
 	UserInterface ui;
 	WeatherData wd(sensor);
