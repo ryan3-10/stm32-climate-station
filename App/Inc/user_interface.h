@@ -4,14 +4,25 @@
 #include "display_engine.h"
 #include "observer.h"
 
-class UserInterface : Observer {
+class UserInterface : public Observer {
 private:
+	enum class DISPLAY : uint8_t {
+		HOME,
+		LOG_CONFIG,
+		MENU,
+		HUM_ALERTS,
+		TEMP_ALERTS,
+		ERROR
+	};
+
 	bool humAlertEnabled	= false;
 	bool logEnabled			= false;
 	bool tempAlertEnabled 	= false;
 	bool needsUpdate 		= false;
 
 	char buffer[16];
+
+	DISPLAY currDisplay = DISPLAY::HOME;
 
 	DisplayEngine engine;
 
@@ -30,6 +41,7 @@ private:
 
 	void alertsConfigHelper(int16_t max, int16_t min, char sign, bool isEnabled);
 	void configHelper(const char* l1, const char* l2, const char* l3);
+	void error();
 	void home();
 	void logConfig();
 	void menu();
@@ -39,6 +51,7 @@ private:
 
 public:
 	UserInterface();
+	void render();
 };
 
 

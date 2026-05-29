@@ -5,7 +5,7 @@
 #include "sht31_sensor.h"
 #include <stdint.h>
 
-class WeatherData : Subject {
+class WeatherData : public Subject {
 private:
 	bool statusOk = true;
 

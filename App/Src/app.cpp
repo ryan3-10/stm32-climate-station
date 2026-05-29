@@ -8,9 +8,11 @@ namespace {
 }
 void run_app(I2C_HandleTypeDef* hi2c) {
 	Sht31Sensor sensor(hi2c);
+
 	UserInterface ui;
+
 	WeatherData wd(sensor);
-	wd.attach(ui);
+	wd.subscribe(&ui);
 	wd.update();
 
 	while (true) {

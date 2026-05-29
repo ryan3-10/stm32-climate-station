@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 UserInterface::UserInterface() {
-	home();
+
 }
 
 void UserInterface::alertsConfigHelper(int16_t max, int16_t min, char sign, bool isEn) {
@@ -26,6 +26,14 @@ void UserInterface::configHelper(const char* l1, const char* l2, const char* l3)
 
 	engine.setFont(FONT_SIZE::SMALL);
 	engine.printLine(l3, currSelection == 2);
+	engine.draw();
+}
+
+void UserInterface::error() {
+	engine.clear();
+	engine.printHeader("ERROR");
+	engine.setFont(FONT_SIZE::MED);
+	engine.printLine("SENSOR ERR");
 	engine.draw();
 }
 
@@ -83,6 +91,29 @@ void UserInterface::humAlertsConfig() {
 	alertsConfigHelper(maxHum, minHum, '%', humAlertEnabled);
 }
 
+void UserInterface::render() {
+	switch (currDisplay) {
+		case DISPLAY::HOME:
+			home();
+			break;
+		case DISPLAY::LOG_CONFIG:
+			logConfig();
+			break;
+		case DISPLAY::MENU:
+			menu();
+			break;
+		case DISPLAY::HUM_ALERTS:
+			humAlertsConfig();
+			break;
+		case DISPLAY::TEMP_ALERTS:
+			tempAlertsConfig();
+			break;
+		case DISPLAY::ERROR:
+			error();
+			break;
+	}
+}
+
 void UserInterface::tempAlertsConfig() {
 	engine.clear();
 	engine.printHeader("TEMP ALERTS");
@@ -92,9 +123,14 @@ void UserInterface::tempAlertsConfig() {
 
 void UserInterface::update(float newTemp, float newHum, bool statusOk) {
 	if (!statusOk) {
-		// display error screen
+		error();
+		currDisplay = DISPLAY::ERROR;
 	}
 
 	temp = newTemp;
 	hum = newHum;
+
+	if (currDisplay == DISPLAY::HOME) {
+		home();
+	}
 }
