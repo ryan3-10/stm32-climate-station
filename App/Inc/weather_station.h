@@ -6,9 +6,9 @@
 #include <stdint.h>
 
 struct WeatherData {
-	bool statusOk;
-    float temperature;
-    float humidity;
+	bool statusOk = true;
+    float temperature = 0;
+    float humidity = 0;
 };
 
 class WeatherStation : public Subject {
