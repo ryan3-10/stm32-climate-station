@@ -6,10 +6,6 @@
 
 constexpr uint8_t BODY_START_ROW = 16;
 
-DisplayEngine::DisplayEngine() : font(Font_11x18), row(0) {
-	SSD1306_Init();
-}
-
 void DisplayEngine::clear() const {
 	SSD1306_Clear();
 }
