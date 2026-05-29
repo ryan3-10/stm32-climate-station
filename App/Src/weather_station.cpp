@@ -10,10 +10,6 @@ namespace {
 	constexpr uint32_t readWriteInterval = 1000;
 }
 
-WeatherStation::WeatherStation(Sht31Sensor& s) : sensor(s) {
-
-}
-
 bool WeatherStation::meaningfulChange(SENSOR_DATA newData) const {
 	// If statusOk was and still is false, ignore potential garbage values in weather data
 	if (!newData.statusOk && !data.statusOk) {
@@ -41,12 +37,4 @@ void WeatherStation::update() {
 		notify();
 	}
 	lastUpdate = HAL_GetTick();
-}
-
-uint32_t WeatherStation::getLastUpdate() const {
-	return lastUpdate;
-}
-
-const WeatherData& WeatherStation::getLiveData() const {
-	return data;
 }

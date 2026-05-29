@@ -13,10 +13,10 @@ struct WeatherData {
 
 class WeatherStation : public Subject {
 public:
-	WeatherStation(Sht31Sensor& s);
+	WeatherStation(Sht31Sensor& s) : sensor(s) {}
 	void update();
-	uint32_t getLastUpdate() const;
-	const WeatherData& getLiveData() const;
+	uint32_t getLastUpdate() const { return lastUpdate; }
+	const WeatherData& getLiveData() const { return data; }
 
 private:
 	bool meaningfulChange(SENSOR_DATA newData) const;
