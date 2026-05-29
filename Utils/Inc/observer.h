@@ -1,5 +1,5 @@
-#ifndef INC_OBSERVER_H_
-#define INC_OBSERVER_H_
+#ifndef OBSERVER_H_
+#define OBSERVER_H_
 
 #include <array>
 #include <stdint.h>

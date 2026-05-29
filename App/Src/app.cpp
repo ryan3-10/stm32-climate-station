@@ -1,6 +1,6 @@
+#include <weather_station.h>
 #include "app.h"
 #include "ssd1306.h"
-#include "weather_data.h"
 #include "user_interface.h"
 
 namespace {
@@ -11,13 +11,13 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 
 	UserInterface ui;
 
-	WeatherData wd(sensor);
-	wd.subscribe(&ui);
-	wd.update();
+	WeatherStation ws(sensor);
+	ws.subscribe(&ui);
+	ws.update();
 
 	while (true) {
-		if (HAL_GetTick() - wd.getLastUpdate() >= UPDATE_INTERVAL) {
-			wd.update();
+		if (HAL_GetTick() - ws.getLastUpdate() >= UPDATE_INTERVAL) {
+			ws.update();
 		}
 	}
 }

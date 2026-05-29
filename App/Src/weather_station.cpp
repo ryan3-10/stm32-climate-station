@@ -1,20 +1,20 @@
 #include "sht31_sensor.h"
+#include "weather_station.h"
 #include <cmath>
 #include <stdint.h>
 #include <stdio.h>
 #include <stm32f4xx_hal.h>
-#include <weather_data.h>
 
 namespace {
 constexpr float NOISE_THRESHOLD = 1.0f;
 constexpr uint32_t readWriteInterval = 1000;
 }
 
-WeatherData::WeatherData(Sht31Sensor& s) : sensor(s) {
+WeatherStation::WeatherStation(Sht31Sensor& s) : sensor(s) {
 
 }
 
-bool WeatherData::meaningfulChange(SENSOR_DATA newData) const {
+bool WeatherStation::meaningfulChange(SENSOR_DATA newData) const {
 	// If statusOk was and still is false, ignore potential garbage values in weather data
 	if (!newData.statusOk && !statusOk) {
 		return false;
@@ -27,27 +27,27 @@ bool WeatherData::meaningfulChange(SENSOR_DATA newData) const {
 	);
 }
 
-float WeatherData::getHumidity() const {
+float WeatherStation::getHumidity() const {
 	return humidity;
 }
 
-float WeatherData::getTemperature() const {
+float WeatherStation::getTemperature() const {
 	return temperature;
 }
 
-void WeatherData::notify() {
+void WeatherStation::notify() {
 	for (uint8_t i = 0; i < observerCount; ++i) {
 		observers.at(i)->update(temperature, humidity, statusOk);
 	}
 }
 
-void WeatherData::setValues(SENSOR_DATA newData) {
+void WeatherStation::setValues(SENSOR_DATA newData) {
 	temperature = newData.temperature;
 	humidity = newData.humidity;
 	statusOk = newData.statusOk;
 }
 
-void WeatherData::update() {
+void WeatherStation::update() {
 	SENSOR_DATA newData = sensor.getLiveData();
 
 	if (meaningfulChange(newData)) {
@@ -57,6 +57,6 @@ void WeatherData::update() {
 	lastUpdate = HAL_GetTick();
 }
 
-uint32_t WeatherData::getLastUpdate() const {
+uint32_t WeatherStation::getLastUpdate() const {
 	return lastUpdate;
 }

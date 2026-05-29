@@ -1,11 +1,11 @@
-#ifndef WEATHER_DATA_H_
-#define WEATHER_DATA_H_
+#ifndef WEATHER_STATION_H_
+#define WEATHER_STATION_H_
 
 #include "observer.h"
 #include "sht31_sensor.h"
 #include <stdint.h>
 
-class WeatherData : public Subject {
+class WeatherStation : public Subject {
 private:
 	bool statusOk = true;
 
@@ -21,7 +21,7 @@ private:
 	void setValues(SENSOR_DATA newData);
 
 public:
-	WeatherData(Sht31Sensor& s);
+	WeatherStation(Sht31Sensor& s);
 
 	float getHumidity() const;
 	float getTemperature() const;
