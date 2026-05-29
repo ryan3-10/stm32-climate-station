@@ -10,6 +10,10 @@ struct SENSOR_DATA {
 };
 
 class Sht31Sensor {
+public:
+	Sht31Sensor(I2C_HandleTypeDef* h);
+	SENSOR_DATA getLiveData();
+
 private:
 	I2C_HandleTypeDef* hi2c;
 
@@ -18,11 +22,6 @@ private:
 
 	HAL_StatusTypeDef requestData();
 	HAL_StatusTypeDef receiveData(uint8_t* buffer);
-
-public:
-	Sht31Sensor(I2C_HandleTypeDef* h);
-
-	SENSOR_DATA getLiveData();
 };
 
 #endif /* EXTERNAL_DRIVERS_SHT31_SENSOR_H_ */
