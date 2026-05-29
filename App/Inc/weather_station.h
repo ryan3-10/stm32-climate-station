@@ -6,6 +6,14 @@
 #include <stdint.h>
 
 class WeatherStation : public Subject {
+public:
+	WeatherStation(Sht31Sensor& s);
+
+	float getHumidity() const;
+	float getTemperature() const;
+	void update();
+	uint32_t getLastUpdate() const;
+
 private:
 	bool statusOk = true;
 
@@ -19,14 +27,6 @@ private:
 	bool meaningfulChange(SENSOR_DATA newData) const;
 	virtual void notify() override;
 	void setValues(SENSOR_DATA newData);
-
-public:
-	WeatherStation(Sht31Sensor& s);
-
-	float getHumidity() const;
-	float getTemperature() const;
-	void update();
-	uint32_t getLastUpdate() const;
 };
 
 
