@@ -89,7 +89,3 @@ void UserInterface::tempAlertsConfig() {
 
 	alertsConfigHelper(maxTemp, minTemp, 'F', tempAlertEnabled);
 }
-
-
-
-
