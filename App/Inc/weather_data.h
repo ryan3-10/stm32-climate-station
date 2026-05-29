@@ -1,28 +1,32 @@
 #ifndef WEATHER_DATA_H_
 #define WEATHER_DATA_H_
 
+#include "observer.h"
 #include "sht31_sensor.h"
 #include <stdint.h>
 
-class WeatherData {
+class WeatherData : Subject {
 private:
-	float humidity;
-	uint32_t lastReadWrite;
-	Sht31Sensor& sensor;
-	float temperature;
+	bool statusOk = true;
 
-	void readWriteData();
+	float humidity = 0;
+	float temperature = 0;
+
+	Sht31Sensor& sensor;
+
+	uint32_t lastUpdate = 0;
+
+	bool meaningfulChange(SENSOR_DATA newData) const;
+	virtual void notify() override;
+	void setValues(SENSOR_DATA newData);
 
 public:
 	WeatherData(Sht31Sensor& s);
-	WeatherData(const WeatherData&) = delete;
-	WeatherData& operator=(const WeatherData&) = delete;
-	WeatherData(WeatherData&&) = delete;
-	WeatherData& operator=(WeatherData&&) = delete;
 
-	float getTemperature();
-	float getHumidity();
+	float getHumidity() const;
+	float getTemperature() const;
 	void update();
+	uint32_t getLastUpdate() const;
 };
 
 

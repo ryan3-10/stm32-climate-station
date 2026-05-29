@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 UserInterface::UserInterface() {
-	tempAlertsConfig();
+	home();
 }
 
 void UserInterface::alertsConfigHelper(int16_t max, int16_t min, char sign, bool isEn) {
@@ -88,4 +88,13 @@ void UserInterface::tempAlertsConfig() {
 	engine.printHeader("TEMP ALERTS");
 
 	alertsConfigHelper(maxTemp, minTemp, 'F', tempAlertEnabled);
+}
+
+void UserInterface::update(float newTemp, float newHum, bool statusOk) {
+	if (!statusOk) {
+		// display error screen
+	}
+
+	temp = newTemp;
+	hum = newHum;
 }

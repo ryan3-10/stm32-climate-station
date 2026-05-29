@@ -2,8 +2,9 @@
 #define INC_USER_INTERFACE_H_
 
 #include "display_engine.h"
+#include "observer.h"
 
-class UserInterface {
+class UserInterface : Observer {
 private:
 	bool humAlertEnabled	= false;
 	bool logEnabled			= false;
@@ -34,6 +35,7 @@ private:
 	void menu();
 	void humAlertsConfig();
 	void tempAlertsConfig();
+	virtual void update(float newTemp, float newH, bool statusOk) override;
 
 public:
 	UserInterface();

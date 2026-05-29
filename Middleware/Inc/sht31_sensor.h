@@ -3,6 +3,12 @@
 
 #include <stm32f4xx_hal.h>
 
+struct SENSOR_DATA {
+	float humidity;
+	float temperature;
+	bool statusOk;
+};
+
 class Sht31Sensor {
 private:
 	I2C_HandleTypeDef* hi2c;
@@ -10,14 +16,13 @@ private:
 	float rawToHumidity(uint8_t byte1, uint8_t byte2);
 	float rawToTemperature(uint8_t byte1, uint8_t byte2);
 
+	HAL_StatusTypeDef requestData();
+	HAL_StatusTypeDef receiveData(uint8_t* buffer);
+
 public:
 	Sht31Sensor(I2C_HandleTypeDef* h);
-	Sht31Sensor(const Sht31Sensor&) = delete;
-	Sht31Sensor& operator=(const Sht31Sensor&) = delete;
-	Sht31Sensor(Sht31Sensor&&) = delete;
-	Sht31Sensor& operator=(Sht31Sensor&&) = delete;
 
-	void updateWeatherValues(float& temperature, float& humidity);
+	SENSOR_DATA getLiveData();
 };
 
 #endif /* EXTERNAL_DRIVERS_SHT31_SENSOR_H_ */
