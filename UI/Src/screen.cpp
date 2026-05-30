@@ -12,7 +12,7 @@ void Screen::render(bool freshRender) {
 	if (freshRender) {
 		engine->clear();
 		engine->printHeader(getHeader());
-		//cleanState();
+		cleanState();
 	}
 
 	engine->jumpToBodyStart();
@@ -20,7 +20,14 @@ void Screen::render(bool freshRender) {
 }
 
 void HomeScreen::renderHelper() const {
-	char buffer[16];
+	static bool inErrorState = false;
+
+	// Always do a fresh render when switching between error and non-error states
+	if (inErrorState != weatherData.statusOk) {
+		engine->clear();
+		engine->printHeader(getHeader());
+		inErrorState = weatherData.statusOk;
+	}
 
 	engine->setFont(FONT_SIZE::MED);
 
@@ -28,9 +35,9 @@ void HomeScreen::renderHelper() const {
 	if (!weatherData.statusOk) {
 		engine->printLine("SENSOR");
 		engine->printLine("ERROR");
-	}
+	} else {
+		char buffer[16];
 
-	else {
 		// Display temperature
 		snprintf(buffer, sizeof(buffer), "%.1fF", weatherData.temperature);
 		engine->printLine(buffer);
