@@ -7,15 +7,15 @@ struct CONFIG {
 	bool enabled = false;
 
 	union {
-		uint8_t hourInterval = 0;
+		int16_t maxTemp = 0;
+		uint8_t hourInterval;
 		uint8_t maxHum;
-		int16_t maxTemp;
 	};
 
 	union {
-		uint8_t minuteInterval = 0;
+		int16_t minTemp = 0;
+		uint8_t minuteInterval;
 		uint8_t minHum;
-		int16_t minTemp;
 	};
 };
 

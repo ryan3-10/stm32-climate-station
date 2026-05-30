@@ -1,14 +1,14 @@
-#include "config_screen.h"
+#include "screen.h"
 #include <stdio.h>
 
 void ConfigScreen::configHelper(const char* l1, const char* l2, const char* l3) const {
-	engine.setFont(FONT_SIZE::MED);
-	engine.printLine(l1, cursorPos == 0);
-	engine.printLine(l2, cursorPos == 1);
+	engine->setFont(FONT_SIZE::MED);
+	engine->printLine(l1, cursorPos == 0);
+	engine->printLine(l2, cursorPos == 1);
 
-	engine.setFont(FONT_SIZE::SMALL);
-	engine.printLine(l3, cursorPos == 2);
-	engine.draw();
+	engine->setFont(FONT_SIZE::SMALL);
+	engine->printLine(l3, cursorPos == 2);
+	engine->draw();
 }
 
 void AlertsConfigScreen::alertsConfigHelper(uint16_t max, uint16_t min, char sign) const {
@@ -45,7 +45,3 @@ void TempAlertsConfigScreen::renderHelper() const {
 void HumAlertsConfigScreen::renderHelper() const {
 	alertsConfigHelper(editConfig.maxHum, editConfig.minHum, '%');
 }
-
-
-
-

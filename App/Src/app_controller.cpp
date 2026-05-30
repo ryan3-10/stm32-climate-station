@@ -9,11 +9,14 @@ AppController::AppController(I2C_HandleTypeDef* hi2c) :
 	ws(sensor),
 	ui(config, ws.getLiveData())
 {
-	ws.subscribe(&ui);
-	ws.update();
+
 }
 
 void AppController::run() {
+	ws.subscribe(&ui);
+	ws.update();
+	ui.enable();
+
 	while (true) {
 		if (HAL_GetTick() - ws.getLastUpdate() >= UPDATE_INTERVAL) {
 			ws.update();
