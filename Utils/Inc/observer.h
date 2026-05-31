@@ -1,31 +1,30 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
+#include "data_structs.h"
 #include <array>
 #include <stdint.h>
 
-namespace {
-	constexpr uint8_t ARRAY_SIZE = 3;
-}
 
 class Observer {
 public:
 	Observer() = default;
 	virtual ~Observer() = default;
-	virtual void update() = 0;
+	virtual void update(const WeatherData& data) = 0;
 };
 
 class Subject {
 private:
-	std::array<Observer*, ARRAY_SIZE> observers;
-	uint8_t observerCount = 0;
+	static constexpr uint8_t MAX_OBSERVERS = 3;
+	std::array<Observer*, MAX_OBSERVERS> observers;
+	uint8_t count = 0;
 
 public:
 	Subject() = default;
 	virtual ~Subject() = default;
 
-	void subscribe(Observer* observer);
-	virtual void notify();
+	void addObserver(Observer* observer);
+	virtual void notify(const WeatherData& data);
 };
 
 

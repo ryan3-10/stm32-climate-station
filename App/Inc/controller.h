@@ -1,19 +1,18 @@
 #ifndef APP_CONTROLLER_H_
 #define APP_CONTROLLER_H_
 
-#include "app_config.h"
+#include "settings.h"
 #include "user_interface.h"
 #include "weather_station.h"
-#include <stm32f4xx_hal.h>
 
-class AppController {
+class Controller {
 public:
-	AppController(I2C_HandleTypeDef* hi2c);
+	Controller(WeatherStation w);
+	void init();
 	void run();
 
 private:
-	APP_CONFIG config;
-	Sht31Sensor sensor;
+	SettingsConfig settings;
 	WeatherStation ws;
 	UserInterface ui;
 };

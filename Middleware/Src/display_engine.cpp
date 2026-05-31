@@ -10,7 +10,7 @@ void DisplayEngine::clear() const {
 	SSD1306_Clear();
 }
 
-void DisplayEngine::draw() const {
+void DisplayEngine::updateScreen() const {
 	SSD1306_UpdateScreen();
 }
 
@@ -37,7 +37,7 @@ void DisplayEngine::print(const char* buffer, bool highlight) const {
 }
 
 void DisplayEngine::printHeader(const char* buffer) {
-	setFont(FONT_SIZE::MED);
+	setFont(FONT_SIZE::SMALL);
 	row = 0;
 	printLine(buffer);
 	jumpToBodyStart();

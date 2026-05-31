@@ -1,120 +1,94 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "app_config.h"
+#include "data_structs.h"
 #include "display_engine.h"
-#include "weather_station.h"
 #include <array>
 
 class Screen {
 public:
-	Screen(const char* h, const char* l)
-		: header(h), label(l)
+	Screen(const char* l)
+		: label(l)
 	{}
 
 	virtual ~Screen() = default;
-	const char* getHeader() const { return header; }
 	const char* getLabel() const { return label; }
-	void render(bool freshRender);
-	static void init();
+	void render();
+	static void init(DisplayEngine* e);
 
 protected:
 	static DisplayEngine* engine;
 
 private:
-	virtual void renderHelper() const = 0;
-	virtual void cleanState() = 0;
-	const char* const header;
+	virtual void draw() const = 0;
 	const char* const label;
 };
 
 class HomeScreen : public Screen {
 public:
-	HomeScreen(const WeatherData& wd) :
-		Screen("HOME", "Home"), weatherData(wd)
+	HomeScreen() :
+		Screen("Home")
 	{}
 
-private:
-	 void renderHelper() const override;
-	 void cleanState() override {} // nothing to clear for the home screen
+	void update(const WeatherData& wd) { weatherData = wd; }
 
-	 const WeatherData& weatherData;
+private:
+	 void draw() const override;
+	 WeatherData weatherData;
 };
 
 class MenuScreen : public Screen {
 	static constexpr uint8_t MENU_LENGTH = 4;
+	using menuArray = std::array<const Screen*, MENU_LENGTH>;
 
 public:
-	MenuScreen(const std::array<Screen*, MENU_LENGTH>& m) :
-		Screen("MENU", "Menu"), menu(m)
+	MenuScreen(const menuArray& m) :
+		Screen("Menu"), menu(m)
 	{}
 
 private:
-	 void renderHelper() const override;
-	 void cleanState() override { cursorPos = 0; }
+	 void draw() const override;
 
-	 const std::array<Screen*, MENU_LENGTH>& menu;
+	 const menuArray& menu;
 	 uint8_t cursorPos = 0;
 };
 
-class ConfigScreen : public Screen {
+class LogConfigScreen : public Screen {
 public:
-	ConfigScreen(const CONFIG& c, const char* header, const char* label) :
-		Screen(header, label), editConfig(c), masterConfig(c)
+	LogConfigScreen(const LogData& lg)
+		: Screen("Log Config"), logData(lg)
 	{}
-	virtual ~ConfigScreen() = default;
 
-protected:
-	void configHelper(const char* l1, const char* l2, const char* l3) const;
-	CONFIG editConfig;
-	uint8_t cursorPos = 0;
-
-private:
-	void cleanState() override;
-	const CONFIG& masterConfig;
-};
-
-
-class LogConfigScreen : public ConfigScreen {
-public:
-	LogConfigScreen(const CONFIG& config)
-		: ConfigScreen(config, "LOG CONFIG", "Log Config")
-	{}
 	virtual ~LogConfigScreen() = default;
 
 private:
-	 void renderHelper() const override;
+	 void draw() const override;
+	 LogData logData;
+	 uint8_t cursorPos = 0;
 };
 
-class AlertsConfigScreen : public ConfigScreen {
+class TempAlertsScreen : public Screen {
 public:
-	AlertsConfigScreen(const CONFIG& c, const char* header, const char* label)
-		: ConfigScreen(c, header, label)
-	{}
-	virtual ~AlertsConfigScreen() = default;
-
-protected:
-	 void alertsConfigHelper(uint16_t max, uint16_t min, char sign) const;
-};
-
-class TempAlertsConfigScreen : public AlertsConfigScreen {
-public:
-	TempAlertsConfigScreen(const CONFIG& config)
-		: AlertsConfigScreen(config, "TEMP ALERTS", "Temp Alerts")
+	TempAlertsScreen(const AlertData& ad)
+		: Screen("Temperature Alerts"), alertData(ad)
 	{}
 
 private:
-	void renderHelper() const override;
+	void draw() const override;
+	AlertData alertData;
+	uint8_t cursorPos = 0;
 };
 
-class HumAlertsConfigScreen : public AlertsConfigScreen {
+class HumAlertsScreen : public Screen {
 public:
-	HumAlertsConfigScreen(const CONFIG& config)
-		: AlertsConfigScreen(config, "HUM ALERTS", "Hum Alerts")
+	HumAlertsScreen(const AlertData& ad)
+		: Screen("Humidity Alerts"), alertData(ad)
 	{}
 
 private:
-	void renderHelper() const override;
+	void draw() const override;
+	AlertData alertData;
+	uint8_t cursorPos = 0;
 };
 
 #endif

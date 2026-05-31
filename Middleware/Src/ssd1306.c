@@ -607,7 +607,7 @@ void SSD1306_DrawBitmap(int16_t x, int16_t y, const unsigned char* bitmap, int16
 void SSD1306_Clear (void)
 {
 	SSD1306_Fill (0);
-    SSD1306_UpdateScreen();
+    //SSD1306_UpdateScreen();
 }
 void SSD1306_ON(void) {
 	SSD1306_WRITECOMMAND(0x8D);

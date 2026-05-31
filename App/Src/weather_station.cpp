@@ -2,39 +2,30 @@
 #include "weather_station.h"
 #include <cmath>
 #include <stdint.h>
-#include <stdio.h>
 #include <stm32f4xx_hal.h>
 
-namespace {
-	constexpr float NOISE_THRESHOLD = 1.0f;
-	constexpr uint32_t readWriteInterval = 1000;
+void WeatherStation::update() {
+	const auto newData = sensor.read();
+
+	if (!noiseDetected(newData, data)) {
+		data = newData;
+		notify(data);
+	}
+
+	lastReadTime = HAL_GetTick();
 }
 
-bool WeatherStation::meaningfulChange(SENSOR_DATA newData) const {
-	// If statusOk was and still is false, ignore potential garbage values in weather data
-	if (!newData.statusOk && !data.statusOk) {
-		return false;
+bool WeatherStation::noiseDetected(const WeatherData& d1, const WeatherData& d2) const {
+	constexpr float NOISE_THRESHOLD = 1.0f;
+
+	// If statusOk was and still is false, ignore potential garbage values
+	if (!d1.statusOk && !d2.statusOk) {
+		return true;
 	}
 
 	return (
-		newData.statusOk != data.statusOk ||
-		abs(newData.temperature - data.temperature) >= NOISE_THRESHOLD ||
-		abs(newData.humidity - data.humidity) >= NOISE_THRESHOLD
+		d1.statusOk == d2.statusOk &&
+		abs(d1.temp - d2.temp) <= NOISE_THRESHOLD &&
+		abs(d1.hum - d2.hum) <= NOISE_THRESHOLD
 	);
-}
-
-void WeatherStation::setValues(SENSOR_DATA newData) {
-	data.statusOk = newData.statusOk;
-	data.temperature = newData.temperature;
-	data.humidity = newData.humidity;
-}
-
-void WeatherStation::update() {
-	SENSOR_DATA newData = sensor.getLiveData();
-
-	if (meaningfulChange(newData)) {
-		setValues(newData);
-		notify();
-	}
-	lastUpdate = HAL_GetTick();
 }

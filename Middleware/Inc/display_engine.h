@@ -15,7 +15,7 @@ class DisplayEngine {
 public:
 	DisplayEngine() { SSD1306_Init(); }
 	void clear() const;
-	void draw() const;
+	void updateScreen() const;
 	void jumpToBodyStart();
 	void newLine();
 	void print(const char* buffer, bool highlight=false) const;

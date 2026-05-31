@@ -1,6 +1,4 @@
 #include "sht31_sensor.h"
-
-#include <stdio.h>
 #include <stm32f4xx_hal.h>
 
 namespace {
@@ -8,27 +6,27 @@ namespace {
 	uint8_t READ_COMMAND[2] = {0x2C, 0x06}; // Single shot, high repeat, clock stretch enabled
 }
 
-float Sht31Sensor::rawToHumidity(uint8_t rawByte1, uint8_t rawByte2) {
+float Sht31Sensor::rawToHumidity(uint8_t rawByte1, uint8_t rawByte2) const {
 	uint16_t rawHumidity = (rawByte1 << 8) | rawByte2;
 	return 100 * rawHumidity / 65535.0f;
 }
 
-float Sht31Sensor::rawToTemperature(uint8_t rawByte1, uint8_t rawByte2) {
+float Sht31Sensor::rawToTemperature(uint8_t rawByte1, uint8_t rawByte2) const {
 	uint16_t rawTemp = (rawByte1 << 8) | rawByte2;
 	return -49 + (315.0f * rawTemp / 65535.0f);
 }
 
-SENSOR_DATA Sht31Sensor::getLiveData() {
+const WeatherData Sht31Sensor::read() {
 	uint8_t data[6];
-	SENSOR_DATA result { .statusOk = true };
+	WeatherData result { .statusOk = true };
 
 	if (requestData() != HAL_OK || receiveData(data) != HAL_OK) {
 		result.statusOk = false;
 	}
 
 	if (result.statusOk) {
-		result.temperature = rawToTemperature(data[0], data[1]);
-		result.humidity = rawToHumidity(data[3], data[4]);
+		result.temp = rawToTemperature(data[0], data[1]);
+		result.hum = rawToHumidity(data[3], data[4]);
 	}
 
 	return result;

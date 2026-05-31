@@ -1,29 +1,26 @@
-#include "screen.h"
+#include "settings.h"
 #include "user_interface.h"
-#include "weather_station.h"
-#include <array>
 
-UserInterface::UserInterface(const APP_CONFIG& ac, const WeatherData& wd)
+UserInterface::UserInterface(const SettingsConfig& settings)
 	:
-	appConfig(ac),
-	weatherData(wd),
-	homeScreen(weatherData),
-	logScreen(appConfig.logConfig),
-	tempAlertsScreen(appConfig.tempAlertsConfig),
-	humAlertsScreen(appConfig.humAlertsConfig),
+	logScreen(settings.getLogData()),
+	tempAlertsScreen(settings.getAlertData()),
+	humAlertsScreen(settings.getAlertData()),
 	menuScreen(menuItems),
 	currentScreen(homeScreen)
 {
-	Screen::init();
+	Screen::init(&engine);
 }
 
-void UserInterface::enable() {
-	enabled = true;
-	currentScreen.render(true);
+void UserInterface::render() {
+	currentScreen.render();
+	isDirty = false;
 }
 
-void UserInterface::update() {
-	if (enabled && &currentScreen == &homeScreen) {
-		currentScreen.render(false);
+void UserInterface::update(const WeatherData& data) {
+	homeScreen.update(data);
+
+	if (&currentScreen == &homeScreen) {
+		isDirty = true;
 	}
 }

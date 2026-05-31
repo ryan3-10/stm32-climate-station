@@ -1,29 +1,22 @@
 #ifndef WEATHER_STATION_H_
 #define WEATHER_STATION_H_
 
+#include "data_structs.h"
 #include "observer.h"
 #include "sht31_sensor.h"
 #include <stdint.h>
-
-struct WeatherData {
-	bool statusOk = true;
-    float temperature = 0;
-    float humidity = 0;
-};
 
 class WeatherStation : public Subject {
 public:
 	WeatherStation(Sht31Sensor& s) : sensor(s) {}
 	void update();
-	uint32_t getLastUpdate() const { return lastUpdate; }
-	const WeatherData& getLiveData() const { return data; }
+	uint32_t getLastReadTime() const { return lastReadTime; }
 
 private:
-	bool meaningfulChange(SENSOR_DATA newData) const;
-	void setValues(SENSOR_DATA newData);
+	bool noiseDetected(const WeatherData& d1, const WeatherData& d2) const;
 
 	Sht31Sensor& sensor;
-	uint32_t lastUpdate = 0;
+	uint32_t lastReadTime = 0;
 	WeatherData data;
 };
 
