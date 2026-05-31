@@ -8,5 +8,8 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	WeatherStation ws(sensor);
 	Controller c(ws);
 	c.init();
-	c.run();
+
+	while (true) {
+		c.run();
+	}
 }

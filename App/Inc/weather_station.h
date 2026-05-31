@@ -3,19 +3,19 @@
 
 #include "data_structs.h"
 #include "observer.h"
-#include "sht31_sensor.h"
+#include "weather_sensor.h"
 #include <stdint.h>
 
 class WeatherStation : public Subject {
 public:
-	WeatherStation(Sht31Sensor& s) : sensor(s) {}
+	WeatherStation(IWeatherSensor& s) : sensor(s) {}
 	void update();
 	uint32_t getLastReadTime() const { return lastReadTime; }
 
 private:
 	bool noiseDetected(const WeatherData& d1, const WeatherData& d2) const;
 
-	Sht31Sensor& sensor;
+	IWeatherSensor& sensor;
 	uint32_t lastReadTime = 0;
 	WeatherData data;
 };

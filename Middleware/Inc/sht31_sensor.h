@@ -1,13 +1,14 @@
 #ifndef EXTERNAL_DRIVERS_SHT31_SENSOR_H_
 #define EXTERNAL_DRIVERS_SHT31_SENSOR_H_
 
-#include <data_structs.h>
+#include "data_structs.h"
+#include "weather_sensor.h"
 #include <stm32f4xx_hal.h>
 
-class Sht31Sensor {
+class Sht31Sensor : public IWeatherSensor {
 public:
 	Sht31Sensor(I2C_HandleTypeDef* h) : hi2c(h) {}
-	const WeatherData read();
+	const WeatherData read() override;
 
 private:
 	I2C_HandleTypeDef* hi2c;

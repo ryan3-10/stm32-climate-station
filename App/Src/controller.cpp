@@ -10,14 +10,12 @@ Controller::Controller(WeatherStation w) :
 void Controller::run() {
 	constexpr uint32_t UPDATE_INTERVAL = 1000;
 
-	while (true) {
-		if (HAL_GetTick() - ws.getLastReadTime() >= UPDATE_INTERVAL) {
-			ws.update();
-		}
+	if (HAL_GetTick() - ws.getLastReadTime() >= UPDATE_INTERVAL) {
+		ws.update();
+	}
 
-		if (ui.needsRender()) {
-			ui.render();
-		}
+	if (ui.needsRender()) {
+		ui.render();
 	}
 }
 
