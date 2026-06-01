@@ -1,10 +1,9 @@
 #include "screen.h"
 #include <stdio.h>
 
-DisplayEngine* Screen::engine = nullptr;
-
-void Screen::init(DisplayEngine* e) {
-	engine = e;
+void Screen::init() {
+	static DisplayEngine e;
+	engine = &e;
 }
 
 void Screen::render() {
@@ -43,13 +42,13 @@ void MenuScreen::draw() const {
 	}
 }
 
-UIEvent HomeScreen::handleInput(INPUT_TYPE input) {
+EVENT_TYPE HomeScreen::handleInput(INPUT_TYPE input) {
 	// Any input from the home screen moves to the menu screen
-	return LeftHome{};
+	return EVENT_TYPE::LEFT_HOME;
 }
 
-UIEvent MenuScreen::handleInput(INPUT_TYPE input) {
-	UIEvent event = NullEvent{};
+EVENT_TYPE MenuScreen::handleInput(INPUT_TYPE input) {
+	EVENT_TYPE event = EVENT_TYPE::NULL_EVENT;
 
 	switch (input) {
 		case INPUT_TYPE::LEFT:
@@ -59,7 +58,8 @@ UIEvent MenuScreen::handleInput(INPUT_TYPE input) {
 			cursorPos = cursorPos == MENU_LENGTH - 1 ? 0 : cursorPos + 1;
 			break;
 		case INPUT_TYPE::ENTER:
-			event = menu[cursorPos];
+			event = EVENT_TYPE::MENU_SELECT;
+			selection = menu[cursorPos];
 			cursorPos = 0;
 			break;
 	}

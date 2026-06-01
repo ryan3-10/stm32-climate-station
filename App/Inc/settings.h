@@ -5,15 +5,18 @@
 
 class SettingsConfig {
 public:
-	Logconfig getLogData() const { return log; }
-	AlertConfig getAlertData() const { return alert; }
+	LogConfig getLogData() const { return log; }
+	TempAlertConfig getTempAlertData() const { return tempAlert; }
+	HumAlertConfig getHumAlertData() const { return humAlert; }
 
-	void setLogData(const Logconfig& l) { log = l; }
-	void setAlertData(const AlertConfig& a) { alert = a; }
+	void setLogData(const LogConfig& l) { log = l; }
+	void setTempAlertData(const TempAlertConfig& a) { tempAlert = a; }
+	void setHumAlertData(const HumAlertConfig& a) { humAlert = a; }
 
 private:
-	Logconfig log;
-	AlertConfig alert;
+	LogConfig log;
+	TempAlertConfig tempAlert;
+	HumAlertConfig humAlert;
 };
 
 

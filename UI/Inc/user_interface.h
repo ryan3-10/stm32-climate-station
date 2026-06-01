@@ -20,11 +20,14 @@ private:
 	};
 
 	bool isDirty = false;
-	DisplayEngine engine;
+	WeatherData weatherData;
+	LogConfig logC;
+	TempAlertConfig tempC;
+	HumAlertConfig humC;
 	HomeScreen homeScreen;
-	LogConfigScreen logScreen;
-	TempAlertsScreen tempAlertsScreen;
-	HumAlertsScreen humAlertsScreen;
+	ConfigScreen logScreen;
+	ConfigScreen tempAlertsScreen;
+	ConfigScreen humAlertsScreen;
 	MenuScreen menuScreen;
 	Screen& currentScreen;
 };

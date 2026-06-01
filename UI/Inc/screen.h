@@ -6,26 +6,29 @@
 #include <array>
 #include <variant>
 
-class Screen;
-struct NullEvent {};
-struct LeftHome {};
-
 enum class INPUT_TYPE : uint8_t {
 	LEFT,
 	ENTER,
 	RIGHT
 };
 
-using UIEvent = std::variant<
-	LeftHome,
-	Logconfig,
-	NullEvent,
-	Screen*,
-	WeatherData,
-	AlertConfig
->;
+enum class EVENT_TYPE : uint8_t {
+	NULL_EVENT,
+	LEFT_HOME,
+	MENU_SELECT,
+	LOG_CONFIG_SAVE,
+	TEMP_CONFIG_SAVE,
+	HUM_CONFIG_SAVE
+};
 
-using ConfigValue = std::variant<uint16_t*, bool*>;
+struct ConfigScreenLayout {
+	const char* header;
+	const uint16_t MAX_VALUE;
+	const uint8_t MIN_DATA_WIDTH;
+	const char* preData1;
+	const char* preData2;
+	const char postData;
+};
 
 class Screen {
 public:
@@ -36,24 +39,22 @@ public:
 	virtual ~Screen() = default;
 	const char* getLabel() const { return label; }
 	void render();
-	static void init(DisplayEngine* e);
+	static void init();
 
 protected:
-	static DisplayEngine* engine;
+	inline static DisplayEngine* engine = nullptr;
 
 private:
 	virtual void draw() const = 0;
-	virtual UIEvent handleInput(INPUT_TYPE input) = 0;
+	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
 	const char* const label;
 };
 
 class HomeScreen : public Screen {
 public:
-	HomeScreen() :
-		Screen("Home")
-	{}
+	HomeScreen() : Screen("Home") {}
 
-	UIEvent handleInput(INPUT_TYPE input) override;
+	EVENT_TYPE handleInput(INPUT_TYPE input) override;
 	void update(const WeatherData& wd) { weatherData = wd; }
 
 private:
@@ -70,92 +71,64 @@ public:
 		Screen("Menu"), menu(m)
 	{}
 
-	UIEvent handleInput(INPUT_TYPE input) override;
+	EVENT_TYPE handleInput(INPUT_TYPE input) override;
+	Screen* getSelection() { return selection; }
 
 private:
 	 void draw() const override;
 
+	 Screen* selection = nullptr;
 	 const menuArray& menu;
 	 uint8_t cursorPos = 0;
 };
 
-class LogConfigScreen : public Screen {
-	static constexpr uint16_t MAX_CONFIG_VALUE = 99;
+
+class ConfigScreen : public Screen {
+static constexpr uint8_t NUM_ITEMS = 3;
 
 public:
-	LogConfigScreen(const Logconfig& lg)
-		: Screen("Log Config")
-		, logConfig(lg)
-		,configValues({
-			&logConfig.hourInt,
-			&logConfig.minInt,
-			&logConfig.enabled
-		})
-	{}
+	ConfigScreen(LogConfig& con, const ConfigScreenLayout& lay)
+		: Screen(lay.header)
+		, layout(lay)
+		, d1(con.hourInt)
+		, d2(con.minInt)
+		, en(con.enabled)
+		{
 
-	UIEvent handleInput(INPUT_TYPE input) override;
+		}
+
+	ConfigScreen(TempAlertConfig& con, const ConfigScreenLayout& lay)
+		: Screen(lay.header)
+		, layout(lay)
+		, d1(con.minTemp)
+		, d2(con.maxTemp)
+		, en(con.enabled)
+		{
+
+		}
+
+	ConfigScreen(HumAlertConfig& con, const ConfigScreenLayout& lay)
+		: Screen(lay.header)
+		, layout(lay)
+		, d1(con.minHum)
+		, d2(con.maxHum)
+		, en(con.enabled)
+		{
+
+		}
+
+	EVENT_TYPE handleInput(INPUT_TYPE input) override;
 
 private:
 	 void draw() const override;
-	 Logconfig logConfig;
+	 void stepUp();
+	 void stepDown();
+
+	 ConfigScreenLayout layout;
+	 uint16_t& d1;
+	 uint16_t& d2;
+	 bool& en;
 	 uint8_t cursorPos = 0;
-	 std::array<ConfigValue, 3> configValues;
-
-	 template <typename T>
-	 friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
-};
-
-class TempAlertsScreen : public Screen {
-	static constexpr uint16_t MAX_CONFIG_VALUE = 999;
-
-public:
-	TempAlertsScreen(const AlertConfig& ad)
-		: Screen("Temperature Alerts")
-		, alertData(ad)
-		, configValues({
-			&alertData.maxTemp,
-			&alertData.minTemp,
-			&alertData.tempEnabled
-		})
-	{
-	}
-
-	UIEvent handleInput(INPUT_TYPE input) override;
-
-private:
-	void draw() const override;
-	AlertConfig alertData;
-	uint8_t cursorPos = 0;
-	std::array<ConfigValue, 3> configValues;
-
-	template <typename T>
-	friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
-};
-
-class HumAlertsScreen : public Screen {
-	static constexpr uint16_t MAX_CONFIG_VALUE = 100;
-
-public:
-	HumAlertsScreen(const AlertConfig& ad)
-		: Screen("Humidity Alerts")
-		, alertData(ad)
-		, configValues({
-			&alertData.maxHum,
-			&alertData.minHum,
-			&alertData.humEnabled
-		})
-	{}
-
-	UIEvent handleInput(INPUT_TYPE input) override;
-
-private:
-	void draw() const override;
-	AlertConfig alertData;
-	uint8_t cursorPos = 0;
-	std::array<ConfigValue, 3> configValues;
-
-	template <typename T>
-	friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
 };
 
 #endif

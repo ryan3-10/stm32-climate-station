@@ -9,19 +9,22 @@ struct WeatherData {
 	float hum = 0.0f;
 };
 
-struct Logconfig {
-	bool enabled = false;
+struct LogConfig {
 	uint16_t hourInt = 0;
 	uint16_t minInt = 0;
+	bool enabled = false;
 };
 
-struct AlertConfig {
-	bool tempEnabled = false;
-	bool humEnabled = false;
-	uint16_t maxTemp = 0;
-	uint16_t minTemp = 0;
+struct HumAlertConfig {
 	uint16_t maxHum = 0;
 	uint16_t minHum = 0;
+	bool enabled;
+};
+
+struct TempAlertConfig {
+	uint16_t maxTemp = 0;
+	uint16_t minTemp = 0;
+	bool enabled = false;
 };
 
 
