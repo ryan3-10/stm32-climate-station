@@ -9,13 +9,13 @@ struct WeatherData {
 	float hum = 0.0f;
 };
 
-struct LogData {
+struct Logconfig {
 	bool enabled = false;
-	uint8_t hourInt = 0;
-	uint8_t minInt = 0;
+	uint16_t hourInt = 0;
+	uint16_t minInt = 0;
 };
 
-struct AlertData {
+struct AlertConfig {
 	bool tempEnabled = false;
 	bool humEnabled = false;
 	uint16_t maxTemp = 0;
@@ -23,5 +23,8 @@ struct AlertData {
 	uint16_t maxHum = 0;
 	uint16_t minHum = 0;
 };
+
+
+
 
 #endif /* INC_APP_CONFIG_H_ */

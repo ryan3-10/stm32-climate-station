@@ -5,15 +5,15 @@
 
 class SettingsConfig {
 public:
-	LogData getLogData() const { return log; }
-	AlertData getAlertData() const { return alert; }
+	Logconfig getLogData() const { return log; }
+	AlertConfig getAlertData() const { return alert; }
 
-	void setLogData(const LogData& l) { log = l; }
-	void setAlertData(const AlertData& a) { alert = a; }
+	void setLogData(const Logconfig& l) { log = l; }
+	void setAlertData(const AlertConfig& a) { alert = a; }
 
 private:
-	LogData log;
-	AlertData alert;
+	Logconfig log;
+	AlertConfig alert;
 };
 
 

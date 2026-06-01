@@ -1,6 +1,7 @@
 #ifndef APP_CONTROLLER_H_
 #define APP_CONTROLLER_H_
 
+#include "circular_queue.h"
 #include "settings.h"
 #include "user_interface.h"
 #include "weather_station.h"

@@ -17,7 +17,6 @@ void Screen::render() {
 void HomeScreen::draw() const {
 	engine->setFont(FONT_SIZE::MED);
 
-
 	if (weatherData.statusOk) {
 		char buffer[16];
 
@@ -43,4 +42,31 @@ void MenuScreen::draw() const {
 		engine->printLine(menu[i]->getLabel(), cursorPos == i);
 	}
 }
+
+UIEvent HomeScreen::handleInput(INPUT_TYPE input) {
+	// Any input from the home screen moves to the menu screen
+	return LeftHomeNotification{};
+}
+
+UIEvent MenuScreen::handleInput(INPUT_TYPE input) {
+	UIEvent event = NullEvent{};
+
+	switch (input) {
+		case INPUT_TYPE::LEFT:
+			cursorPos = cursorPos == 0 ? MENU_LENGTH - 1 : cursorPos - 1;
+			break;
+		case INPUT_TYPE::RIGHT:
+			cursorPos = cursorPos == MENU_LENGTH - 1 ? 0 : cursorPos + 1;
+			break;
+		case INPUT_TYPE::ENTER:
+			event = menu[cursorPos];
+			cursorPos = 0;
+			break;
+	}
+
+	return event;
+}
+
+
+
 

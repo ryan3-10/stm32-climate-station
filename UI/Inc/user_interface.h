@@ -15,7 +15,7 @@ public:
 	void update(const WeatherData& data) override;
 
 private:
-	const std::array<const Screen*, 4> menuItems = {
+	std::array<Screen*, 4> menuItems = {
 		&homeScreen, &logScreen, &tempAlertsScreen, &humAlertsScreen
 	};
 

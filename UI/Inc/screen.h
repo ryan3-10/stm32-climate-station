@@ -4,6 +4,28 @@
 #include "data_structs.h"
 #include "display_engine.h"
 #include <array>
+#include <variant>
+
+class Screen;
+struct NullEvent {};
+struct LeftHomeNotification {};
+
+enum class INPUT_TYPE : uint8_t {
+	LEFT,
+	ENTER,
+	RIGHT
+};
+
+using UIEvent = std::variant<
+	LeftHomeNotification,
+	Logconfig,
+	NullEvent,
+	Screen*,
+	WeatherData,
+	AlertConfig
+>;
+
+using ConfigValue = std::variant<uint16_t*, bool*>;
 
 class Screen {
 public:
@@ -21,6 +43,7 @@ protected:
 
 private:
 	virtual void draw() const = 0;
+	virtual UIEvent handleInput(INPUT_TYPE input) = 0;
 	const char* const label;
 };
 
@@ -30,6 +53,7 @@ public:
 		Screen("Home")
 	{}
 
+	UIEvent handleInput(INPUT_TYPE input) override;
 	void update(const WeatherData& wd) { weatherData = wd; }
 
 private:
@@ -39,12 +63,14 @@ private:
 
 class MenuScreen : public Screen {
 	static constexpr uint8_t MENU_LENGTH = 4;
-	using menuArray = std::array<const Screen*, MENU_LENGTH>;
+	using menuArray = std::array<Screen*, MENU_LENGTH>;
 
 public:
-	MenuScreen(const menuArray& m) :
+	MenuScreen(menuArray& m) :
 		Screen("Menu"), menu(m)
 	{}
+
+	UIEvent handleInput(INPUT_TYPE input) override;
 
 private:
 	 void draw() const override;
@@ -54,41 +80,82 @@ private:
 };
 
 class LogConfigScreen : public Screen {
+	static constexpr uint16_t MAX_CONFIG_VALUE = 99;
+
 public:
-	LogConfigScreen(const LogData& lg)
-		: Screen("Log Config"), logData(lg)
+	LogConfigScreen(const Logconfig& lg)
+		: Screen("Log Config")
+		, logConfig(lg),
+		configValues({
+			&logConfig.hourInt,
+			&logConfig.minInt,
+			&logConfig.enabled
+		})
 	{}
 
-	virtual ~LogConfigScreen() = default;
+	UIEvent handleInput(INPUT_TYPE input) override;
 
 private:
 	 void draw() const override;
-	 LogData logData;
+	 Logconfig logConfig;
 	 uint8_t cursorPos = 0;
+	 std::array<ConfigValue, 3> configValues;
+
+	 template <typename T>
+	 friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
 };
 
 class TempAlertsScreen : public Screen {
+	static constexpr uint16_t MAX_CONFIG_VALUE = 999;
+
 public:
-	TempAlertsScreen(const AlertData& ad)
-		: Screen("Temperature Alerts"), alertData(ad)
-	{}
+	TempAlertsScreen(const AlertConfig& ad)
+		: Screen("Temperature Alerts")
+		, alertData(ad)
+		, configValues({
+			&alertData.maxTemp,
+			&alertData.minTemp,
+			&alertData.tempEnabled
+		})
+	{
+	}
+
+	UIEvent handleInput(INPUT_TYPE input) override;
 
 private:
 	void draw() const override;
-	AlertData alertData;
+	AlertConfig alertData;
 	uint8_t cursorPos = 0;
+	std::array<ConfigValue, 3> configValues;
+
+	template <typename T>
+	friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
 };
 
 class HumAlertsScreen : public Screen {
+	static constexpr uint16_t MAX_CONFIG_VALUE = 100;
+
 public:
-	HumAlertsScreen(const AlertData& ad)
-		: Screen("Humidity Alerts"), alertData(ad)
+	HumAlertsScreen(const AlertConfig& ad)
+		: Screen("Humidity Alerts")
+		, alertData(ad)
+		, configValues({
+			&alertData.maxHum,
+			&alertData.minHum,
+			&alertData.humEnabled
+		})
 	{}
+
+	UIEvent handleInput(INPUT_TYPE input) override;
 
 private:
 	void draw() const override;
-	AlertData alertData;
+	AlertConfig alertData;
 	uint8_t cursorPos = 0;
+	std::array<ConfigValue, 3> configValues;
+
+	template <typename T>
+	friend UIEvent configHandleHelper(T&, UIEvent, INPUT_TYPE);
 };
 
 #endif
