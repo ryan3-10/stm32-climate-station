@@ -9,7 +9,8 @@ namespace {
 		.MIN_DATA_WIDTH = 2,
 		.preData1 		= "Hr:",
 		.preData2 		= "Min:",
-		.postData 		= ' '
+		.postData 		= ' ',
+		.onSave			= EVENT_TYPE::LOG_CONFIG_SAVE
 	};
 
 	ConfigScreenLayout tempAlertsLayout = {
@@ -18,7 +19,8 @@ namespace {
 		.MIN_DATA_WIDTH	= 3,
 		.preData1 		= "Max: ",
 		.preData2 		= "Min: ",
-		.postData 		= 'F'
+		.postData 		= 'F',
+		.onSave			= EVENT_TYPE::TEMP_CONFIG_SAVE
 	};
 
 	ConfigScreenLayout humAlertsLayout = {
@@ -27,7 +29,8 @@ namespace {
 		.MIN_DATA_WIDTH = 3,
 		.preData1 		= "Max: ",
 		.preData2 		= "Min: ",
-		.postData 		= '%'
+		.postData 		= '%',
+		.onSave 		= EVENT_TYPE::HUM_CONFIG_SAVE
 	};
 }
 

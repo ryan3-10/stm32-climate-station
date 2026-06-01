@@ -2,7 +2,6 @@
 #define USER_INTERFACE_H_
 
 #include "data_structs.h"
-#include "display_engine.h"
 #include "observer.h"
 #include "screen.h"
 #include <array>

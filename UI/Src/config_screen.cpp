@@ -34,7 +34,7 @@ EVENT_TYPE ConfigScreen::handleInput(INPUT_TYPE input) {
 	}
 
 	return cursorPos == 0
-		? EVENT_TYPE::LOG_CONFIG_SAVE
+		? layout.onSave
 		: EVENT_TYPE::NULL_EVENT;
 }
 

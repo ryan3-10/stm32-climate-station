@@ -4,7 +4,6 @@
 #include "data_structs.h"
 #include "display_engine.h"
 #include <array>
-#include <variant>
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,
@@ -28,6 +27,7 @@ struct ConfigScreenLayout {
 	const char* preData1;
 	const char* preData2;
 	const char postData;
+	const EVENT_TYPE onSave;
 };
 
 class Screen {
@@ -82,9 +82,8 @@ private:
 	 uint8_t cursorPos = 0;
 };
 
-
 class ConfigScreen : public Screen {
-static constexpr uint8_t NUM_ITEMS = 3;
+	static constexpr uint8_t NUM_ITEMS = 3;
 
 public:
 	ConfigScreen(LogConfig& con, const ConfigScreenLayout& lay)
