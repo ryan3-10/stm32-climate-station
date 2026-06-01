@@ -45,7 +45,7 @@ void MenuScreen::draw() const {
 
 UIEvent HomeScreen::handleInput(INPUT_TYPE input) {
 	// Any input from the home screen moves to the menu screen
-	return LeftHomeNotification{};
+	return LeftHome{};
 }
 
 UIEvent MenuScreen::handleInput(INPUT_TYPE input) {

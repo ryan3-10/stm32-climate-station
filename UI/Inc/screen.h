@@ -8,7 +8,7 @@
 
 class Screen;
 struct NullEvent {};
-struct LeftHomeNotification {};
+struct LeftHome {};
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,
@@ -17,7 +17,7 @@ enum class INPUT_TYPE : uint8_t {
 };
 
 using UIEvent = std::variant<
-	LeftHomeNotification,
+	LeftHome,
 	Logconfig,
 	NullEvent,
 	Screen*,
