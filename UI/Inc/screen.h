@@ -85,8 +85,8 @@ class LogConfigScreen : public Screen {
 public:
 	LogConfigScreen(const Logconfig& lg)
 		: Screen("Log Config")
-		, logConfig(lg),
-		configValues({
+		, logConfig(lg)
+		,configValues({
 			&logConfig.hourInt,
 			&logConfig.minInt,
 			&logConfig.enabled
