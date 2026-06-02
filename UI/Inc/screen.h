@@ -42,6 +42,7 @@ public:
 	static void init();
 
 protected:
+	// bad things happen if this is instantiated before hi2c
 	inline static DisplayEngine* engine = nullptr;
 
 private:
