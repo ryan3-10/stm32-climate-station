@@ -9,7 +9,6 @@ void WeatherStation::update() {
 
 	if (!noiseDetected(newData, data)) {
 		data = newData;
-		notify(data);
 	}
 
 	lastReadTime = HAL_GetTick();

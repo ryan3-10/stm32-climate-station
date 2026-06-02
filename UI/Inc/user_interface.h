@@ -2,11 +2,10 @@
 #define USER_INTERFACE_H_
 
 #include "data_structs.h"
-#include "observer.h"
 #include "screen.h"
 #include <array>
 
-class UserInterface : public Observer {
+class UserInterface {
 public:
 	UserInterface(
 		const LogConfig& logC,
@@ -18,7 +17,7 @@ public:
 	void toSelected() { currentScreen = menuScreen.getSelection(); }
 	bool needsRender() { return isDirty; }
 	void render();
-	void update(const WeatherData& data) override;
+	void update(const WeatherData& data);
 	EVENT_TYPE handlInput(INPUT_TYPE input);
 
 private:

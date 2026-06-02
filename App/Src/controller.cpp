@@ -12,6 +12,8 @@ void Controller::run() {
 
 	if (HAL_GetTick() - ws.getLastReadTime() >= UPDATE_INTERVAL) {
 		ws.update();
+		auto weather = ws.read();
+		ui.update(weather);
 	}
 
 	if (ui.needsRender()) {
@@ -22,8 +24,9 @@ void Controller::run() {
 }
 
 void Controller::init() {
-	ws.addObserver(&ui);
 	ws.update();
+	auto weather = ws.read();
+	ui.update(weather);
 	ui.render();
 }
 

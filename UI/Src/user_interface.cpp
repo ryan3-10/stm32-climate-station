@@ -56,6 +56,7 @@ void UserInterface::update(const WeatherData& data) {
 		isDirty = true;
 	}
 }
+
 EVENT_TYPE UserInterface::handlInput(INPUT_TYPE input) {
 	isDirty = true;
 	return currentScreen->handleInput(input);
