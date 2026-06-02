@@ -23,7 +23,6 @@ enum class EVENT_TYPE : uint8_t {
 struct ConfigScreenLayout {
 	const char* header;
 	const uint16_t MAX_VALUE;
-	const uint8_t MIN_DATA_WIDTH;
 	const char* preData1;
 	const char* preData2;
 	const char postData;
@@ -37,6 +36,7 @@ public:
 	{}
 
 	virtual ~Screen() = default;
+	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
 	const char* getLabel() const { return label; }
 	void render();
 	static void init();
@@ -46,7 +46,6 @@ protected:
 
 private:
 	virtual void draw() const = 0;
-	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
 	const char* const label;
 };
 
@@ -55,11 +54,13 @@ public:
 	HomeScreen() : Screen("Home") {}
 
 	EVENT_TYPE handleInput(INPUT_TYPE input) override;
-	void update(const WeatherData& wd) { weatherData = wd; }
+	void update(float t, float h, bool ok) { temp = t; hum = h; statusOk = ok; }
 
 private:
 	 void draw() const override;
-	 WeatherData weatherData;
+	 float temp;
+	 float hum;
+	 bool statusOk;
 };
 
 class MenuScreen : public Screen {
@@ -86,47 +87,22 @@ class ConfigScreen : public Screen {
 	static constexpr uint8_t NUM_ITEMS = 3;
 
 public:
-	ConfigScreen(LogConfig& con, const ConfigScreenLayout& lay)
-		: Screen(lay.header)
-		, layout(lay)
-		, d1(con.hourInt)
-		, d2(con.minInt)
-		, en(con.enabled)
-		{
-
-		}
-
-	ConfigScreen(TempAlertConfig& con, const ConfigScreenLayout& lay)
-		: Screen(lay.header)
-		, layout(lay)
-		, d1(con.minTemp)
-		, d2(con.maxTemp)
-		, en(con.enabled)
-		{
-
-		}
-
-	ConfigScreen(HumAlertConfig& con, const ConfigScreenLayout& lay)
-		: Screen(lay.header)
-		, layout(lay)
-		, d1(con.minHum)
-		, d2(con.maxHum)
-		, en(con.enabled)
-		{
-
-		}
+	ConfigScreen(const ConfigScreenLayout& lay) : Screen(lay.header), layout(lay)
+	{}
 
 	EVENT_TYPE handleInput(INPUT_TYPE input) override;
+	void getEdits(uint16_t& data1, uint16_t& data2, bool& e) const;
+	void setEdits(uint16_t data1, uint16_t data2, bool e);
 
 private:
 	 void draw() const override;
 	 void stepUp();
 	 void stepDown();
 
-	 ConfigScreenLayout layout;
-	 uint16_t& d1;
-	 uint16_t& d2;
-	 bool& en;
+	 const ConfigScreenLayout layout;
+	 uint16_t d1 = 0;
+	 uint16_t d2 = 0;
+	 bool en = false;
 	 uint8_t cursorPos = 0;
 };
 

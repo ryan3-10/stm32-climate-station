@@ -8,10 +8,18 @@
 
 class UserInterface : public Observer {
 public:
-	UserInterface(const SettingsConfig& ac);
+	UserInterface(
+		const LogConfig& logC,
+		const TempAlertConfig& tAlertC,
+		const HumAlertConfig& hAlertC
+	);
+	void toHome() { currentScreen = &homeScreen; }
+	void toMenu() { currentScreen = &menuScreen; }
+	void toSelected() { currentScreen = menuScreen.getSelection(); }
 	bool needsRender() { return isDirty; }
 	void render();
 	void update(const WeatherData& data) override;
+	EVENT_TYPE handlInput(INPUT_TYPE input);
 
 private:
 	std::array<Screen*, 4> menuItems = {
@@ -20,15 +28,12 @@ private:
 
 	bool isDirty = false;
 	WeatherData weatherData;
-	LogConfig logC;
-	TempAlertConfig tempC;
-	HumAlertConfig humC;
 	HomeScreen homeScreen;
 	ConfigScreen logScreen;
 	ConfigScreen tempAlertsScreen;
 	ConfigScreen humAlertsScreen;
-	MenuScreen menuScreen;
-	Screen& currentScreen;
+	MenuScreen menuScreen{menuItems};
+	Screen* currentScreen = &homeScreen;
 };
 
 

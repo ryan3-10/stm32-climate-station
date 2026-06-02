@@ -59,3 +59,15 @@ void ConfigScreen::stepDown() {
 			en = !en;
 	}
 }
+
+void ConfigScreen::getEdits(uint16_t& data1, uint16_t& data2, bool& e) const {
+	data1 = d1;
+	data2 = d1;
+	e = en;
+}
+
+void ConfigScreen::setEdits(uint16_t data1, uint16_t data2, bool e) {
+	d1 = data1;
+	d2 = data2;
+	en = e;
+}
