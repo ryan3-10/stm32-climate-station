@@ -11,11 +11,13 @@ public:
 	Controller(WeatherStation w);
 	void init();
 	void run();
+	void handleInputs();
 
 private:
-	SettingsConfig settings;
+	Settings settings;
 	WeatherStation ws;
 	UserInterface ui;
+	CircularQueue<INPUT_TYPE, 20> inputQ;
 };
 
 #endif /* APP_CONTROLLER_H_ */

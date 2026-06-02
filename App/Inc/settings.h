@@ -3,22 +3,11 @@
 
 #include "data_structs.h"
 
-class SettingsConfig {
-public:
-	LogConfig getLogData() const { return log; }
-	TempAlertConfig getTempAlertData() const { return tempAlert; }
-	HumAlertConfig getHumAlertData() const { return humAlert; }
-
-	void setLogData(const LogConfig& l) { log = l; }
-	void setTempAlertData(const TempAlertConfig& a) { tempAlert = a; }
-	void setHumAlertData(const HumAlertConfig& a) { humAlert = a; }
-
-private:
+struct Settings {
 	LogConfig log;
 	TempAlertConfig tempAlert;
 	HumAlertConfig humAlert;
 };
-
 
 
 #endif /* INC_SETTINGS_H_ */
