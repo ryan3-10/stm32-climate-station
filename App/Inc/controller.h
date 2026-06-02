@@ -1,6 +1,7 @@
 #ifndef APP_CONTROLLER_H_
 #define APP_CONTROLLER_H_
 
+#include "system.h"
 #include "circular_queue.h"
 #include "settings.h"
 #include "user_interface.h"
@@ -16,6 +17,8 @@ public:
 private:
 	Settings settings;
 	WeatherStation ws;
+	AlertSystem alertSys;
+	LogSystem logSys;
 	UserInterface ui;
 	CircularQueue<INPUT_TYPE, 20> inputQ;
 };

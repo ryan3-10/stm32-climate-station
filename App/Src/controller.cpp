@@ -1,8 +1,11 @@
 #include "controller.h"
+#include <stm32f4xx_hal.h>
 
-Controller::Controller(WeatherStation w) :
-	ws(w),
-	ui(settings.log, settings.tempAlert, settings.humAlert)
+Controller::Controller(WeatherStation w)
+	: ws(w)
+	, alertSys(settings.tempAlert, settings.humAlert)
+	, logSys(settings.log)
+	, ui(settings.log, settings.tempAlert, settings.humAlert)
 {
 
 }
@@ -14,6 +17,7 @@ void Controller::run() {
 		ws.update();
 		auto weather = ws.read();
 		ui.update(weather);
+		alertSys.update(weather);
 	}
 
 	if (ui.needsRender()) {
