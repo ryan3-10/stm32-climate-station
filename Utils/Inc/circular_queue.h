@@ -10,10 +10,6 @@ class CircularQueue {
 
 public:
 	bool push(const T& in) {
-		#ifdef DEBUG
-		assert(!isFull());
-		#endif
-
 		if (isFull()) {
 			return false;
 		}
@@ -25,10 +21,6 @@ public:
 	}
 
 	bool pop(T& out) {
-		#ifdef DEBUG
-		assert(!isEmpty());
-		#endif
-
 		if (isEmpty()) {
 			return false;
 		}
