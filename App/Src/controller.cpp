@@ -1,6 +1,6 @@
 #include "controller.h"
 #include <stm32f4xx_hal.h>
-
+#include <stdio.h>
 Controller::Controller(WeatherStation w)
 	: ws(w)
 	, alertSys(settings.tempAlert, settings.humAlert)
@@ -18,10 +18,13 @@ void Controller::run() {
 		auto weather = ws.read();
 		ui.update(weather);
 		alertSys.update(weather);
+		logSys.update(weather);
 	}
-
 	if (ui.needsRender()) {
 		ui.render();
+	}
+	if (logSys.needsToLog()) {
+		logSys.log();
 	}
 
 	handleInputs();

@@ -18,8 +18,10 @@ public:
 	~AlertSystem() = default;
 
 	void update(const WeatherData& weather);
-	ALERT_SYS_STATE getTempState() { return tempState; }
-	ALERT_SYS_STATE getHumState() { return humState; }
+	void setConfig(const TempAlertConfig& t) { tempConfig = t; }
+	void setConfig(const HumAlertConfig& h) { humConfig = h; }
+	ALERT_SYS_STATE getTempState() const { return tempState; }
+	ALERT_SYS_STATE getHumState() const { return humState; }
 
 private:
 	TempAlertConfig tempConfig;
@@ -34,7 +36,9 @@ public:
 	~LogSystem() = default;
 
 	void log();
-	bool needsToLog();
+	void setConfig(const LogConfig& l) { logConfig = l; }
+	void update(const WeatherData& weather) { cachedWeather = weather; }
+	bool needsToLog() const;
 
 private:
 	LogConfig logConfig;

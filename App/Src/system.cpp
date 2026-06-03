@@ -40,7 +40,7 @@ void LogSystem::log() {
 	lastLogTime = HAL_GetTick();
 }
 
-bool LogSystem::needsToLog() {
+bool LogSystem::needsToLog() const {
 	if (!logConfig.enabled) {
 		return false;
 	}
