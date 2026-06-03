@@ -16,15 +16,15 @@ void Screen::render() {
 void HomeScreen::draw() const {
 	engine->setFont(FONT_SIZE::MED);
 
-	if (statusOk) {
+	if (weather.statusOk) {
 		char buffer[16];
 
 		// Display temperature
-		snprintf(buffer, sizeof(buffer), "%.1fF", temp);
+		snprintf(buffer, sizeof(buffer), "%.1fF", weather.temp);
 		engine->printLine(buffer);
 
 		// Display humidity
-		snprintf(buffer, sizeof(buffer), "%.1f%%", hum);
+		snprintf(buffer, sizeof(buffer), "%.1f%%", weather.hum);
 		engine->printLine(buffer);
 	}
 	else { // If sensor is in error state, print error message
@@ -42,13 +42,13 @@ void MenuScreen::draw() const {
 	}
 }
 
-EVENT_TYPE HomeScreen::handleInput(INPUT_TYPE input) {
+Screen* HomeScreen::handleInput(INPUT_TYPE input) {
 	// Any input from the home screen moves to the menu screen
-	return EVENT_TYPE::LEFT_HOME;
+	return nextScreen;
 }
 
-EVENT_TYPE MenuScreen::handleInput(INPUT_TYPE input) {
-	EVENT_TYPE event = EVENT_TYPE::NULL_EVENT;
+Screen* MenuScreen::handleInput(INPUT_TYPE input) {
+	Screen* newScreen = this;
 
 	switch (input) {
 		case INPUT_TYPE::LEFT:
@@ -58,13 +58,12 @@ EVENT_TYPE MenuScreen::handleInput(INPUT_TYPE input) {
 			cursorPos = cursorPos == MENU_LENGTH - 1 ? 0 : cursorPos + 1;
 			break;
 		case INPUT_TYPE::ENTER:
-			event = EVENT_TYPE::MENU_SELECT;
-			selection = menu[cursorPos];
+			newScreen = menu[cursorPos];
 			cursorPos = 0;
 			break;
 	}
 
-	return event;
+	return newScreen;
 }
 
 

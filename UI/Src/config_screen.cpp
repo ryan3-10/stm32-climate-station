@@ -20,7 +20,9 @@ void ConfigScreen::draw() const {
 	engine->printLine(line3, cursorPos == 2);
 }
 
-EVENT_TYPE ConfigScreen::handleInput(INPUT_TYPE input) {
+Screen* ConfigScreen::handleInput(INPUT_TYPE input) {
+	Screen* newScreen = this;
+
 	switch (input) {
 		case INPUT_TYPE::LEFT:
 			stepDown();
@@ -33,9 +35,12 @@ EVENT_TYPE ConfigScreen::handleInput(INPUT_TYPE input) {
 			break;
 	}
 
-	return cursorPos == 0
-		? layout.onSave
-		: EVENT_TYPE::NULL_EVENT;
+	if (cursorPos == 0) {
+		newScreen = nextScreen;
+		onSave(d1, d2, en);
+	}
+
+	return newScreen;
 }
 
 void ConfigScreen::stepUp() {
@@ -60,14 +65,32 @@ void ConfigScreen::stepDown() {
 	}
 }
 
-void ConfigScreen::getEdits(uint16_t& data1, uint16_t& data2, bool& e) const {
-	data1 = d1;
-	data2 = d1;
-	e = en;
+ConfigScreenLayout LogLayout() {
+	return ConfigScreenLayout {
+		.header 		= "Log Config",
+		.MAX_VALUE 		= 99,
+		.preData1 		= "Hr:",
+		.preData2 		= "Min:",
+		.postData 		= ' '
+	};
 }
 
-void ConfigScreen::setEdits(uint16_t data1, uint16_t data2, bool e) {
-	d1 = data1;
-	d2 = data2;
-	en = e;
+ConfigScreenLayout TempAlertLayout() {
+	return ConfigScreenLayout {
+		.header 		= "Temp Alerts",
+		.MAX_VALUE 		= 200,
+		.preData1 		= "Max: ",
+		.preData2 		= "Min: ",
+		.postData 		= 'F'
+	};
+}
+
+ConfigScreenLayout HumAlertLayout() {
+	return ConfigScreenLayout {
+		.header 		= "Hum Alerts",
+		.MAX_VALUE 		= 100,
+		.preData1 		= "Max: ",
+		.preData2 		= "Min: ",
+		.postData 		= '%'
+	};
 }

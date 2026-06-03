@@ -4,6 +4,7 @@
 #include "data_structs.h"
 #include "display_engine.h"
 #include <array>
+#include <functional>
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,
@@ -11,22 +12,12 @@ enum class INPUT_TYPE : uint8_t {
 	RIGHT
 };
 
-enum class EVENT_TYPE : uint8_t {
-	NULL_EVENT,
-	LEFT_HOME,
-	MENU_SELECT,
-	LOG_CONFIG_SAVE,
-	TEMP_CONFIG_SAVE,
-	HUM_CONFIG_SAVE
-};
-
 struct ConfigScreenLayout {
 	const char* header;
-	const uint16_t MAX_VALUE;
+	uint16_t MAX_VALUE;
 	const char* preData1;
 	const char* preData2;
 	const char postData;
-	const EVENT_TYPE onSave;
 };
 
 class Screen {
@@ -36,7 +27,7 @@ public:
 	{}
 
 	virtual ~Screen() = default;
-	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
+	virtual Screen* handleInput(INPUT_TYPE input) = 0;
 	const char* getLabel() const { return label; }
 	void render();
 	static void init();
@@ -52,16 +43,15 @@ private:
 
 class HomeScreen : public Screen {
 public:
-	HomeScreen() : Screen("Home") {}
+	HomeScreen(Screen* next) : Screen("Home"), nextScreen(next) {}
 
-	EVENT_TYPE handleInput(INPUT_TYPE input) override;
-	void update(float t, float h, bool ok) { temp = t; hum = h; statusOk = ok; }
+	Screen* handleInput(INPUT_TYPE input) override;
+	void update(const WeatherData& w) { weather = w; }
 
 private:
 	 void draw() const override;
-	 float temp;
-	 float hum;
-	 bool statusOk;
+	 WeatherData weather;
+	 Screen* nextScreen;
 };
 
 class MenuScreen : public Screen {
@@ -73,8 +63,7 @@ public:
 		Screen("Menu"), menu(m)
 	{}
 
-	EVENT_TYPE handleInput(INPUT_TYPE input) override;
-	Screen* getSelection() { return selection; }
+	Screen* handleInput(INPUT_TYPE input) override;
 
 private:
 	 void draw() const override;
@@ -86,14 +75,17 @@ private:
 
 class ConfigScreen : public Screen {
 	static constexpr uint8_t NUM_ITEMS = 3;
+	using OnSaveCallback = std::function<void(uint16_t, uint16_t, bool)>;
 
 public:
-	ConfigScreen(const ConfigScreenLayout& lay) : Screen(lay.header), layout(lay)
+	ConfigScreen(const ConfigScreenLayout& lay, Screen* next, OnSaveCallback os)
+		: Screen(lay.header)
+		, layout(lay)
+		, nextScreen(next)
+		, onSave(os)
 	{}
 
-	EVENT_TYPE handleInput(INPUT_TYPE input) override;
-	void getEdits(uint16_t& data1, uint16_t& data2, bool& e) const;
-	void setEdits(uint16_t data1, uint16_t data2, bool e);
+	Screen* handleInput(INPUT_TYPE input) override;
 
 private:
 	 void draw() const override;
@@ -105,7 +97,13 @@ private:
 	 uint16_t d2 = 0;
 	 bool en = false;
 	 uint8_t cursorPos = 0;
+	 Screen* nextScreen;
+	 OnSaveCallback onSave;
 };
+
+ConfigScreenLayout LogLayout();
+ConfigScreenLayout TempAlertLayout();
+ConfigScreenLayout HumAlertLayout();
 
 #endif
 

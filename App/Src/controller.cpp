@@ -5,7 +5,6 @@ Controller::Controller(WeatherStation w)
 	: ws(w)
 	, alertSys(settings.tempAlert, settings.humAlert)
 	, logSys(settings.log)
-	, ui(settings.log, settings.tempAlert, settings.humAlert)
 {
 
 }
@@ -16,55 +15,50 @@ void Controller::run() {
 	if (HAL_GetTick() - ws.getLastReadTime() >= UPDATE_INTERVAL) {
 		ws.update();
 		auto weather = ws.read();
-		ui.update(weather);
+		homeScreen.update(weather);
 		alertSys.update(weather);
 		logSys.update(weather);
 	}
-	if (ui.needsRender()) {
-		ui.render();
+	if (uiDirty) {
+		currentScreen->render();
+		uiDirty = false;
 	}
 	if (logSys.needsToLog()) {
 		logSys.log();
 	}
 
-	handleInputs();
+	handleInput();
 }
 
 void Controller::init() {
 	ws.update();
 	auto weather = ws.read();
-	ui.update(weather);
-	ui.render();
+	homeScreen.update(weather);
+	currentScreen->render();
 }
 
-void Controller::handleInputs() {
-	INPUT_TYPE input;
-	EVENT_TYPE event;
+void Controller::handleInput() {
+	INPUT_TYPE input{};
 
-	while (inputQ.pop(input)) {
-		event = ui.handlInput(input);
+	if (inputQ.pop(input)) {
+		auto newScreen = currentScreen->handleInput(input);
 
-		switch (event) {
-		case EVENT_TYPE::NULL_EVENT:
-			break;
-		case EVENT_TYPE::LEFT_HOME:
-			ui.toMenu();
-			break;
-		case EVENT_TYPE::MENU_SELECT:
-			ui.toSelected();
-			break;
-		case EVENT_TYPE::LOG_CONFIG_SAVE:
-			// update log system
-			ui.toHome();
-			break;
-		case EVENT_TYPE::TEMP_CONFIG_SAVE:
-			// update alert system
-			ui.toHome();
-			break;
-		case EVENT_TYPE::HUM_CONFIG_SAVE:
-			// update alert system
-			ui.toHome();
-			break;
+		if (newScreen != currentScreen) {
+			currentScreen = newScreen;
 		}
+		uiDirty = true; // Even if currentScreen is the same, current screen needs to update
 	}
 }
+
+void Controller::updateLogConfig(uint16_t hour, uint16_t min, bool en) {
+	logSys.setConfig({hour, min, en});
+}
+
+void Controller::updateTempAlertConfig(uint16_t hour, uint16_t min, bool en) {
+	alertSys.setConfig(TempAlertConfig{hour, min, en});
+}
+
+void Controller::updateHumAlertConfig(uint16_t hour, uint16_t min, bool en) {
+	alertSys.setConfig(HumAlertConfig{hour, min, en});
+}
+
