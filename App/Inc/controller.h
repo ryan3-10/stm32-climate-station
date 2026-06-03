@@ -15,7 +15,7 @@ public:
 	void run();
 
 private:
-	void handleInput();
+	void handleInputs();
 	void updateLogConfig(uint16_t hour, uint16_t min, bool en);
 	void updateTempAlertConfig(uint16_t max, uint16_t min, bool en);
 	void updateHumAlertConfig(uint16_t max, uint16_t min, bool en);

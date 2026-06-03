@@ -27,7 +27,7 @@ void Controller::run() {
 		logSys.log();
 	}
 
-	handleInput();
+	handleInputs();
 }
 
 void Controller::init() {
@@ -37,10 +37,10 @@ void Controller::init() {
 	currentScreen->render();
 }
 
-void Controller::handleInput() {
+void Controller::handleInputs() {
 	INPUT_TYPE input{};
 
-	if (inputQ.pop(input)) {
+	while (inputQ.pop(input)) {
 		auto newScreen = currentScreen->handleInput(input);
 
 		if (newScreen != currentScreen) {
