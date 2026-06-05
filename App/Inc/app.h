@@ -8,6 +8,7 @@ extern "C" {
 #include <stm32f4xx_hal.h>
 
 void run_app(I2C_HandleTypeDef* hi2c);
+void interrupt_handler();
 
 #ifdef __cplusplus
 }

@@ -6,11 +6,13 @@
 #include "settings.h"
 #include "screen.h"
 #include "weather_station.h"
+#include <cassert>
 #include <stdint.h>
 
 class Controller {
 public:
 	Controller(WeatherStation w);
+	void pushInput(INPUT_TYPE input) { assert(inputQ.push(input)); }
 	void init();
 	void run();
 
