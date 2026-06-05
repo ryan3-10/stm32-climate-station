@@ -18,6 +18,10 @@ void Controller::run() {
 		homeScreen.update(weather);
 		alertSys.update(weather);
 		logSys.update(weather);
+
+		if (currentScreen == &homeScreen) {
+			uiDirty = true;
+		}
 	}
 	if (uiDirty) {
 		currentScreen->render();
