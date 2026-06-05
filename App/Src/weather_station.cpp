@@ -15,7 +15,7 @@ void WeatherStation::update() {
 }
 
 bool WeatherStation::noiseDetected(const WeatherData& d1, const WeatherData& d2) const {
-	constexpr float NOISE_THRESHOLD = 1.0f;
+	constexpr float NOISE_THRESHOLD = 0.0f;
 
 	// If statusOk was and still is false, ignore potential garbage values
 	if (!d1.statusOk && !d2.statusOk) {
