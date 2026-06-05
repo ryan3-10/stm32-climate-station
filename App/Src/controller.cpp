@@ -31,6 +31,7 @@ void Controller::run() {
 }
 
 void Controller::init() {
+	Screen::init();
 	ws.update();
 	auto weather = ws.read();
 	homeScreen.update(weather);
