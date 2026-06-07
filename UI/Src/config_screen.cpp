@@ -31,11 +31,12 @@ Screen* ConfigScreen::handleInput(INPUT_TYPE input) {
 			stepUp();
 			break;
 		case INPUT_TYPE::ENTER:
-			cursorPos = cursorPos == NUM_ITEMS - 1 ? 0 : cursorPos + 1;
+			++cursorPos;
 			break;
 	}
 
-	if (cursorPos == 0) {
+	if (cursorPos >= NUM_ITEMS) {
+		cursorPos = 0;
 		newScreen = nextScreen;
 		onSave(d1, d2, en);
 	}
