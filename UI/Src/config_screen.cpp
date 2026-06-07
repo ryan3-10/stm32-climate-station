@@ -47,10 +47,13 @@ void ConfigScreen::stepUp() {
 	switch (cursorPos) {
 		case 0:
 			d1 = d1 == layout.MAX_VALUE ? 0 : d1 + 1;
+			break;
 		case 1:
 			d2 = d2 == layout.MAX_VALUE ? 0 : d2 + 1;
+			break;
 		case 2:
 			en = !en;
+			break;
 	}
 }
 
@@ -58,10 +61,13 @@ void ConfigScreen::stepDown() {
 	switch (cursorPos) {
 		case 0:
 			d1 = d1 == 0 ? layout.MAX_VALUE : d1 - 1;
+			break;
 		case 1:
 			d2 = d2 == 0 ? layout.MAX_VALUE : d2 - 1;
+			break;
 		case 2:
 			en = !en;
+			break;
 	}
 }
 
