@@ -27,8 +27,9 @@ struct Encoder_t {
     int32_t position = 0;
 };
 
-const uint8_t leftTurnPath[] = {1, 3, 2, 0};
-const uint8_t rightTurnPath[] = {2, 3, 1, 0};
+const uint8_t leftTurnPath[] = {1, 3, 2};
+const uint8_t altLeftTurnPath[] = {3, 2, 0};
+const uint8_t rightTurnPath[] = {2, 3, 1};
 
 Controller* cPtr = nullptr;
 Debounce_t pushButton{};
@@ -42,42 +43,6 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	c.init();
 
 	while (true) {
-		static uint8_t lastState = 255;
-
-		uint8_t a = !HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_9);
-		uint8_t b = !HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_10);
-
-		uint8_t state = (a << 1) | b;
-
-		if (state != lastState) {
-			static uint8_t const* currentPath = nullptr;
-			static uint8_t index = 0;
-
-			if (index == 0) {
-				if (state == 1) {
-					currentPath = leftTurnPath;
-					++index;
-				} else if (state == 2) {
-					currentPath = rightTurnPath;
-					++index;
-				}
-			} else if (state == currentPath[index]) {
-				if (++index == 4) {
-					enc.position = currentPath == leftTurnPath ? enc.position - 1 : enc.position + 1;
-					INPUT_TYPE input = currentPath == leftTurnPath ? INPUT_TYPE::LEFT : INPUT_TYPE::RIGHT;
-					c.pushInput(input);
-					index = 0;
-				}
-			} else {
-				index = 0;
-			}
-
-			printf("%li\n", enc.position);
-			lastState = state;
-		}
-
-
-
 		auto startState = pushButton.state;
 		debounceUpdate(pushButton);
 
@@ -93,9 +58,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_12) {
 		pushButton.rawActive = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
 		pushButton.lastRawChangeTime = HAL_GetTick();
-	} else {
+	} else if (GPIO_Pin == GPIO_PIN_9 || GPIO_Pin == GPIO_PIN_10) {
+		static uint8_t state1 = 255;
+		static uint8_t state2 = 255;
 
-	}
+		uint8_t a = !HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_9);
+		uint8_t b = !HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_10);
+		uint8_t state3 = (a << 1) | b;
+
+		if (state3 != state2) {
+			if (state1 == 1 && state2 == 3 && state3 == 2) {
+				cPtr->pushInput(INPUT_TYPE::LEFT);
+			} else if (state1 == 2 && state2 == 3 && state3 == 1) {
+				cPtr->pushInput(INPUT_TYPE::RIGHT);
+			}
+
+			state1 = state2;
+			state2 = state3;
+		}
+    }
 }
 
 void debounceUpdate(Debounce_t& db)
