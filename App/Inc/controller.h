@@ -2,7 +2,6 @@
 #define APP_CONTROLLER_H_
 
 #include "system.h"
-#include "circular_queue.h"
 #include "settings.h"
 #include "screen.h"
 #include "weather_station.h"
@@ -12,12 +11,11 @@
 class Controller {
 public:
 	Controller(WeatherStation w);
-	void pushInput(INPUT_TYPE input) { assert(inputQ.push(input)); }
 	void init();
-	void run();
+	void updateComponents();
+	void handleInput(INPUT_TYPE input);
 
 private:
-	void handleInputs();
 	void updateLogConfig(uint16_t hour, uint16_t min, bool en);
 	void updateTempAlertConfig(uint16_t max, uint16_t min, bool en);
 	void updateHumAlertConfig(uint16_t max, uint16_t min, bool en);
@@ -26,7 +24,6 @@ private:
 	WeatherStation ws;
 	AlertSystem alertSys;
 	LogSystem logSys;
-	CircularQueue<INPUT_TYPE, 20> inputQ;
 
 	bool uiDirty = false;
 	HomeScreen homeScreen{&menuScreen};

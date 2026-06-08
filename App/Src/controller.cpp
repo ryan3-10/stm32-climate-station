@@ -9,7 +9,7 @@ Controller::Controller(WeatherStation w)
 
 }
 
-void Controller::run() {
+void Controller::updateComponents() {
 	constexpr uint32_t UPDATE_INTERVAL = 1000;
 
 	if (HAL_GetTick() - ws.getLastReadTime() >= UPDATE_INTERVAL) {
@@ -30,8 +30,6 @@ void Controller::run() {
 	if (logSys.needsToLog()) {
 		logSys.log();
 	}
-
-	handleInputs();
 }
 
 void Controller::init() {
@@ -42,17 +40,10 @@ void Controller::init() {
 	currentScreen->render();
 }
 
-void Controller::handleInputs() {
-	INPUT_TYPE input{};
+void Controller::handleInput(INPUT_TYPE input) {
+	currentScreen = currentScreen->handleInput(input);
+	uiDirty = true; // Even if currentScreen is the same, current screen needs to update
 
-	while (inputQ.pop(input)) {
-		auto newScreen = currentScreen->handleInput(input);
-
-		if (newScreen != currentScreen) {
-			currentScreen = newScreen;
-		}
-		uiDirty = true; // Even if currentScreen is the same, current screen needs to update
-	}
 }
 
 void Controller::updateLogConfig(uint16_t hour, uint16_t min, bool en) {

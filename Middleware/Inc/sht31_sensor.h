@@ -7,8 +7,9 @@
 
 class Sht31Sensor : public IWeatherSensor {
 public:
-	Sht31Sensor(I2C_HandleTypeDef* h) : hi2c(h) {}
+	Sht31Sensor() = default;
 	const WeatherData read() override;
+	void init(I2C_HandleTypeDef* h) { hi2c = h; }
 
 private:
 	I2C_HandleTypeDef* hi2c;
