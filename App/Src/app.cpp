@@ -3,46 +3,53 @@
 #include "controller.h"
 #include "sht31_sensor.h"
 #include "weather_station.h"
+#include <atomic>
 #include <stdio.h>
 
 constexpr uint32_t DEBOUNCE_TIME = 10;
 
-volatile bool buttonFlag = false;
-volatile uint32_t timestamp = 0;
-volatile int32_t encoderPos = 0;
+std::atomic<bool> g_buttonFlag = false;
+std::atomic<int32_t> g_timestamp = 0;
+std::atomic<int32_t> g_encoderPos = 0;
 
+// Allocate long-lived objects statically to protect the stack
+static Sht31Sensor sensor;
+static WeatherStation ws(sensor);
+static Controller c(ws);
 
 void run_app(I2C_HandleTypeDef* hi2c) {
-	Sht31Sensor sensor(hi2c);
-	WeatherStation ws(sensor);
-	Controller c(ws);
+	// Late bind hardware
+	sensor.init(hi2c);
 	c.init();
 
 	while (true) {
 		auto now = HAL_GetTick();
 
-		if (buttonFlag && now - timestamp > DEBOUNCE_TIME) {
+		// Handle push button input
+		if (g_buttonFlag && now - g_timestamp > DEBOUNCE_TIME) {
 			c.handleInput(INPUT_TYPE::ENTER);
-			buttonFlag = false;
+			g_buttonFlag = false;
 		}
 
-		if (encoderPos != 0) {
-			int8_t increment = encoderPos > 0 ? -1 : +1;
-			INPUT_TYPE input = encoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
-			while (encoderPos != 0) {
+		// Handle rotary click inputs
+		auto localEncoderPos = g_encoderPos.exchange(0); // get a snapshot of g_encoderPos, and set it to 0
+		if (localEncoderPos != 0) {
+			INPUT_TYPE input = localEncoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
+
+			for (int32_t i = 0; i < std::abs(localEncoderPos); ++i) {
 				c.handleInput(input);
-				encoderPos += increment;
 			}
 		}
 
+		// Update controller's components
 		c.updateComponents();
 	}
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_12) {
-		buttonFlag = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
-		timestamp = HAL_GetTick();
+		g_buttonFlag = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
+		g_timestamp = HAL_GetTick();
 	} else if (GPIO_Pin == GPIO_PIN_9 || GPIO_Pin == GPIO_PIN_10) {
 		static uint8_t state1 = 255;
 		static uint8_t state2 = 255;
@@ -53,9 +60,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 		if (state3 != state2) {
 			if (state1 == 1 && state2 == 3 && state3 == 2) {
-				--encoderPos;
+				--g_encoderPos;
 			} else if (state1 == 2 && state2 == 3 && state3 == 1) {
-				++encoderPos;
+				++g_encoderPos;
 			}
 
 			state1 = state2;
