@@ -8,10 +8,9 @@
 constexpr uint32_t DEBOUNCE_TIME = 10;
 
 volatile bool buttonFlag = false;
-volatile bool buttonActive = false;
 volatile uint32_t timestamp = 0;
+volatile int32_t encoderPos = 0;
 
-CircularQueue<INPUT_TYPE, 50> inputQ;
 
 void run_app(I2C_HandleTypeDef* hi2c) {
 	Sht31Sensor sensor(hi2c);
@@ -20,14 +19,20 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	c.init();
 
 	while (true) {
-		if (buttonActive && buttonFlag && HAL_GetTick() - timestamp > DEBOUNCE_TIME) {
-			inputQ.push(INPUT_TYPE::ENTER);
+		auto now = HAL_GetTick();
+
+		if (buttonFlag && now - timestamp > DEBOUNCE_TIME) {
+			c.handleInput(INPUT_TYPE::ENTER);
 			buttonFlag = false;
 		}
 
-		INPUT_TYPE input{};
-		while (inputQ.pop(input)) {
-			c.handleInput(input);
+		if (encoderPos != 0) {
+			int8_t increment = encoderPos > 0 ? -1 : +1;
+			INPUT_TYPE input = encoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
+			while (encoderPos != 0) {
+				c.handleInput(input);
+				encoderPos += increment;
+			}
 		}
 
 		c.updateComponents();
@@ -36,8 +41,7 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_12) {
-		buttonFlag = true;
-		buttonActive = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
+		buttonFlag = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
 		timestamp = HAL_GetTick();
 	} else if (GPIO_Pin == GPIO_PIN_9 || GPIO_Pin == GPIO_PIN_10) {
 		static uint8_t state1 = 255;
@@ -49,9 +53,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
 		if (state3 != state2) {
 			if (state1 == 1 && state2 == 3 && state3 == 2) {
-				inputQ.push(INPUT_TYPE::LEFT);
+				--encoderPos;
 			} else if (state1 == 2 && state2 == 3 && state3 == 1) {
-				inputQ.push(INPUT_TYPE::RIGHT);
+				++encoderPos;
 			}
 
 			state1 = state2;
