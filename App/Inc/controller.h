@@ -26,7 +26,7 @@ private:
 	WeatherStation ws;
 	AlertSystem alertSys;
 	LogSystem logSys;
-	CircularQueue<INPUT_TYPE, 20> inputQ;
+	CircularQueue<INPUT_TYPE, 50> inputQ;
 
 	bool uiDirty = false;
 	HomeScreen homeScreen{&menuScreen};
