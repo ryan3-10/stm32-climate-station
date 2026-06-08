@@ -9,8 +9,8 @@
 constexpr uint32_t DEBOUNCE_TIME = 10;
 
 std::atomic<bool> g_buttonFlag = false;
-std::atomic<int32_t> g_timestamp = 0;
 std::atomic<int32_t> g_encoderPos = 0;
+volatile uint32_t g_timestamp = 0;
 
 // Allocate long-lived objects statically to protect the stack
 static Sht31Sensor sensor;
@@ -26,7 +26,7 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 		auto now = HAL_GetTick();
 
 		// Handle push button input
-		if (g_buttonFlag && now - g_timestamp > DEBOUNCE_TIME) {
+		if (g_buttonFlag && now - g_timestamp > DEBOUNCE_TIME && HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12)) {
 			c.handleInput(INPUT_TYPE::ENTER);
 			g_buttonFlag = false;
 		}
@@ -48,7 +48,7 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	if (GPIO_Pin == GPIO_PIN_12) {
-		g_buttonFlag = HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12);
+		g_buttonFlag = true;
 		g_timestamp = HAL_GetTick();
 	} else if (GPIO_Pin == GPIO_PIN_9 || GPIO_Pin == GPIO_PIN_10) {
 		static uint8_t state1 = 255;
