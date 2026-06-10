@@ -1,7 +1,7 @@
 #include "weather_station.h"
 #include <stm32f4xx_hal.h>
 #include <stdio.h>
-WeatherStation::WeatherStation(Sht31Sensor s)
+WeatherStation::WeatherStation(Sht31Sensor& s)
 	: sensor(s)
 	, alertSys(settings.tempAlert, settings.humAlert)
 	, logSys(settings.log)

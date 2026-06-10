@@ -10,7 +10,7 @@
 
 class WeatherStation {
 public:
-	WeatherStation(Sht31Sensor s);
+	WeatherStation(Sht31Sensor& s);
 	void init();
 	void updateComponents();
 	void handleInput(INPUT_TYPE input);
@@ -21,7 +21,7 @@ private:
 	void updateHumAlertConfig(uint16_t max, uint16_t min, bool en);
 
 	Settings settings;
-	Sht31Sensor sensor;
+	Sht31Sensor& sensor;
 	AlertSystem alertSys;
 	LogSystem logSys;
 
