@@ -41,7 +41,6 @@ void WeatherStation::init() {
 void WeatherStation::handleInput(INPUT_TYPE input) {
 	currentScreen = currentScreen->handleInput(input);
 	uiDirty = true; // Even if currentScreen is the same, current screen needs to update
-
 }
 
 void WeatherStation::updateLogConfig(uint16_t hour, uint16_t min, bool en) {
