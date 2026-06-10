@@ -1,6 +1,7 @@
 #ifndef APP_WEATHER_STATION_H_
 #define APP_WEATHER_STATION_H_
 
+#include "rotary_encoder.h"
 #include "screen.h"
 #include "settings.h"
 #include "system.h"
@@ -14,12 +15,14 @@ public:
 	void init();
 	void updateComponents();
 	void handleInput(INPUT_TYPE input);
+	void handleInputs();
 
 private:
 	void updateLogConfig(uint16_t hour, uint16_t min, bool en);
 	void updateTempAlertConfig(uint16_t max, uint16_t min, bool en);
 	void updateHumAlertConfig(uint16_t max, uint16_t min, bool en);
 
+	RotaryEncoder rotaryEncoder;
 	Settings settings;
 	Sht31Sensor& sensor;
 	AlertSystem alertSys;
