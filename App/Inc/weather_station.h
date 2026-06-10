@@ -1,5 +1,5 @@
-#ifndef APP_CONTROLLER_H_
-#define APP_CONTROLLER_H_
+#ifndef APP_WEATHER_STATION_H_
+#define APP_WEATHER_STATION_H_
 
 #include "screen.h"
 #include "settings.h"
