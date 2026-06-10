@@ -1,4 +1,5 @@
-#include "sht31_sensor.h"
+#include "../../Hardware/Inc/sht31_sensor.h"
+
 #include <stm32f4xx_hal.h>
 
 namespace {
@@ -29,6 +30,7 @@ const WeatherData Sht31Sensor::read() {
 		result.hum = rawToHumidity(data[3], data[4]);
 	}
 
+	lastReadTime = HAL_GetTick();
 	return result;
 }
 

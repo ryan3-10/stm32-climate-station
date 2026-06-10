@@ -2,9 +2,10 @@
 #define SCREEN_H_
 
 #include "data_structs.h"
-#include "display_engine.h"
 #include <array>
 #include <functional>
+
+#include "display_engine.h"
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,

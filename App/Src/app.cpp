@@ -1,10 +1,9 @@
 #include "app.h"
-#include "circular_queue.h"
-#include "controller.h"
 #include "sht31_sensor.h"
 #include "weather_station.h"
 #include <atomic>
 #include <stdio.h>
+#include <weather_station.h>
 
 constexpr uint32_t DEBOUNCE_TIME = 10;
 
@@ -15,19 +14,18 @@ volatile uint32_t g_timestamp = 0;
 // Allocate long-lived objects statically to protect the stack
 static Sht31Sensor sensor;
 static WeatherStation ws(sensor);
-static Controller c(ws);
 
 void run_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	sensor.init(hi2c);
-	c.init();
+	ws.init();
 
 	while (true) {
 		auto now = HAL_GetTick();
 
 		// Handle push button input
 		if (g_buttonFlag && now - g_timestamp > DEBOUNCE_TIME && HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12)) {
-			c.handleInput(INPUT_TYPE::ENTER);
+			ws.handleInput(INPUT_TYPE::ENTER);
 			g_buttonFlag = false;
 		}
 
@@ -37,12 +35,12 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 			INPUT_TYPE input = localEncoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
 
 			for (int32_t i = 0; i < std::abs(localEncoderPos); ++i) {
-				c.handleInput(input);
+				ws.handleInput(input);
 			}
 		}
 
 		// Update controller's components
-		c.updateComponents();
+		ws.updateComponents();
 	}
 }
 

@@ -20,7 +20,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
    ----------------------------------------------------------------------
  */
-#include <ssd1306.h>
+#include "../../Hardware/Inc/ssd1306.h"
 
 extern I2C_HandleTypeDef hi2c1;
 #define SSD1306_I2C &hi2c1

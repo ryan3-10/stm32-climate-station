@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+
 constexpr uint8_t BODY_START_ROW = 16;
 
 void DisplayEngine::clear() const {

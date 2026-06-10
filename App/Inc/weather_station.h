@@ -1,24 +1,67 @@
-#ifndef WEATHER_STATION_H_
-#define WEATHER_STATION_H_
+#ifndef APP_CONTROLLER_H_
+#define APP_CONTROLLER_H_
 
-#include "data_structs.h"
-#include "weather_sensor.h"
+#include "screen.h"
+#include "settings.h"
+#include "system.h"
+#include <cassert>
 #include <stdint.h>
+#include "../Hardware/Inc/sht31_sensor.h"
 
 class WeatherStation {
 public:
-	WeatherStation(IWeatherSensor& s) : sensor(s) {}
-	void update();
-	uint32_t getLastReadTime() const { return lastReadTime; }
-	WeatherData read() { return data; }
-private:
-	bool noiseDetected(const WeatherData& d1, const WeatherData& d2) const;
+	WeatherStation(Sht31Sensor s);
+	void init();
+	void updateComponents();
+	void handleInput(INPUT_TYPE input);
 
-	IWeatherSensor& sensor;
-	uint32_t lastReadTime = 0;
-	WeatherData data;
+private:
+	void updateLogConfig(uint16_t hour, uint16_t min, bool en);
+	void updateTempAlertConfig(uint16_t max, uint16_t min, bool en);
+	void updateHumAlertConfig(uint16_t max, uint16_t min, bool en);
+
+	Settings settings;
+	Sht31Sensor sensor;
+	AlertSystem alertSys;
+	LogSystem logSys;
+
+	bool uiDirty = false;
+	HomeScreen homeScreen{&menuScreen};
+
+	ConfigScreen logScreen{
+	    LogLayout(),
+	    &homeScreen,
+	    [this](uint16_t hour, uint16_t min, bool en)
+	    {
+	        updateLogConfig(hour, min, en);
+	    }
+	};
+
+	ConfigScreen tempAlertsScreen{
+	    TempAlertLayout(),
+	    &homeScreen,
+	    [this](uint16_t max, uint16_t min, bool en)
+	    {
+	        updateTempAlertConfig(max, min, en);
+	    }
+	};
+
+	ConfigScreen humAlertsScreen{
+	    HumAlertLayout(),
+	    &homeScreen,
+	    [this](uint16_t max, uint16_t min, bool en)
+	    {
+	        updateHumAlertConfig(max, min, en);
+	    }
+	};
+
+	std::array<Screen*, 4> menuItems = {
+			&homeScreen, &logScreen, &tempAlertsScreen, &humAlertsScreen
+	};
+
+	MenuScreen menuScreen{menuItems};
+	Screen* currentScreen = &homeScreen;
 };
 
 
-
-#endif /* WEATHER_DATA_H_ */
+#endif /* APP_CONTROLLER_H_ */

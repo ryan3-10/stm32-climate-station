@@ -1,30 +1,58 @@
-#include "sht31_sensor.h"
 #include "weather_station.h"
-#include <cmath>
-#include <stdint.h>
 #include <stm32f4xx_hal.h>
+#include <stdio.h>
+WeatherStation::WeatherStation(Sht31Sensor s)
+	: sensor(s)
+	, alertSys(settings.tempAlert, settings.humAlert)
+	, logSys(settings.log)
+{
 
-void WeatherStation::update() {
-	const auto newData = sensor.read();
-
-	if (!noiseDetected(newData, data)) {
-		data = newData;
-	}
-
-	lastReadTime = HAL_GetTick();
 }
 
-bool WeatherStation::noiseDetected(const WeatherData& d1, const WeatherData& d2) const {
-	constexpr float NOISE_THRESHOLD = 0.0f;
+void WeatherStation::updateComponents() {
+	constexpr uint32_t UPDATE_INTERVAL = 1000;
 
-	// If statusOk was and still is false, ignore potential garbage values
-	if (!d1.statusOk && !d2.statusOk) {
-		return true;
+	if (HAL_GetTick() - sensor.getLastReadTime() >= UPDATE_INTERVAL) {
+		auto weather = sensor.read();
+		homeScreen.update(weather);
+		alertSys.update(weather);
+		logSys.update(weather);
+
+		if (currentScreen == &homeScreen) {
+			uiDirty = true;
+		}
 	}
-
-	return (
-		d1.statusOk == d2.statusOk &&
-		abs(d1.temp - d2.temp) <= NOISE_THRESHOLD &&
-		abs(d1.hum - d2.hum) <= NOISE_THRESHOLD
-	);
+	if (uiDirty) {
+		currentScreen->render();
+		uiDirty = false;
+	}
+	if (logSys.needsToLog()) {
+		logSys.log();
+	}
 }
+
+void WeatherStation::init() {
+	Screen::init();
+	auto weather = sensor.read();
+	homeScreen.update(weather);
+	currentScreen->render();
+}
+
+void WeatherStation::handleInput(INPUT_TYPE input) {
+	currentScreen = currentScreen->handleInput(input);
+	uiDirty = true; // Even if currentScreen is the same, current screen needs to update
+
+}
+
+void WeatherStation::updateLogConfig(uint16_t hour, uint16_t min, bool en) {
+	logSys.setConfig({hour, min, en});
+}
+
+void WeatherStation::updateTempAlertConfig(uint16_t hour, uint16_t min, bool en) {
+	alertSys.setConfig(TempAlertConfig{hour, min, en});
+}
+
+void WeatherStation::updateHumAlertConfig(uint16_t hour, uint16_t min, bool en) {
+	alertSys.setConfig(HumAlertConfig{hour, min, en});
+}
+
