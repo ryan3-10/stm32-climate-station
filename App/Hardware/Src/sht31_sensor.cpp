@@ -7,6 +7,10 @@ namespace {
 	uint8_t READ_COMMAND[2] = {0x2C, 0x06}; // Single shot, high repeat, clock stretch enabled
 }
 
+uint32_t Sht31Sensor::timeSinceLastRead() {
+	return HAL_GetTick() - lastReadTime;
+}
+
 float Sht31Sensor::rawToHumidity(uint8_t rawByte1, uint8_t rawByte2) const {
 	uint16_t rawHumidity = (rawByte1 << 8) | rawByte2;
 	return 100 * rawHumidity / 65535.0f;

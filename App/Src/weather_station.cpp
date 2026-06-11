@@ -12,7 +12,7 @@ WeatherStation::WeatherStation(Sht31Sensor& s)
 void WeatherStation::updateComponents() {
 	constexpr uint32_t UPDATE_INTERVAL = 1000;
 
-	if (HAL_GetTick() - sensor.getLastReadTime() >= UPDATE_INTERVAL) {
+	if (sensor.timeSinceLastRead() >= UPDATE_INTERVAL) {
 		auto weather = sensor.read();
 		homeScreen.update(weather);
 		alertSys.update(weather);

@@ -10,7 +10,7 @@ public:
 	Sht31Sensor() = default;
 	const WeatherData read();
 	void init(I2C_HandleTypeDef* h) { hi2c = h; }
-	uint32_t getLastReadTime() { return lastReadTime; }
+	uint32_t timeSinceLastRead();
 
 private:
 	I2C_HandleTypeDef* hi2c;
