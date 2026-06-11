@@ -4,10 +4,9 @@
 #include "rotary_encoder.h"
 #include "screen.h"
 #include "settings.h"
+#include "sht31_sensor.h"
 #include "system.h"
-#include <cassert>
 #include <stdint.h>
-#include "../Hardware/Inc/sht31_sensor.h"
 
 class WeatherStation {
 public:
