@@ -3,9 +3,10 @@
 #include "sht31_sensor.h"
 #include "weather_station.h"
 
-// Allocate long-lived objects statically to protect the stack
-static Sht31Sensor sensor;
-static WeatherStation ws(sensor);
+namespace {
+	Sht31Sensor sensor;
+	WeatherStation ws(sensor);
+}
 
 void run_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware

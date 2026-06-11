@@ -3,15 +3,17 @@
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-static constexpr uint32_t DEBOUNCE_TIME = 10;
-#define ENCODER_PORT GPIOD
-static constexpr uint16_t ENCODER_BUTTON_PIN = GPIO_PIN_12;
-static constexpr uint16_t ENCODER_A_PIN = GPIO_PIN_9;
-static constexpr uint16_t ENCODER_B_PIN = GPIO_PIN_10;
+namespace {
+	#define ENCODER_PORT GPIOD
+	constexpr uint32_t DEBOUNCE_TIME = 10;
+	constexpr uint16_t ENCODER_BUTTON_PIN = GPIO_PIN_12;
+	constexpr uint16_t ENCODER_A_PIN = GPIO_PIN_9;
+	constexpr uint16_t ENCODER_B_PIN = GPIO_PIN_10;
 
-std::atomic<bool> g_buttonFlag = false;
-std::atomic<int32_t> g_encoderPos = 0;
-volatile uint32_t g_timestamp = 0;
+	std::atomic<bool> g_buttonFlag = false;
+	std::atomic<int32_t> g_encoderPos = 0;
+	volatile uint32_t g_timestamp = 0;
+}
 
 int32_t RotaryEncoder::readPos() const {
 	// return the value of the global position and reset it to 0
