@@ -4,6 +4,7 @@
 #include "ui_manager.h"
 
 namespace {
+	constexpr uint32_t READ_INTERVAL = 1000;
 	Sht31Sensor sensor;
 	SettingsManager settingsMan;
 	UIManager uiManager(settingsMan);
@@ -11,7 +12,17 @@ namespace {
 	LogSystem logSystem(settingsMan.getLogConfig());
 }
 
-void run_app(I2C_HandleTypeDef* hi2c) {
+void run_app() {
+	if (sensor.timeSinceLastRead() >= READ_INTERVAL) {
+		sensor.update();
+		sensor.notifyObservers();
+	}
+
+	uiManager.update();
+	uiManager.handleInputs();
+}
+
+void init_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	sensor.init(hi2c);
 	sensor.addObserver(&uiManager);
@@ -20,15 +31,5 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 
 	sensor.update();
 	sensor.notifyObservers();
-
-	constexpr uint32_t READ_INTERVAL = 1000;
-	while (true) {
-		if (sensor.timeSinceLastRead() >= READ_INTERVAL) {
-			sensor.update();
-			sensor.notifyObservers();
-		}
-
-		uiManager.update();
-		uiManager.handleInputs();
-	}
+	uiManager.update();
 }
