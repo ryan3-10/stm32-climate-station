@@ -2,15 +2,23 @@
 #define SCREEN_H_
 
 #include "data_structs.h"
-#include <array>
-#include <functional>
-
 #include "display_engine.h"
+#include <array>
+#include <optional>
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,
 	ENTER,
 	RIGHT
+};
+
+enum class EVENT_TYPE : uint8_t {
+	NONE,
+	HOME_LEFT,
+	MENU_ITEM_SELECTED,
+	LOG_CONFIG_SAVED,
+	TEMP_CONFIG_SAVED,
+	HUM_CONFIG_SAVED
 };
 
 struct ConfigScreenLayout {
@@ -23,36 +31,28 @@ struct ConfigScreenLayout {
 
 class Screen {
 public:
-	Screen(const char* l)
-		: label(l)
-	{}
+	Screen(const char* l) : label(l) {}
 
 	virtual ~Screen() = default;
-	virtual Screen* handleInput(INPUT_TYPE input) = 0;
+	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
 	const char* getLabel() const { return label; }
-	void render();
-	static void init();
-
-protected:
-	// bad things happen if this is instantiated before hi2c
-	inline static DisplayEngine* engine = nullptr;
+	void render(DisplayEngine& engine);
 
 private:
-	virtual void draw() const = 0;
+	virtual void draw(DisplayEngine& engine) const = 0;
 	const char* const label;
 };
 
 class HomeScreen : public Screen {
 public:
-	HomeScreen(Screen* next) : Screen("Home"), nextScreen(next) {}
+	HomeScreen() : Screen("Home") {}
 
-	Screen* handleInput(INPUT_TYPE input) override;
+	EVENT_TYPE handleInput(INPUT_TYPE input) override;
 	void update(const WeatherData& w) { weather = w; }
 
 private:
-	 void draw() const override;
+	 void draw(DisplayEngine& engine) const override;
 	 WeatherData weather;
-	 Screen* nextScreen;
 };
 
 class MenuScreen : public Screen {
@@ -60,51 +60,18 @@ class MenuScreen : public Screen {
 	using menuArray = std::array<Screen*, MENU_LENGTH>;
 
 public:
-	MenuScreen(menuArray& m) :
-		Screen("Menu"), menu(m)
-	{}
+	MenuScreen(const menuArray& m) : Screen("Menu"), menu(m) {}
 
-	Screen* handleInput(INPUT_TYPE input) override;
+	EVENT_TYPE handleInput(INPUT_TYPE input) override;
+	Screen* getSelection() { return selection; }
 
 private:
-	 void draw() const override;
+	 void draw(DisplayEngine& engine) const override;
 
 	 Screen* selection = nullptr;
-	 const menuArray& menu;
+	 const menuArray menu;
 	 uint8_t cursorPos = 0;
 };
-
-class ConfigScreen : public Screen {
-	static constexpr uint8_t NUM_ITEMS = 3;
-	using OnSaveCallback = std::function<void(uint16_t, uint16_t, bool)>;
-
-public:
-	ConfigScreen(const ConfigScreenLayout& lay, Screen* next, OnSaveCallback os)
-		: Screen(lay.header)
-		, layout(lay)
-		, nextScreen(next)
-		, onSave(os)
-	{}
-
-	Screen* handleInput(INPUT_TYPE input) override;
-
-private:
-	 void draw() const override;
-	 void stepUp();
-	 void stepDown();
-
-	 const ConfigScreenLayout layout;
-	 uint16_t d1 = 0;
-	 uint16_t d2 = 0;
-	 bool en = false;
-	 uint8_t cursorPos = 0;
-	 Screen* nextScreen;
-	 OnSaveCallback onSave;
-};
-
-ConfigScreenLayout LogLayout();
-ConfigScreenLayout TempAlertLayout();
-ConfigScreenLayout HumAlertLayout();
 
 #endif
 

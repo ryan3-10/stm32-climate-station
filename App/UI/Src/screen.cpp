@@ -1,54 +1,49 @@
 #include "screen.h"
 #include <stdio.h>
 
-void Screen::init() {
-	static DisplayEngine e;
-	engine = &e;
+void Screen::render(DisplayEngine& engine) {
+	engine.clear();
+	engine.printHeader(getLabel());
+	draw(engine);
+	engine.updateScreen();
 }
 
-void Screen::render() {
-	engine->clear();
-	engine->printHeader(getLabel());
-	draw();
-	engine->updateScreen();
-}
-
-void HomeScreen::draw() const {
-	engine->setFont(FONT_SIZE::MED);
+void HomeScreen::draw(DisplayEngine& engine) const {
+	engine.setFont(FONT_SIZE::MED);
 
 	if (weather.statusOk) {
 		char buffer[16];
 
 		// Display temperature
 		snprintf(buffer, sizeof(buffer), "%.1fF", weather.temp);
-		engine->printLine(buffer);
+		engine.printLine(buffer);
 
 		// Display humidity
 		snprintf(buffer, sizeof(buffer), "%.1f%%", weather.hum);
-		engine->printLine(buffer);
+		engine.printLine(buffer);
 	}
 	else { // If sensor is in error state, print error message
-		engine->printLine("SENSOR");
-		engine->printLine("ERROR");
+		engine.printLine("SENSOR");
+		engine.printLine("ERROR");
 	}
 }
 
-void MenuScreen::draw() const {
-	engine->setFont(FONT_SIZE::SMALL);
+void MenuScreen::draw(DisplayEngine& engine) const {
+	engine.setFont(FONT_SIZE::SMALL);
 
 	// Print each menu item, highlighting the one that cursor index points to
 	for (uint8_t i = 0; i < menu.size(); ++i) {
-		engine->printLine(menu[i]->getLabel(), cursorPos == i);
+		engine.printLine(menu[i]->getLabel(), cursorPos == i);
 	}
 }
 
-Screen* HomeScreen::handleInput(INPUT_TYPE input) {
-	// Any input from the home screen moves to the menu screen
-	return nextScreen;
+EVENT_TYPE HomeScreen::handleInput(INPUT_TYPE input) {
+	// Any input from the home screen just exits the home screen
+	return EVENT_TYPE::HOME_LEFT;
 }
 
-Screen* MenuScreen::handleInput(INPUT_TYPE input) {
-	Screen* newScreen = this;
+EVENT_TYPE MenuScreen::handleInput(INPUT_TYPE input) {
+	EVENT_TYPE event = EVENT_TYPE::NONE;
 
 	switch (input) {
 		case INPUT_TYPE::LEFT:
@@ -58,12 +53,13 @@ Screen* MenuScreen::handleInput(INPUT_TYPE input) {
 			cursorPos = cursorPos == MENU_LENGTH - 1 ? 0 : cursorPos + 1;
 			break;
 		case INPUT_TYPE::ENTER:
-			newScreen = menu[cursorPos];
+			event = EVENT_TYPE::MENU_ITEM_SELECTED;
+			selection = menu[cursorPos];
 			cursorPos = 0;
 			break;
 	}
 
-	return newScreen;
+	return event;
 }
 
 

@@ -14,52 +14,21 @@ void WeatherStation::updateComponents() {
 
 	if (sensor.timeSinceLastRead() >= UPDATE_INTERVAL) {
 		auto weather = sensor.read();
-		homeScreen.update(weather);
 		alertSys.update(weather);
 		logSys.update(weather);
+	}
 
-		if (currentScreen == &homeScreen) {
-			uiDirty = true;
-		}
-	}
-	if (uiDirty) {
-		currentScreen->render();
-		uiDirty = false;
-	}
+
 	if (logSys.needsToLog()) {
 		logSys.log();
 	}
 }
 
 void WeatherStation::init() {
-	Screen::init();
 	auto weather = sensor.read();
-	homeScreen.update(weather);
-	currentScreen->render();
 }
 
-void WeatherStation::handleInputs() {
-	// handle button press
-	if (rotaryEncoder.buttonWasPressed()) {
-		handleInput(INPUT_TYPE::ENTER);
-	}
 
-	// Handle rotary click inputs
-	auto localEncoderPos = rotaryEncoder.readPos();
-	if (localEncoderPos != 0) {
-		INPUT_TYPE input = localEncoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
-
-		uint32_t absoluteClicks = std::abs(localEncoderPos);
-		for (uint32_t i = 0; i < absoluteClicks; ++i) {
-			handleInput(input);
-		}
-	}
-}
-
-void WeatherStation::handleInput(INPUT_TYPE input) {
-	currentScreen = currentScreen->handleInput(input);
-	uiDirty = true; // Even if currentScreen is the same, current screen needs to update
-}
 
 void WeatherStation::updateLogConfig(uint16_t hour, uint16_t min, bool en) {
 	logSys.setConfig({hour, min, en});

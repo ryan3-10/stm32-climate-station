@@ -14,7 +14,7 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	ws.init();
 
 	while (true) {
-		ws.handleInputs();
+		//ws.handleInputs();
 		ws.updateComponents();
 	}
 }

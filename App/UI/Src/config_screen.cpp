@@ -1,8 +1,8 @@
-#include "screen.h"
+#include "config_screen.h"
 #include <stdint.h>
 #include <stdio.h>
 
-void ConfigScreen::draw() const {
+void ConfigScreen::draw(DisplayEngine& engine) const {
 	char line1[16];
 	char line2[16];
 	const char* line3 = en ? "Enabled" : "Disabled";
@@ -12,17 +12,16 @@ void ConfigScreen::draw() const {
 	snprintf(line2, sizeof(line2), "%s%02i%c", layout.preData2, d2, layout.postData);
 
 	// print each line, highlighting the one that cursorPos points to
-	engine->setFont(FONT_SIZE::MED);
-	engine->printLine(line1, cursorPos == 0);
-	engine->printLine(line2, cursorPos == 1);
+	engine.setFont(FONT_SIZE::MED);
+	engine.printLine(line1, cursorPos == 0);
+	engine.printLine(line2, cursorPos == 1);
 
-	engine->setFont(FONT_SIZE::SMALL);
-	engine->printLine(line3, cursorPos == 2);
+	engine.setFont(FONT_SIZE::SMALL);
+	engine.printLine(line3, cursorPos == 2);
 }
 
-Screen* ConfigScreen::handleInput(INPUT_TYPE input) {
-	Screen* newScreen = this;
-
+EVENT_TYPE ConfigScreen::handleInput(INPUT_TYPE input) {
+	EVENT_TYPE event = EVENT_TYPE::NONE;
 	switch (input) {
 		case INPUT_TYPE::LEFT:
 			stepDown();
@@ -37,11 +36,10 @@ Screen* ConfigScreen::handleInput(INPUT_TYPE input) {
 
 	if (cursorPos >= NUM_ITEMS) {
 		cursorPos = 0;
-		newScreen = nextScreen;
-		onSave(d1, d2, en);
+		event = onSave;
 	}
 
-	return newScreen;
+	return event;
 }
 
 void ConfigScreen::stepUp() {
