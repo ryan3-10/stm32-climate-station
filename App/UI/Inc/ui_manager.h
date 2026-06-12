@@ -14,7 +14,6 @@ public:
 	void handleInputs();
 	void update();
 	void onWeatherUpdate(const WeatherData& data) override;
-	void init();
 
 private:
 	void handleEvent(EVENT_TYPE event);
@@ -31,7 +30,7 @@ private:
 	ConfigScreen humAlertsScreen{HumAlertLayout(), EVENT_TYPE::HUM_CONFIG_SAVED};
 	MenuScreen menuScreen{{&homeScreen, &logScreen, &tempAlertsScreen, &humAlertsScreen}};
 	Screen* currentScreen = &homeScreen;
-	DisplayEngine* engine = nullptr;
+	DisplayEngine engine;
 };
 
 

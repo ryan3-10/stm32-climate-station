@@ -13,7 +13,7 @@ enum class FONT_SIZE : uint8_t {
 
 class DisplayEngine {
 public:
-	DisplayEngine() { SSD1306_Init(); }
+	DisplayEngine() = default;
 	void clear() const;
 	void updateScreen() const;
 	void jumpToBodyStart();

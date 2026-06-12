@@ -24,12 +24,15 @@ void run_app() {
 
 void init_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
+	SSD1306_Init();
 	sensor.init(hi2c);
-	uiManager.init();
+
+	// Add observers
 	sensor.addObserver(&uiManager);
 	sensor.addObserver(&alertSystem);
 	sensor.addObserver(&logSystem);
 
+	// Pre loop so we don't wait for READ_INTERVAL in run_app on the first loop
 	sensor.update();
 	sensor.notifyObservers();
 	uiManager.update();

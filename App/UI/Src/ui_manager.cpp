@@ -2,7 +2,7 @@
 
 void UIManager::update() {
 	if (dirtyFlag) {
-		currentScreen->render(*engine);
+		currentScreen->render(engine);
 		dirtyFlag = false;
 	}
 }
@@ -88,9 +88,4 @@ void UIManager::onWeatherUpdate(const WeatherData& data) {
 	if (currentScreen == &homeScreen) {
 		dirtyFlag = true;
 	}
-}
-
-void UIManager::init() {
-	static DisplayEngine eng;
-	engine = &eng;
 }
