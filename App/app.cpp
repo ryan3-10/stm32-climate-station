@@ -27,10 +27,14 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	SSD1306_Init();
 	sensor.init(hi2c);
 
-	// Add observers
+	// Weather observers
 	sensor.addObserver(&uiManager);
 	sensor.addObserver(&alertSystem);
 	sensor.addObserver(&logSystem);
+
+	// Settings observers
+	settingsMan.addObserver(&alertSystem);
+	settingsMan.addObserver(&logSystem);
 
 	// Pre loop so we don't wait for READ_INTERVAL in run_app on the first loop
 	sensor.update();
