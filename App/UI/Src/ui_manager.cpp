@@ -3,6 +3,7 @@
 void UIManager::update() {
 	if (dirtyFlag) {
 		currentScreen->render(engine);
+		dirtyFlag = false;
 	}
 }
 
@@ -77,4 +78,11 @@ void UIManager::submitHumConfig() {
 			settingsManager.setHumConfig({d1, d2, en});
 		}
 	);
+}
+
+void UIManager::onWeatherUpdate(const WeatherData& data) {
+	homeScreen.update(data);
+	if (currentScreen == &homeScreen) {
+		dirtyFlag = true;
+	}
 }

@@ -14,12 +14,13 @@ namespace {
 void run_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	sensor.init(hi2c);
+	sensor.addObserver(&uiManager);
 
+	constexpr uint32_t READ_INTERVAL = 1000;
 	while (true) {
-		constexpr uint32_t READ_INTERVAL = 1000;
-
 		if (sensor.timeSinceLastRead() >= READ_INTERVAL) {
-			auto weather = sensor.read();
+			sensor.update();
+			sensor.notifyObservers();
 		}
 
 		uiManager.update();

@@ -3,15 +3,17 @@
 
 #include "config_screen.h"
 #include "display_engine.h"
+#include "observer.h"
 #include "rotary_encoder.h"
 #include "screen.h"
 #include "settings_manager.h"
 
-class UIManager {
+class UIManager : public WeatherObserver {
 public:
 	UIManager(SettingsManager& sm) : settingsManager(sm) {}
 	void handleInputs();
 	void update();
+	void onWeatherUpdate(const WeatherData& data) override;
 
 private:
 	void handleEvent(EVENT_TYPE event);

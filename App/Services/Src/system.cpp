@@ -2,7 +2,7 @@
 #include "system.h"
 #include <stm32f4xx_hal.h>
 
-void AlertSystem::update(const WeatherData& weather) {
+void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 	using STATE = ALERT_SYS_STATE;
 
 	// return early if sensor is in an error state

@@ -1,4 +1,5 @@
 #include "sht31_sensor.h"
+#include <stdint.h>
 #include <stm32f4xx_hal.h>
 
 namespace {
@@ -20,7 +21,7 @@ float Sht31Sensor::rawToTemperature(uint8_t rawByte1, uint8_t rawByte2) const {
 	return -49 + (315.0f * rawTemp / 65535.0f);
 }
 
-const WeatherData Sht31Sensor::read() {
+void Sht31Sensor::update() {
 	uint8_t data[6];
 	WeatherData result { .statusOk = true };
 
@@ -33,8 +34,9 @@ const WeatherData Sht31Sensor::read() {
 		result.hum = rawToHumidity(data[3], data[4]);
 	}
 
+	weatherData = result;
 	lastReadTime = HAL_GetTick();
-	return result;
+
 }
 
 HAL_StatusTypeDef Sht31Sensor::requestData() {
@@ -43,6 +45,12 @@ HAL_StatusTypeDef Sht31Sensor::requestData() {
 
 HAL_StatusTypeDef Sht31Sensor::receiveData(uint8_t* buffer) {
 	return HAL_I2C_Master_Receive(hi2c, ADDRESS, buffer, 6, HAL_MAX_DELAY);
+}
+
+void Sht31Sensor::notifyObservers() const {
+	for (uint8_t i = 0; i < count; ++i) {
+		observers.at(i)->onWeatherUpdate(weatherData);
+	}
 }
 
 
