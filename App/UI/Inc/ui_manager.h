@@ -11,7 +11,7 @@ class UIManager {
 public:
 	UIManager(SettingsManager& sm) : settingsManager(sm) {}
 	void handleInputs();
-	void render() { currentScreen->render(engine); }
+	void update();
 
 private:
 	void handleEvent(EVENT_TYPE event);
@@ -21,7 +21,7 @@ private:
 
 	SettingsManager& settingsManager;
 	RotaryEncoder rotaryEncoder;
-	bool uiDirty = false;
+	bool dirtyFlag = false;
 	HomeScreen homeScreen;
 	ConfigScreen logScreen{LogLayout(), EVENT_TYPE::LOG_CONFIG_SAVED};
 	ConfigScreen tempAlertsScreen{TempAlertLayout(), EVENT_TYPE::TEMP_CONFIG_SAVED};

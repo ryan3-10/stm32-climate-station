@@ -1,8 +1,15 @@
 #include "ui_manager.h"
 
+void UIManager::update() {
+	if (dirtyFlag) {
+		currentScreen->render(engine);
+	}
+}
+
 void UIManager::handleInputs() {
 	// handle button press
 	if (rotaryEncoder.buttonWasPressed()) {
+		dirtyFlag = true;
 		auto event = currentScreen->handleInput(INPUT_TYPE::ENTER);
 		handleEvent(event);
 	}
@@ -10,6 +17,7 @@ void UIManager::handleInputs() {
 	// Handle rotary click inputs
 	auto localEncoderPos = rotaryEncoder.readPos();
 	if (localEncoderPos != 0) {
+		dirtyFlag = true;
 		INPUT_TYPE input = localEncoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
 
 		uint32_t absoluteClicks = std::abs(localEncoderPos);
