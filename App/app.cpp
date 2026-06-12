@@ -18,6 +18,9 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	sensor.addObserver(&alertSystem);
 	sensor.addObserver(&logSystem);
 
+	sensor.update();
+	sensor.notifyObservers();
+
 	constexpr uint32_t READ_INTERVAL = 1000;
 	while (true) {
 		if (sensor.timeSinceLastRead() >= READ_INTERVAL) {
