@@ -26,5 +26,6 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 		}
 
 		uiManager.update();
+		uiManager.handleInputs();
 	}
 }

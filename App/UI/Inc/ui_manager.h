@@ -23,7 +23,7 @@ private:
 
 	SettingsManager& settingsManager;
 	RotaryEncoder rotaryEncoder;
-	bool dirtyFlag = false;
+	bool dirtyFlag = true;
 	HomeScreen homeScreen;
 	ConfigScreen logScreen{LogLayout(), EVENT_TYPE::LOG_CONFIG_SAVED};
 	ConfigScreen tempAlertsScreen{TempAlertLayout(), EVENT_TYPE::TEMP_CONFIG_SAVED};
