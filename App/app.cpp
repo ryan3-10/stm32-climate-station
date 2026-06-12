@@ -25,6 +25,7 @@ void run_app() {
 void init_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	sensor.init(hi2c);
+	uiManager.init();
 	sensor.addObserver(&uiManager);
 	sensor.addObserver(&alertSystem);
 	sensor.addObserver(&logSystem);
