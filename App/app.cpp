@@ -15,6 +15,8 @@ void run_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	sensor.init(hi2c);
 	sensor.addObserver(&uiManager);
+	sensor.addObserver(&alertSystem);
+	sensor.addObserver(&logSystem);
 
 	constexpr uint32_t READ_INTERVAL = 1000;
 	while (true) {
