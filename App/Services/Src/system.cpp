@@ -35,6 +35,11 @@ void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 	}
 }
 
+void AlertSystem::onSettingsChange(const Settings& settings) {
+	humConfig = settings.humAlert;
+	tempConfig = settings.tempAlert;
+}
+
 void LogSystem::log() {
 	// TODO implement logging logic
 	lastLogTime = HAL_GetTick();
@@ -47,5 +52,9 @@ bool LogSystem::needsToLog() const {
 
 	auto miliInterval = hoursToMili(logConfig.hourInt) + minToMili(logConfig.minInt);
 	return HAL_GetTick() - lastLogTime >= miliInterval;
+}
+
+void LogSystem::onSettingsChange(const Settings& settings) {
+	logConfig = settings.log;
 }
 

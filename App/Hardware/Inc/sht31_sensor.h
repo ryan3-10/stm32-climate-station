@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-class Sht31Sensor : public Subject {
+class Sht31Sensor : public Subject<WeatherObserver> {
 public:
 	Sht31Sensor() = default;
 	void update();

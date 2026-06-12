@@ -27,7 +27,11 @@ struct TempAlertConfig {
 	bool enabled = false;
 };
 
-
+struct Settings {
+	LogConfig log{};
+	TempAlertConfig tempAlert{};
+	HumAlertConfig humAlert{};
+};
 
 
 #endif /* INC_APP_CONFIG_H_ */

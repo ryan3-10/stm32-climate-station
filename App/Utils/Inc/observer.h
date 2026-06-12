@@ -5,9 +5,7 @@
 #include <array>
 #include <stdint.h>
 
-namespace {
-	constexpr uint8_t MAX_OBSERVERS = 5;
-}
+static constexpr uint8_t MAX_OBSERVERS = 5;
 
 class WeatherObserver {
 public:
@@ -16,16 +14,24 @@ public:
 	virtual void onWeatherUpdate(const WeatherData& data) = 0;
 };
 
+class SettingsObserver {
+public:
+	SettingsObserver() = default;
+	virtual ~SettingsObserver() = default;
+	virtual void onSettingsChange(const Settings& settings) = 0;
+};
+
+template <typename ObserverType>
 class Subject {
 public:
 	Subject() = default;
 	virtual ~Subject() = default;
 
-	void addObserver(WeatherObserver* observer) { observers.at(count++) = observer; }
+	void addObserver(ObserverType* observer) { observers.at(count++) = observer; }
 	virtual void notifyObservers() const = 0;
 
 protected:
-	std::array<WeatherObserver*, MAX_OBSERVERS> observers;
+	std::array<ObserverType*, MAX_OBSERVERS> observers{};
 	uint8_t count = 0;
 };
 

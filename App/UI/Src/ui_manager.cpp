@@ -60,6 +60,7 @@ void UIManager::submitLogConfig() {
 			settingsManager.setLogConfig({d1, d2, en});
 		}
 	);
+	settingsManager.notifyObservers();
 }
 
 void UIManager::submitTempConfig() {
@@ -69,6 +70,7 @@ void UIManager::submitTempConfig() {
 			settingsManager.setTempConfig({d1, d2, en});
 		}
 	);
+	settingsManager.notifyObservers();
 }
 
 void UIManager::submitHumConfig() {
@@ -78,6 +80,7 @@ void UIManager::submitHumConfig() {
 			settingsManager.setHumConfig({d1, d2, en});
 		}
 	);
+	settingsManager.notifyObservers();
 }
 
 void UIManager::onWeatherUpdate(const WeatherData& data) {
