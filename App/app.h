@@ -8,7 +8,7 @@ extern "C" {
 #include <stm32f4xx_hal.h>
 
 void run_app();
-void init_app(I2C_HandleTypeDef* hi2c);
+void init_app(I2C_HandleTypeDef* hi2c, SPI_HandleTypeDef* spi);
 
 #ifdef __cplusplus
 }

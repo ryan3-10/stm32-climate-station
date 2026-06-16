@@ -1,4 +1,5 @@
 #include "app.h"
+#include "sd.h"
 #include "sht31_sensor.h"
 #include "system.h"
 #include "ui_manager.h"
@@ -6,6 +7,7 @@
 namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
 	Sht31Sensor sensor;
+	Sd sd;
 	SettingsManager settingsMan;
 	UIManager uiManager(settingsMan);
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig());
@@ -22,10 +24,11 @@ void run_app() {
 	uiManager.handleInputs();
 }
 
-void init_app(I2C_HandleTypeDef* hi2c) {
+void init_app(I2C_HandleTypeDef* hi2c, SPI_HandleTypeDef* spi) {
 	// Late bind hardware
 	SSD1306_Init();
 	sensor.init(hi2c);
+	sd.init(spi);
 
 	// Weather observers
 	sensor.addObserver(&uiManager);
