@@ -502,6 +502,11 @@ inline DRESULT USER_SPI_ioctl (
 		}
 		break;
 
+	case GET_SECTOR_SIZE:
+		*(WORD*)buff = 512;
+		res = RES_OK;
+		break;
+
 	case GET_BLOCK_SIZE :	/* Get erase block size in unit of sector (DWORD) */
 		if (CardType & CT_SD2) {	/* SDC ver 2.00 */
 			if (send_cmd(ACMD13, 0) == 0) {	/* Read SD status */
