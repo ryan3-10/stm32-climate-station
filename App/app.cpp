@@ -1,6 +1,7 @@
+#include "alert_system.h"
 #include "app.h"
+#include "logger.h"
 #include "sht31_sensor.h"
-#include "system.h"
 #include "ui_manager.h"
 
 namespace {
@@ -9,7 +10,7 @@ namespace {
 	SettingsManager settingsMan;
 	UIManager uiManager(settingsMan);
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig());
-	LogSystem logSystem(settingsMan.getLogConfig());
+	Logger logger(settingsMan.getLogConfig());
 }
 
 void run_app() {
@@ -30,11 +31,11 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	// Weather observers
 	sensor.addObserver(&uiManager);
 	sensor.addObserver(&alertSystem);
-	sensor.addObserver(&logSystem);
+	sensor.addObserver(&logger);
 
 	// Settings observers
 	settingsMan.addObserver(&alertSystem);
-	settingsMan.addObserver(&logSystem);
+	settingsMan.addObserver(&logger);
 
 	// Pre loop so we don't wait for READ_INTERVAL in run_app on the first loop
 	sensor.update();

@@ -1,5 +1,5 @@
-#ifndef SRC_SYSTEM_H_
-#define SRC_SYSTEM_H_
+#ifndef SERVICES_INC_ALERT_SYSTEM_H_
+#define SERVICES_INC_ALERT_SYSTEM_H_
 
 #include "data_structs.h"
 #include "observer.h"
@@ -30,23 +30,6 @@ private:
 	HumAlertConfig humConfig;
 	ALERT_SYS_STATE tempState = ALERT_SYS_STATE::NO_TRIGGER;
 	ALERT_SYS_STATE humState = ALERT_SYS_STATE::NO_TRIGGER;
-};
-
-class LogSystem : public WeatherObserver, public SettingsObserver {
-public:
-	LogSystem(const LogConfig& l) : logConfig(l) {}
-	~LogSystem() = default;
-
-	void log();
-	void setConfig(const LogConfig& l) { logConfig = l; }
-	void onSettingsChange(const Settings& settings) override;
-	void onWeatherUpdate(const WeatherData& weather) override { cachedWeather = weather; }
-	bool needsToLog() const;
-
-private:
-	LogConfig logConfig;
-	uint32_t lastLogTime;
-	WeatherData cachedWeather;
 };
 
 #endif /* SRC_SYSTEM_H_ */
