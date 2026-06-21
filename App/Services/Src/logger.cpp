@@ -1,9 +1,10 @@
 #include "logger.h"
 #include "math.h"
+#include "time.h"
 
 void Logger::log() {
 	// TODO implement logging logic
-	lastLogTime = 0;
+	lastLogTime = getTick();
 }
 
 bool Logger::needsToLog() const {
@@ -12,8 +13,7 @@ bool Logger::needsToLog() const {
 	}
 
 	auto miliInterval = hoursToMili(logConfig.hourInt) + minToMili(logConfig.minInt);
-	//return HAL_GetTick() - lastLogTime >= miliInterval;
-	return false;
+	return getTick() - lastLogTime >= miliInterval;
 }
 
 void Logger::onSettingsChange(const Settings& settings) {
