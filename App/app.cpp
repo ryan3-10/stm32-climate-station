@@ -1,6 +1,7 @@
 #include "alert_system.h"
 #include "app.h"
 #include "logger.h"
+#include "settings_manager.h"
 #include "sht31_sensor.h"
 #include "ui_manager.h"
 
