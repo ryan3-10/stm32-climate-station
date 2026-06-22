@@ -9,8 +9,11 @@ void FileManager::createFileIfNotExist(const char* fileName) {
 
 	if (fres == FR_OK) {
 		printf("Succesfully created file '%s\n", fileName);
-	} else {
-		printf("file creation error: (%i)\n", fres);
+	} else if (fres == FR_EXIST) {
+		printf("File %s already exists\n", fileName);
+	}
+	else {
+		printf("Failed to create file %s. Error: (%i)\n", fileName, fres);
 	}
 
 	f_close(&file);
