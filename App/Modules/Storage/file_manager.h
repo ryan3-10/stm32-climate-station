@@ -6,11 +6,14 @@
 class FileManager {
 public:
 	void createFileIfNotExist(const char* fileName);
+	void deleteNode(const char* nodeName);
 	void writeToFile(const char* fileName, const char* text);
+	void readFromFile(const char* fileName, char* output, uint32_t numBytes);
 	void init();
 
 private:
 	FATFS fatFs;
+	FIL file;
 };
 
 

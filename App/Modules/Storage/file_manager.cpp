@@ -1,30 +1,37 @@
 #include "file_manager.h"
+#include <algorithm>
 #include <fatfs.h>
 #include <stdio.h>
 #include <string.h>
 
 void FileManager::createFileIfNotExist(const char* fileName) {
-	FIL file;
 	auto fres = f_open(&file, fileName, FA_CREATE_NEW);
 
 	if (fres == FR_OK) {
 		printf("Succesfully created file '%s\n", fileName);
 	} else if (fres == FR_EXIST) {
 		printf("File %s already exists\n", fileName);
-	}
-	else {
+	} else {
 		printf("Failed to create file %s. Error: (%i)\n", fileName, fres);
 	}
 
 	f_close(&file);
 }
 
+void FileManager::deleteNode(const char* nodeName) {
+	auto fres = f_unlink(nodeName);
+	if (fres == FR_OK) {
+		printf("Deleted node %s\n", nodeName);
+	} else {
+		printf("Failed to delete node %s. Error: (%i)\n", nodeName, fres);
+	}
+}
+
 void FileManager::writeToFile(const char* fileName, const char* text) {
-	FIL fil;
-	f_open(&fil, fileName, FA_WRITE | FA_OPEN_APPEND);
+	f_open(&file, fileName, FA_WRITE | FA_OPEN_APPEND);
 
 	UINT bytesWrote;
-	auto fres = f_write(&fil, text, strlen(text), &bytesWrote);
+	auto fres = f_write(&file, text, strlen(text), &bytesWrote);
 
 	if (fres == FR_OK) {
 		printf("Wrote %i bytes to '%s'!\r\n", bytesWrote, fileName);
@@ -32,8 +39,37 @@ void FileManager::writeToFile(const char* fileName, const char* text) {
 		printf("f_write error (%i)\r\n", fres);
 	}
 
-	f_close(&fil);
+	f_close(&file);
 }
+
+void FileManager::readFromFile(const char* fileName, char* output, uint32_t numBytes) {
+	auto fres = f_open(&file, fileName, FA_READ);
+
+	if (fres == FR_OK) {
+		printf("Opened file %s for reading!\n", fileName);
+	} else {
+		printf("Failed to open file %s for reading. Error: (%i)\n", fileName, fres);
+	}
+
+	// Maximum of 256 bytes can be read to ensure no overflow
+	constexpr uint32_t BUFFER_SIZE = 256;
+	static char readBuf[BUFFER_SIZE];
+
+	// Ensure we don't read more than BUFFER_SIZE
+	auto bytesToRead = std::min(BUFFER_SIZE, numBytes);
+
+	//We can either use f_read OR f_gets to get data out of files
+	//f_gets is a wrapper on f_read that does some string formatting for us
+	char* rres = f_gets(readBuf, bytesToRead, &file);
+	if(rres != 0) {
+	  printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
+	} else {
+	  printf("f_gets error (%i)\r\n", fres);
+	}
+
+	f_close(&file);
+}
+
 
 void FileManager::init() {
 	//Open the file system
@@ -60,28 +96,9 @@ void FileManager::init() {
 //
 //    printf("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
 //
-//    //Now let's try to open file "test.txt"
-//    fres = f_open(&fil, "test.txt", FA_READ);
-//    if (fres != FR_OK) {
-//	  printf("f_open error (%i)\r\n", fres);
-//	  while(1);
-//    }
-//    printf("I was able to open 'test.txt' for reading!\r\n");
 //
-//    //Read 30 bytes from "test.txt" on the SD card
-//    BYTE readBuf[30];
 //
-//    //We can either use f_read OR f_gets to get data out of files
-//    //f_gets is a wrapper on f_read that does some string formatting for us
-//    TCHAR* rres = f_gets((TCHAR*)readBuf, 30, &fil);
-//    if(rres != 0) {
-//      printf("Read string from 'test.txt' contents: %s\r\n", readBuf);
-//    } else {
-//      printf("f_gets error (%i)\r\n", fres);
-//    }
 //
-//    //Be a tidy kiwi - don't forget to close your file!
-//    f_close(&fil);
 //
 //
 //
