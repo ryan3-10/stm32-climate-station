@@ -19,6 +19,10 @@ void run_app() {
 		sensor.notifyObservers();
 	}
 
+	if (logger.needsToLog()) {
+		logger.log();
+	}
+
 	uiManager.update();
 	uiManager.handleInputs();
 }
@@ -27,6 +31,7 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	SSD1306_Init();
 	sensor.init(hi2c);
+	logger.init();
 
 	// Weather observers
 	sensor.addObserver(&uiManager);

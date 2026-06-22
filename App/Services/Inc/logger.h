@@ -3,6 +3,7 @@
 
 #include "data_structs.h"
 #include "observer.h"
+#include <fatfs.h>
 
 class Logger : public WeatherObserver, public SettingsObserver {
 public:
@@ -14,11 +15,16 @@ public:
 	void onSettingsChange(const Settings& settings) override;
 	void onWeatherUpdate(const WeatherData& weather) override { cachedWeather = weather; }
 	bool needsToLog() const;
+	void init();
 
 private:
+	void createFileIfNotExist(const char* fileName);
+	void writeToFile(const char* fileName, const char* text);
+
 	LogConfig logConfig;
 	uint32_t lastLogTime;
 	WeatherData cachedWeather;
+	FATFS FatFs; 	//Fatfs handle
 };
 
 
