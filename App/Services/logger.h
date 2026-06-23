@@ -2,12 +2,13 @@
 #define SERVICES_INC_LOGGER_H_
 
 #include "data_structs.h"
+#include "ds3231_clock.h"
 #include "file_manager.h"
 #include "observer.h"
 
 class Logger : public WeatherObserver, public SettingsObserver {
 public:
-	Logger(const LogConfig& l) : logConfig(l) {}
+	Logger(const LogConfig& l, Ds3231Clock& c) : logConfig(l), clock(c) {}
 	~Logger() = default;
 
 	void init();
@@ -19,6 +20,7 @@ public:
 
 private:
 	LogConfig logConfig;
+	Ds3231Clock& clock;
 	uint32_t lastLogTime;
 	WeatherData cachedWeather;
 	FileManager fileManager;

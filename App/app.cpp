@@ -13,7 +13,7 @@ namespace {
 	SettingsManager settingsMan;
 	UIManager uiManager(settingsMan);
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig());
-	Logger logger(settingsMan.getLogConfig());
+	Logger logger(settingsMan.getLogConfig(), clock);
 }
 
 void run_app() {
@@ -50,6 +50,4 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	sensor.update();
 	sensor.notifyObservers();
 	uiManager.update();
-
-	clock.currentDateTime();
 }
