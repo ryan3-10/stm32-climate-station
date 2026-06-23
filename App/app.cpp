@@ -4,10 +4,12 @@
 #include "settings_manager.h"
 #include "sht31_sensor.h"
 #include "ui_manager.h"
+#include "ds3231_clock.h"
 
 namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
 	Sht31Sensor sensor;
+	Ds3231Clock clock;
 	SettingsManager settingsMan;
 	UIManager uiManager(settingsMan);
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig());
@@ -32,6 +34,7 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	// Late bind hardware
 	SSD1306_Init();
 	sensor.init(hi2c);
+	clock.init(hi2c);
 	logger.init();
 
 	// Weather observers
@@ -47,4 +50,6 @@ void init_app(I2C_HandleTypeDef* hi2c) {
 	sensor.update();
 	sensor.notifyObservers();
 	uiManager.update();
+
+	clock.currentDateTime();
 }
