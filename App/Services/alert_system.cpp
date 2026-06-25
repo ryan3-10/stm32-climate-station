@@ -1,8 +1,16 @@
 #include "alert_system.h"
 
-void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
-	using STATE = ALERT_SYS_STATE;
+using STATE = ALERT_SYS_STATE;
 
+void AlertSystem::update() {
+	if (tempState == STATE::NO_TRIGGER && humState == STATE::NO_TRIGGER) {
+		buzzer.stopPattern();
+	} else {
+		buzzer.runPattern();
+	}
+}
+
+void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 	// return early if sensor is in an error state
 	if (!weather.statusOk) {
 		tempState = STATE::NO_TRIGGER;

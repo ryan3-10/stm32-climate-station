@@ -14,7 +14,7 @@ namespace {
 	Ds3231Clock clock;
 	Logger logger(settingsMan.getLogConfig(), clock);
 	PassiveBuzzer buzzer;
-	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig());
+	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig(), buzzer);
 	UIManager uiManager(settingsMan);
 }
 
@@ -30,6 +30,7 @@ void run_app() {
 
 	uiManager.update();
 	uiManager.handleInputs();
+	alertSystem.update();
 }
 
 void init_app(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
@@ -39,6 +40,7 @@ void init_app(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
 	clock.init(hi2c);
 	logger.init();
 	buzzer.init(pvmTimer, TIM_CHANNEL_1);
+	buzzer.setPattern(standardPattern2);
 
 	// Weather observers
 	sensor.addObserver(&uiManager);

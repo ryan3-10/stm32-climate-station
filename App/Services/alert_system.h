@@ -3,6 +3,7 @@
 
 #include "data_structs.h"
 #include "observer.h"
+#include "passive_buzzer.h"
 
 enum class ALERT_SYS_STATE : uint8_t {
 	NO_TRIGGER,
@@ -12,12 +13,13 @@ enum class ALERT_SYS_STATE : uint8_t {
 
 class AlertSystem : public WeatherObserver, public SettingsObserver {
 public:
-	AlertSystem(const TempAlertConfig& t, const HumAlertConfig& h)
-		: tempConfig(t), humConfig(h)
+	AlertSystem(const TempAlertConfig& t, const HumAlertConfig& h, PassiveBuzzer& pb)
+		: tempConfig(t), humConfig(h), buzzer(pb)
 	{}
 
 	~AlertSystem() = default;
 
+	void update();
 	void onWeatherUpdate(const WeatherData& weather) override;
 	void onSettingsChange(const Settings& settings) override;
 	void setConfig(const TempAlertConfig& t) { tempConfig = t; }
@@ -28,6 +30,7 @@ public:
 private:
 	TempAlertConfig tempConfig;
 	HumAlertConfig humConfig;
+	PassiveBuzzer& buzzer;
 	ALERT_SYS_STATE tempState = ALERT_SYS_STATE::NO_TRIGGER;
 	ALERT_SYS_STATE humState = ALERT_SYS_STATE::NO_TRIGGER;
 };

@@ -2,6 +2,7 @@
 #define HARDWARE_INC_TIME_H_
 
 #include <stm32f4xx_hal.h>
-uint32_t getTick() { return HAL_GetTick(); }
+inline uint32_t getTick() { return HAL_GetTick(); }
+inline uint32_t timeElapsed(uint32_t time) { return HAL_GetTick() - time; }
 
 #endif /* HARDWARE_INC_TIME_H_ */
