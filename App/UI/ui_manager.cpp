@@ -74,7 +74,7 @@ void UIManager::submitTempConfig() {
 }
 
 void UIManager::submitHumConfig() {
-	tempAlertsScreen.submitChanges(
+	humAlertsScreen.submitChanges(
 		[this] (uint16_t d1, uint16_t d2, bool en)
 		{
 			settingsManager.setHumConfig({d1, d2, en});
