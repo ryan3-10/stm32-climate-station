@@ -10,11 +10,11 @@ enum CLOCK_STATUS : uint8_t;
 class Ds3231Clock {
 public:
 	CLOCK_STATUS currentDateTime(DateTime& dt);
-	CLOCK_STATUS setDateTime(DateTime dt);
+	CLOCK_STATUS setDateTime(const DateTime& dt);
 	void init(I2C_HandleTypeDef* h) { hi2c = h; }
 
 private:
-	bool isValidDateTime(DateTime dt);
+	bool isValidDateTime(const DateTime& dt);
 	HAL_StatusTypeDef sendData(uint8_t* data, uint8_t numBytes);
 	HAL_StatusTypeDef receiveData(uint8_t* buffer, uint8_t numBytes);
 	uint8_t decimalToBcd(uint8_t decimal);

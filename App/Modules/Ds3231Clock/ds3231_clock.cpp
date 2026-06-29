@@ -8,7 +8,7 @@ namespace {
 	constexpr uint8_t CENTURY_BIT_MASK = 1 << 7;
 }
 
-bool Ds3231Clock::isValidDateTime(DateTime dt) {
+bool Ds3231Clock::isValidDateTime(const DateTime& dt) {
 	// Currently checks for register correctness only, not calendar correctness
 	return
 		dt.second <= 59 &&
@@ -19,7 +19,7 @@ bool Ds3231Clock::isValidDateTime(DateTime dt) {
 		dt.month >= 1 && dt.month <= 12;
 }
 
-CLOCK_STATUS Ds3231Clock::setDateTime(DateTime dt) {
+CLOCK_STATUS Ds3231Clock::setDateTime(const DateTime& dt) {
 	if (!isValidDateTime(dt)) {
 		return CLOCK_STATUS::INVALID_INPUT;
 	}
