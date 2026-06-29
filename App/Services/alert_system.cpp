@@ -27,6 +27,8 @@ void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 		} else {
 			tempState = STATE::NO_TRIGGER;
 		}
+	} else {
+		tempState = STATE::NO_TRIGGER;
 	}
 
 	// check for humidity triggers
@@ -38,6 +40,8 @@ void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 		} else {
 			humState = STATE::NO_TRIGGER;
 		}
+	} else {
+		humState = STATE::NO_TRIGGER;
 	}
 }
 
