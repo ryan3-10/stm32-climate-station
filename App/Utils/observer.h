@@ -11,7 +11,7 @@ class WeatherObserver {
 public:
 	WeatherObserver() = default;
 	virtual ~WeatherObserver() = default;
-	virtual void onWeatherUpdate(const WeatherData& data) = 0;
+	virtual void onWeatherUpdate(const SensorRead& data) = 0;
 };
 
 class SettingsObserver {

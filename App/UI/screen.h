@@ -48,11 +48,11 @@ public:
 	HomeScreen() : Screen("Home") {}
 
 	EVENT_TYPE handleInput(INPUT_TYPE input) override;
-	void update(const WeatherData& w) { weather = w; }
+	void update(const SensorRead& r) { reading = r; }
 
 private:
 	 void draw(DisplayEngine& engine) const override;
-	 WeatherData weather;
+	 SensorRead reading;
 };
 
 class MenuScreen : public Screen {

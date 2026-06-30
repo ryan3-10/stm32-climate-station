@@ -9,6 +9,11 @@ struct WeatherData {
 	float hum = 0.0f;
 };
 
+struct SensorRead {
+	WeatherData data;
+	bool statusOk;
+};
+
 struct LogConfig {
 	uint16_t hourInt = 0;
 	uint16_t minInt = 0;

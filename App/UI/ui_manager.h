@@ -13,7 +13,7 @@ public:
 	UIManager(SettingsManager& sm) : settingsManager(sm) {}
 	void handleInputs();
 	void update();
-	void onWeatherUpdate(const WeatherData& data) override;
+	void onWeatherUpdate(const SensorRead& reading) override;
 
 private:
 	void handleEvent(EVENT_TYPE event);

@@ -26,12 +26,12 @@ void Logger::log() {
 	}
 
 	char weatherBuf[30] = {0};
-	if (cachedWeather.statusOk) {
+	if (cachedReading.statusOk) {
 		snprintf(
 			weatherBuf,
 			sizeof(weatherBuf),
 			"%.1fF %.1f%%",
-			cachedWeather.temp, cachedWeather.hum
+			cachedReading.data.temp, cachedReading.data.hum
 		);
 	} else {
 		strncpy(weatherBuf, "Sensor Error", sizeof(weatherBuf) - 1);

@@ -11,15 +11,15 @@ void Screen::render(DisplayEngine& engine) {
 void HomeScreen::draw(DisplayEngine& engine) const {
 	engine.setFont(FONT_SIZE::MED);
 
-	if (weather.statusOk) {
+	if (reading.statusOk) {
 		char buffer[16];
 
 		// Display temperature
-		snprintf(buffer, sizeof(buffer), "%.1fF", weather.temp);
+		snprintf(buffer, sizeof(buffer), "%.1fF", reading.data.temp);
 		engine.printLine(buffer);
 
 		// Display humidity
-		snprintf(buffer, sizeof(buffer), "%.1f%%", weather.hum);
+		snprintf(buffer, sizeof(buffer), "%.1f%%", reading.data.hum);
 		engine.printLine(buffer);
 	}
 	else { // If sensor is in error state, print error message

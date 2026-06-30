@@ -83,8 +83,8 @@ void UIManager::submitHumConfig() {
 	settingsManager.notifyObservers();
 }
 
-void UIManager::onWeatherUpdate(const WeatherData& data) {
-	homeScreen.update(data);
+void UIManager::onWeatherUpdate(const SensorRead& reading) {
+	homeScreen.update(reading);
 	if (currentScreen == &homeScreen) {
 		dirtyFlag = true;
 	}

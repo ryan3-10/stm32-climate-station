@@ -15,14 +15,14 @@ public:
 	void log();
 	void setConfig(const LogConfig& l) { logConfig = l; }
 	void onSettingsChange(const Settings& settings) override;
-	void onWeatherUpdate(const WeatherData& weather) override { cachedWeather = weather; }
+	void onWeatherUpdate(const SensorRead& reading) override { cachedReading = reading; }
 	bool needsToLog() const;
 
 private:
 	LogConfig logConfig;
 	Ds3231Clock& clock;
 	uint32_t lastLogTime;
-	WeatherData cachedWeather;
+	SensorRead cachedReading;
 	FileManager fileManager;
 };
 

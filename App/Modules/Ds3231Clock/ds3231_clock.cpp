@@ -36,15 +36,19 @@ CLOCK_STATUS Ds3231Clock::setDateTime(const DateTime& dt) {
 
 	return sendData(buffer, 8) == HAL_OK
 		? CLOCK_STATUS::OK
-		: CLOCK_STATUS::HARDWARE_ERR;
+		: CLOCK_STATUS::SEND_ERROR;
 }
 
 CLOCK_STATUS Ds3231Clock::currentDateTime(DateTime& dt) {
 	uint8_t buffer[7];
 
 	// Set the register pointer to 0x00 and then read 7 bytes. Check that both succeed
-	if (sendData(0x00, 1) != HAL_OK || receiveData(buffer, 7) != HAL_OK) {
-		return CLOCK_STATUS::HARDWARE_ERR;
+	if (sendData(0x00, 1) != HAL_OK) {
+		return CLOCK_STATUS::SEND_ERROR;
+	}
+
+	if (receiveData(buffer, 7) != HAL_OK) {
+		return CLOCK_STATUS::RECEIVE_ERROR;
 	}
 
 	dt.second = bcdToDecimal(buffer[0]);

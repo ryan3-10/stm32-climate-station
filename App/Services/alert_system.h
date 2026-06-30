@@ -20,7 +20,7 @@ public:
 	~AlertSystem() = default;
 
 	void update();
-	void onWeatherUpdate(const WeatherData& weather) override;
+	void onWeatherUpdate(const SensorRead& reading) override;
 	void onSettingsChange(const Settings& settings) override;
 	void setConfig(const TempAlertConfig& t) { tempConfig = t; }
 	void setConfig(const HumAlertConfig& h) { humConfig = h; }

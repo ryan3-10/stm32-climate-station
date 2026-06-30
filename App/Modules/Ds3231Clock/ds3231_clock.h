@@ -5,7 +5,7 @@
 #include <stm32f4xx_hal.h>
 
 struct DateTime;
-enum CLOCK_STATUS : uint8_t;
+enum class CLOCK_STATUS : uint8_t;
 
 class Ds3231Clock {
 public:
@@ -24,10 +24,11 @@ private:
 	I2C_HandleTypeDef* hi2c;
 };
 
-enum CLOCK_STATUS : uint8_t {
+enum class CLOCK_STATUS : uint8_t {
 	OK,
 	INVALID_INPUT,
-	HARDWARE_ERR
+	SEND_ERROR,
+	RECEIVE_ERROR
 };
 
 struct DateTime {

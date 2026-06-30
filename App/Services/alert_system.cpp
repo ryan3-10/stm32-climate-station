@@ -10,9 +10,9 @@ void AlertSystem::update() {
 	}
 }
 
-void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
+void AlertSystem::onWeatherUpdate(const SensorRead& reading) {
 	// return early if sensor is in an error state
-	if (!weather.statusOk) {
+	if (!reading.statusOk) {
 		tempState = STATE::NO_TRIGGER;
 		humState = STATE::NO_TRIGGER;
 		return;
@@ -20,9 +20,9 @@ void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 
 	// check for temp triggers
 	if (tempConfig.enabled) {
-		if (weather.temp > tempConfig.maxTemp) {
+		if (reading.data.temp > tempConfig.maxTemp) {
 			tempState = STATE::MAX_TRIGGER;
-		} else if (weather.temp < tempConfig.minTemp) {
+		} else if (reading.data.temp < tempConfig.minTemp) {
 			tempState = STATE::MIN_TRIGGER;
 		} else {
 			tempState = STATE::NO_TRIGGER;
@@ -33,9 +33,9 @@ void AlertSystem::onWeatherUpdate(const WeatherData& weather) {
 
 	// check for humidity triggers
 	if (humConfig.enabled) {
-		if (weather.hum > humConfig.maxHum) {
+		if (reading.data.hum > humConfig.maxHum) {
 			humState = STATE::MAX_TRIGGER;
-		} else if (weather.hum < humConfig.minHum) {
+		} else if (reading.data.hum < humConfig.minHum) {
 			humState = STATE::MIN_TRIGGER;
 		} else {
 			humState = STATE::NO_TRIGGER;
