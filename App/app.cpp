@@ -6,11 +6,14 @@
 #include "passive_buzzer.h"
 #include "settings_manager.h"
 #include "sht31_sensor.h"
+#include "system_health.h"
+#include "time_service.h"
 #include "weather_station.h"
 #include "ui_manager.h"
 
 namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
+	constexpr uint32_t HEALTH_CHECK_INTERVAL = 1000;
 	Sht31Sensor sensor;
 	WeatherStation ws(sensor);
 	SettingsManager settingsMan;
@@ -20,6 +23,7 @@ namespace {
 	PassiveBuzzer buzzer;
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig(), buzzer);
 	UIManager uiManager(settingsMan);
+	SystemHealth systemHealth(sensor, clock, fileManager);
 }
 
 void run_app() {
@@ -28,17 +32,16 @@ void run_app() {
 		ws.notifyObservers();
 	}
 
+	if (systemHealth.timeSinceLastRetry() >= HEALTH_CHECK_INTERVAL) {
+		systemHealth.retryFailedComponents();
+	}
+
 	if (logger.needsToLog()) {
 		logger.log();
 	}
 
-	SystemHealth newSysHealth = {
-		sensor.getStatus() == SENSOR_STATUS::OK,
-		true,
-		clock.getStatus() == CLOCK_STATUS::OK
-	};
 
-	uiManager.updateHeaderInfo(newSysHealth);
+	uiManager.updateHealthSnapshot(systemHealth.getSnapshot());
 	uiManager.renderIfDirty();
 	uiManager.handleInputs();
 	alertSystem.update();
@@ -49,7 +52,8 @@ void init_app(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
 	SSD1306_Init();
 	sensor.init(hi2c);
 	clock.init(hi2c);
-	fileManager.init();
+	fileManager.mount();
+	fileManager.createFileIfNotExist("log.txt");
 	buzzer.init(pvmTimer, TIM_CHANNEL_1);
 	buzzer.setPattern(standardPattern2);
 

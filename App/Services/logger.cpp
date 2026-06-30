@@ -6,7 +6,6 @@
 #include <string.h>
 
 void Logger::init() {
-	fileManager.init();
 	fileManager.createFileIfNotExist("log.txt");
 }
 

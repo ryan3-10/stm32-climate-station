@@ -53,9 +53,9 @@ void UIManager::handleEvent(EVENT_TYPE event) {
 	}
 }
 
-void UIManager::updateHeaderInfo(const SystemHealth& sysHealth) {
-	if (sysHealth != headerData) {
-		headerData = sysHealth;
+void UIManager::updateHealthSnapshot(const SystemHealth::Snapshot& newSnap) {
+	if (newSnap != currentSnap) {
+		currentSnap = newSnap;
 		dirtyFlag = true;
 	}
 }

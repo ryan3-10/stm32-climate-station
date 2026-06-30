@@ -37,10 +37,21 @@ FRESULT FileManager::readFromFile(const char* fileName, char* output, uint32_t n
 }
 
 
-FRESULT FileManager::init() {
+FRESULT FileManager::mount() {
 	// Mount the filesystem
 	status = f_mount(&fatFs, "", 1); //1=mount now
 	return status;
+}
+
+bool FileManager::isHardwareErr() const {
+	// Return true if a hardware error was detected
+	return
+		status == FR_DISK_ERR ||
+		status == FR_INT_ERR ||
+		status == FR_NOT_READY ||
+		status == FR_INVALID_DRIVE ||
+		status == FR_NO_FILESYSTEM ||
+		status == FR_TIMEOUT;
 }
 
 //    //Let's get some statistics from the SD card

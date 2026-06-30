@@ -7,19 +7,7 @@
 #include "rotary_encoder.h"
 #include "screen.h"
 #include "settings_manager.h"
-
-struct SystemHealth {
-	bool sensorOk = true;
-	bool sdOk = true;
-	bool clockOk = true;
-
-	bool operator!=(const SystemHealth& other) const {
-		return
-			sensorOk != other.sensorOk ||
-			sdOk != other.sdOk ||
-			clockOk != other.clockOk;
-	}
-};
+#include "system_health.h"
 
 class UIManager : public WeatherObserver {
 public:
@@ -27,7 +15,7 @@ public:
 	void handleInputs();
 	void renderIfDirty();
 	void onWeatherUpdate(const SensorRead& reading) override;
-	void updateHeaderInfo(const SystemHealth& sysHealth);
+	void updateHealthSnapshot(const SystemHealth::Snapshot& newSnap);
 
 private:
 	void handleEvent(EVENT_TYPE event);
@@ -36,7 +24,7 @@ private:
 	void submitHumConfig();
 
 	SettingsManager& settingsManager;
-	SystemHealth headerData;
+	SystemHealth::Snapshot currentSnap;
 	RotaryEncoder rotaryEncoder;
 	bool dirtyFlag = true;
 	HomeScreen homeScreen;

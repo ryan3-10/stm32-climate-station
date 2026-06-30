@@ -9,7 +9,8 @@ public:
 	FRESULT deleteNode(const char* nodeName);
 	FRESULT writeToFile(const char* fileName, const char* text);
 	FRESULT readFromFile(const char* fileName, char* output, uint32_t numBytes);
-	FRESULT init();
+	FRESULT mount();
+	bool isHardwareErr() const;
 
 private:
 	FATFS fatFs;
