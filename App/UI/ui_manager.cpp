@@ -1,6 +1,6 @@
 #include "ui_manager.h"
 
-void UIManager::update() {
+void UIManager::renderIfDirty() {
 	if (dirtyFlag) {
 		currentScreen->render(engine);
 		dirtyFlag = false;
@@ -50,6 +50,13 @@ void UIManager::handleEvent(EVENT_TYPE event) {
 		submitHumConfig();
 		currentScreen = &homeScreen;
 		break;
+	}
+}
+
+void UIManager::updateHeaderInfo(const SystemHealth& sysHealth) {
+	if (sysHealth != headerData) {
+		headerData = sysHealth;
+		dirtyFlag = true;
 	}
 }
 

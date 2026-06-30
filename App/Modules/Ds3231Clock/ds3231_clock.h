@@ -11,6 +11,7 @@ class Ds3231Clock {
 public:
 	CLOCK_STATUS currentDateTime(DateTime& dt);
 	CLOCK_STATUS setDateTime(const DateTime& dt);
+	CLOCK_STATUS getStatus() { return status; }
 	void init(I2C_HandleTypeDef* h) { hi2c = h; }
 
 private:
@@ -22,6 +23,7 @@ private:
 
 	static constexpr uint8_t ADDRESS = 0x68 << 1; // 7-bit address
 	I2C_HandleTypeDef* hi2c;
+	CLOCK_STATUS status;
 };
 
 enum class CLOCK_STATUS : uint8_t {

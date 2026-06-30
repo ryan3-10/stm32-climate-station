@@ -8,7 +8,12 @@
 
 class Logger : public WeatherObserver, public SettingsObserver {
 public:
-	Logger(const LogConfig& l, Ds3231Clock& c) : logConfig(l), clock(c) {}
+	Logger(const LogConfig& l, Ds3231Clock& c, FileManager& fm)
+		: logConfig(l)
+		, clock(c)
+		, fileManager(fm)
+	{}
+
 	~Logger() = default;
 
 	void init();
@@ -21,9 +26,9 @@ public:
 private:
 	LogConfig logConfig;
 	Ds3231Clock& clock;
+	FileManager& fileManager;
 	uint32_t lastLogTime;
 	SensorRead cachedReading;
-	FileManager fileManager;
 };
 
 

@@ -6,17 +6,16 @@ SENSOR_STATUS Sht31Sensor::getTempFAndHum(float& temp, float& hum) {
 	uint8_t data[6];
 
 	if (requestData() != HAL_OK) {
-		return SENSOR_STATUS::SEND_ERROR;
+		status = SENSOR_STATUS::SEND_ERROR;
+	} else if (receiveData(data) != HAL_OK) {
+		status = SENSOR_STATUS::RECEIVE_ERROR;
+	} else {
+		status = SENSOR_STATUS::OK;
+		temp = rawToTempF(data[0], data[1]);
+		hum = rawToHumidity(data[3], data[4]);
 	}
 
-	if (receiveData(data) != HAL_OK) {
-		return SENSOR_STATUS::RECEIVE_ERROR;
-	}
-
-	temp = rawToTempF(data[0], data[1]);
-	hum = rawToHumidity(data[3], data[4]);
-
-	return SENSOR_STATUS::OK;
+	return status;
 }
 
 float Sht31Sensor::rawToHumidity(uint8_t rawByte1, uint8_t rawByte2) const {

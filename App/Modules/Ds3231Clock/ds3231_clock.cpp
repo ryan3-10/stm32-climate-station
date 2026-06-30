@@ -34,9 +34,11 @@ CLOCK_STATUS Ds3231Clock::setDateTime(const DateTime& dt) {
 	buffer[6] = (dt.year / 100) << 7 | decimalToBcd(dt.month); // bit 7 of month register = century
 	buffer[7] = decimalToBcd(dt.year);
 
-	return sendData(buffer, 8) == HAL_OK
+	status = sendData(buffer, 8) == HAL_OK
 		? CLOCK_STATUS::OK
 		: CLOCK_STATUS::SEND_ERROR;
+
+	return status;
 }
 
 CLOCK_STATUS Ds3231Clock::currentDateTime(DateTime& dt) {
@@ -44,27 +46,27 @@ CLOCK_STATUS Ds3231Clock::currentDateTime(DateTime& dt) {
 
 	// Set the register pointer to 0x00 and then read 7 bytes. Check that both succeed
 	if (sendData(0x00, 1) != HAL_OK) {
-		return CLOCK_STATUS::SEND_ERROR;
+		status = CLOCK_STATUS::SEND_ERROR;
+	} else if (receiveData(buffer, 7) != HAL_OK) {
+		status = CLOCK_STATUS::RECEIVE_ERROR;
+	} else {
+		status = CLOCK_STATUS::OK;
+
+		dt.second = bcdToDecimal(buffer[0]);
+		dt.minute = bcdToDecimal(buffer[1]);
+		dt.hour = bcdToDecimal(buffer[2] & ~TIME_MODE_BIT_MASK); // ignore 12/24 hour bit
+		dt.day = bcdToDecimal(buffer[3]);
+		dt.date = bcdToDecimal(buffer[4]);
+		dt.month = bcdToDecimal(buffer[5] & ~CENTURY_BIT_MASK); // ignore century bit
+		dt.year = bcdToDecimal(buffer[6]);
+
+		// Check century in case I need to run this program in the year 2108
+		if (buffer[5] & CENTURY_BIT_MASK) {
+			dt.year += 100;
+		}
 	}
 
-	if (receiveData(buffer, 7) != HAL_OK) {
-		return CLOCK_STATUS::RECEIVE_ERROR;
-	}
-
-	dt.second = bcdToDecimal(buffer[0]);
-	dt.minute = bcdToDecimal(buffer[1]);
-	dt.hour = bcdToDecimal(buffer[2] & ~TIME_MODE_BIT_MASK); // ignore 12/24 hour bit
-	dt.day = bcdToDecimal(buffer[3]);
-	dt.date = bcdToDecimal(buffer[4]);
-	dt.month = bcdToDecimal(buffer[5] & ~CENTURY_BIT_MASK); // ignore century bit
-	dt.year = bcdToDecimal(buffer[6]);
-
-	// Check century in case I need to run this program in the year 2108
-	if (buffer[5] & CENTURY_BIT_MASK) {
-		dt.year += 100;
-	}
-
-	return CLOCK_STATUS::OK;
+	return status;
 }
 
 HAL_StatusTypeDef Ds3231Clock::sendData(uint8_t* data, uint8_t numBytes) {
