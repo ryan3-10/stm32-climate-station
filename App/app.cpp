@@ -10,6 +10,7 @@
 #include "time_service.h"
 #include "weather_station.h"
 #include "ui_manager.h"
+#include <stdint.h>
 
 namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
