@@ -1,10 +1,9 @@
 #include "ui_manager.h"
+#include "system_health.h"
 
-void UIManager::renderIfDirty() {
-	if (dirtyFlag) {
-		currentScreen->render(engine);
-		dirtyFlag = false;
-	}
+void UIManager::render() {
+	currentScreen->render(engine, currentlyDisplayedHealth.data());
+	dirtyFlag = false;
 }
 
 void UIManager::handleInputs() {
@@ -53,9 +52,9 @@ void UIManager::handleEvent(EVENT_TYPE event) {
 	}
 }
 
-void UIManager::updateHealthSnapshot(const SystemHealth::Snapshot& newSnap) {
-	if (newSnap != currentSnap) {
-		currentSnap = newSnap;
+void UIManager::updateHealthSummary(HealthSummary newSummary) {
+	if (newSummary != currentlyDisplayedHealth) {
+		currentlyDisplayedHealth = newSummary;
 		dirtyFlag = true;
 	}
 }

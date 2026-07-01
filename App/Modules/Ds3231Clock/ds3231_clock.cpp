@@ -8,6 +8,16 @@ namespace {
 	constexpr uint8_t CENTURY_BIT_MASK = 1 << 7;
 }
 
+void Ds3231Clock::runHealthCheck() {
+	uint8_t buffer;
+
+	if (receiveData(&buffer, 1) == HAL_OK) {
+		status = CLOCK_STATUS::OK;
+	} else {
+		status = CLOCK_STATUS::RECEIVE_ERROR;
+	}
+}
+
 bool Ds3231Clock::isValidDateTime(const DateTime& dt) {
 	// Currently checks for register correctness only, not calendar correctness
 	return
@@ -68,6 +78,8 @@ CLOCK_STATUS Ds3231Clock::currentDateTime(DateTime& dt) {
 
 	return status;
 }
+
+
 
 HAL_StatusTypeDef Ds3231Clock::sendData(uint8_t* data, uint8_t numBytes) {
 	return HAL_I2C_Master_Transmit(hi2c, ADDRESS, data, numBytes, HAL_MAX_DELAY);

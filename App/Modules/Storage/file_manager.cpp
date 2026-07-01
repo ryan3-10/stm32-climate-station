@@ -4,8 +4,15 @@
 #include <stdio.h>
 #include <string.h>
 
+void FileManager::runHealthCheck() {
+	if (!isMounted) {
+		mount();
+	}
+}
+
 FRESULT FileManager::createFileIfNotExist(const char* fileName) {
 	status = f_open(&file, fileName, FA_CREATE_NEW);
+	f_close(&file);
 	return status;
 }
 
@@ -30,7 +37,7 @@ FRESULT FileManager::readFromFile(const char* fileName, char* output, uint32_t n
 
 	//Can either use f_read OR f_gets to get data out of files
 	//f_gets is a wrapper on f_read that does some string formatting
-	char* rres = f_gets(output, numBytes, &file);
+	f_gets(output, numBytes, &file);
 	f_close(&file);
 
 	return status;
@@ -39,7 +46,22 @@ FRESULT FileManager::readFromFile(const char* fileName, char* output, uint32_t n
 
 FRESULT FileManager::mount() {
 	// Mount the filesystem
-	status = f_mount(&fatFs, "", 1); //1=mount now
+	status = f_mount(&fatFs, "", 1); //1 = mount now
+
+	if(status == FR_OK) {
+		isMounted = true;
+	}
+
+	return status;
+}
+
+FRESULT FileManager::unmount() {
+	status = f_mount(NULL, "", 0); // NULL = unmount
+
+	if (status == FR_OK) {
+		isMounted = false;
+	}
+
 	return status;
 }
 
@@ -50,10 +72,22 @@ bool FileManager::isHardwareErr() const {
 		status == FR_INT_ERR ||
 		status == FR_NOT_READY ||
 		status == FR_INVALID_DRIVE ||
+		status == FR_INVALID_OBJECT ||
 		status == FR_NO_FILESYSTEM ||
 		status == FR_TIMEOUT;
 }
 
+FRESULT FileManager::getStats(uint32_t& totalSectors, uint32_t& freeSectors) {
+	uint32_t freeClusters;
+	FATFS* fatPtr = &fatFs;
+	status = f_getfree("", &freeClusters, &fatPtr);
+
+	//Formula comes from ChaN's documentation
+	totalSectors = (fatPtr->n_fatent - 2) * fatPtr->csize;
+	freeSectors = freeClusters * fatPtr->csize;
+
+	return status;
+}
 //    //Let's get some statistics from the SD card
 //    DWORD free_clusters, free_sectors, total_sectors;
 //

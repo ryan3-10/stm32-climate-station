@@ -2,17 +2,25 @@
 #define EXTERNAL_DRIVERS_SHT31_SENSOR_H_
 
 #include "data_structs.h"
+#include "health_checkable.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-enum class SENSOR_STATUS : uint8_t;
+enum class SENSOR_STATUS : uint8_t {
+	OK,
+	SEND_ERROR,
+	RECEIVE_ERROR
+};
 
-class Sht31Sensor {
+class Sht31Sensor : public HealthCheckable {
 public:
 	Sht31Sensor() = default;
 	SENSOR_STATUS getTempFAndHum(float& temp, float& hum);
 	void init(I2C_HandleTypeDef* h) { hi2c = h; }
 	SENSOR_STATUS getStatus() { return status; }
+	const char* getErrorCode() const override { return "Se"; }
+	bool isOk() const override { return status == SENSOR_STATUS::OK; }
+	void runHealthCheck() override;
 
 
 private:
@@ -25,12 +33,6 @@ private:
 	static constexpr uint8_t ADDRESS = 0x44 << 1; // 7-bit address
 	uint8_t READ_COMMAND[2] = {0x2C, 0x06}; // Single shot, high repeat, clock stretch enabled
 	I2C_HandleTypeDef* hi2c;
-};
-
-enum class SENSOR_STATUS : uint8_t {
-	OK,
-	SEND_ERROR,
-	RECEIVE_ERROR
 };
 
 #endif /* EXTERNAL_DRIVERS_SHT31_SENSOR_H_ */

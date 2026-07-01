@@ -1,14 +1,16 @@
 #include "screen.h"
+#include "system_health.h"
 #include <stdio.h>
+#include <string.h>
 
-void Screen::render(DisplayEngine& engine) {
+void Screen::render(DisplayEngine& engine, const char* header) {
 	engine.clear();
-	engine.printHeader(getLabel());
-	draw(engine);
+	engine.printHeader(header);
+	drawBody(engine);
 	engine.updateScreen();
 }
 
-void HomeScreen::draw(DisplayEngine& engine) const {
+void HomeScreen::drawBody(DisplayEngine& engine) const {
 	engine.setFont(FONT_SIZE::MED);
 
 	if (reading.statusOk) {
@@ -28,7 +30,7 @@ void HomeScreen::draw(DisplayEngine& engine) const {
 	}
 }
 
-void MenuScreen::draw(DisplayEngine& engine) const {
+void MenuScreen::drawBody(DisplayEngine& engine) const {
 	engine.setFont(FONT_SIZE::SMALL);
 
 	// Print each menu item, highlighting the one that cursor index points to

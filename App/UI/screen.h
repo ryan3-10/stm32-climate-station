@@ -3,6 +3,7 @@
 
 #include "data_structs.h"
 #include "display_engine.h"
+#include "system_health.h"
 #include <array>
 #include <optional>
 
@@ -36,10 +37,10 @@ public:
 	virtual ~Screen() = default;
 	virtual EVENT_TYPE handleInput(INPUT_TYPE input) = 0;
 	const char* getLabel() const { return label; }
-	void render(DisplayEngine& engine);
+	void render(DisplayEngine& engine, const char* header);
 
 private:
-	virtual void draw(DisplayEngine& engine) const = 0;
+	virtual void drawBody(DisplayEngine& engine) const = 0;
 	const char* const label;
 };
 
@@ -51,7 +52,7 @@ public:
 	void update(const SensorRead& r) { reading = r; }
 
 private:
-	 void draw(DisplayEngine& engine) const override;
+	 void drawBody(DisplayEngine& engine) const override;
 	 SensorRead reading;
 };
 
@@ -66,7 +67,7 @@ public:
 	Screen* getSelection() { return selection; }
 
 private:
-	 void draw(DisplayEngine& engine) const override;
+	 void drawBody(DisplayEngine& engine) const override;
 
 	 Screen* selection = nullptr;
 	 const menuArray menu;

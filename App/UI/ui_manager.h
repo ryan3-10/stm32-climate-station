@@ -3,6 +3,7 @@
 
 #include "config_screen.h"
 #include "display_engine.h"
+#include "system_health.h"
 #include "observer.h"
 #include "rotary_encoder.h"
 #include "screen.h"
@@ -13,9 +14,10 @@ class UIManager : public WeatherObserver {
 public:
 	UIManager(SettingsManager& sm) : settingsManager(sm) {}
 	void handleInputs();
-	void renderIfDirty();
+	void render();
 	void onWeatherUpdate(const SensorRead& reading) override;
-	void updateHealthSnapshot(const SystemHealth::Snapshot& newSnap);
+	void updateHealthSummary(HealthSummary newSummary);
+	bool isDirty() { return dirtyFlag; }
 
 private:
 	void handleEvent(EVENT_TYPE event);
@@ -24,7 +26,7 @@ private:
 	void submitHumConfig();
 
 	SettingsManager& settingsManager;
-	SystemHealth::Snapshot currentSnap;
+	HealthSummary currentlyDisplayedHealth;
 	RotaryEncoder rotaryEncoder;
 	bool dirtyFlag = true;
 	HomeScreen homeScreen;

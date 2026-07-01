@@ -19,7 +19,7 @@ public:
 	void submitChanges(Callback callback) { callback(d1, d2, en); }
 
 private:
-	 void draw(DisplayEngine& engine) const override;
+	 void drawBody(DisplayEngine& engine) const override;
 	 void stepUp();
 	 void stepDown();
 

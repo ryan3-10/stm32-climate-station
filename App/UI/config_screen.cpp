@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-void ConfigScreen::draw(DisplayEngine& engine) const {
+void ConfigScreen::drawBody(DisplayEngine& engine) const {
 	char line1[16];
 	char line2[16];
 	const char* line3 = en ? "Enabled" : "Disabled";

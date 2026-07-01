@@ -3,41 +3,27 @@
 
 #include "ds3231_clock.h"
 #include "file_manager.h"
+#include "health_checkable.h"
 #include "sht31_sensor.h"
 #include "time_service.h"
+#include <array>
 #include <stdint.h>
+
+using ComponentsArray = std::array<HealthCheckable*, 3>;
+using HealthSummary = std::array<char, 20>;
 
 class SystemHealth {
 public:
-	SystemHealth(Sht31Sensor& sens, Ds3231Clock& clk, FileManager& fm)
-		: sensor(sens)
-		, clock(clk)
-		, fileManager(fm)
-	{}
-
-	uint32_t timeSinceLastRetry() { return timeElapsed(lastRetryTime); }
-
-	struct Snapshot {
-		bool sensorOk;
-		bool clockOk;
-		bool fileManagerOk;
-
-		bool operator!=(const Snapshot& other) const {
-			return
-				sensorOk != other.sensorOk ||
-				clockOk != other.clockOk ||
-				fileManagerOk != other.fileManagerOk;
-		}
-	};
-
-	Snapshot getSnapshot() const;
-	void retryFailedComponents();
+	SystemHealth(const ComponentsArray& c) : comps(c) {}
+	bool allOk() const;
+	uint32_t timeSinceLastCheck() const { return timeElapsed(lastHealthCheckTime); }
+	void healthCheckFailed();
+	void healthCheckAll();
+	HealthSummary getHealthSummary() const;
 
 private:
-	Sht31Sensor& sensor;
-	Ds3231Clock& clock;
-	FileManager& fileManager;
-	uint32_t lastRetryTime = 0;
+	ComponentsArray comps;
+	uint32_t lastHealthCheckTime = 0;
 };
 
 #endif /* SERVICES_SYSTEM_HEALTH_H_ */

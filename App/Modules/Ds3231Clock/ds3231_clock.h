@@ -1,18 +1,28 @@
 #ifndef MODULES_DS3231CLOCK_DS3231_CLOCK_H_
 #define MODULES_DS3231CLOCK_DS3231_CLOCK_H_
 
+#include "health_checkable.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
 struct DateTime;
-enum class CLOCK_STATUS : uint8_t;
 
-class Ds3231Clock {
+enum class CLOCK_STATUS : uint8_t {
+	OK,
+	INVALID_INPUT,
+	SEND_ERROR,
+	RECEIVE_ERROR
+};
+
+class Ds3231Clock : public HealthCheckable {
 public:
 	CLOCK_STATUS currentDateTime(DateTime& dt);
 	CLOCK_STATUS setDateTime(const DateTime& dt);
 	CLOCK_STATUS getStatus() { return status; }
 	void init(I2C_HandleTypeDef* h) { hi2c = h; }
+	const char* getErrorCode() const override { return "Cl"; }
+	bool isOk() const override { return status == CLOCK_STATUS::OK; }
+	void runHealthCheck() override;
 
 private:
 	bool isValidDateTime(const DateTime& dt);
@@ -24,13 +34,6 @@ private:
 	static constexpr uint8_t ADDRESS = 0x68 << 1; // 7-bit address
 	I2C_HandleTypeDef* hi2c;
 	CLOCK_STATUS status;
-};
-
-enum class CLOCK_STATUS : uint8_t {
-	OK,
-	INVALID_INPUT,
-	SEND_ERROR,
-	RECEIVE_ERROR
 };
 
 struct DateTime {

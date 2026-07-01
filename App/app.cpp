@@ -23,7 +23,7 @@ namespace {
 	PassiveBuzzer buzzer;
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig(), buzzer);
 	UIManager uiManager(settingsMan);
-	SystemHealth systemHealth(sensor, clock, fileManager);
+	SystemHealth systemHealth({&sensor, &clock, &fileManager});
 }
 
 void run_app() {
@@ -32,17 +32,19 @@ void run_app() {
 		ws.notifyObservers();
 	}
 
-	if (systemHealth.timeSinceLastRetry() >= HEALTH_CHECK_INTERVAL) {
-		systemHealth.retryFailedComponents();
+	if (systemHealth.timeSinceLastCheck() >= HEALTH_CHECK_INTERVAL) {
+		systemHealth.healthCheckFailed();
 	}
 
 	if (logger.needsToLog()) {
 		logger.log();
 	}
 
+	uiManager.updateHealthSummary(systemHealth.getHealthSummary());
 
-	uiManager.updateHealthSnapshot(systemHealth.getSnapshot());
-	uiManager.renderIfDirty();
+	if (uiManager.isDirty()) {
+		uiManager.render();
+	}
 	uiManager.handleInputs();
 	alertSystem.update();
 }
@@ -56,6 +58,9 @@ void init_app(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
 	fileManager.createFileIfNotExist("log.txt");
 	buzzer.init(pvmTimer, TIM_CHANNEL_1);
 	buzzer.setPattern(standardPattern2);
+
+	// initial health check
+	systemHealth.healthCheckAll();
 
 	// Weather observers
 	ws.addObserver(&uiManager);

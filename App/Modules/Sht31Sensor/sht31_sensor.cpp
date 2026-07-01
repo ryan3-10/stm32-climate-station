@@ -2,6 +2,11 @@
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
+void Sht31Sensor::runHealthCheck() {
+	float dummy;
+	getTempFAndHum(dummy, dummy);
+}
+
 SENSOR_STATUS Sht31Sensor::getTempFAndHum(float& temp, float& hum) {
 	uint8_t data[6];
 
