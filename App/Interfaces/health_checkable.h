@@ -3,6 +3,7 @@
 
 class HealthCheckable {
 public:
+	virtual ~HealthCheckable() = default;
 	virtual const char* getErrorCode() const = 0;
 	virtual bool isOk() const = 0;
 	virtual void runHealthCheck() = 0;
