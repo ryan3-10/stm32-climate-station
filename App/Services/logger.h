@@ -5,9 +5,7 @@
 #include "config_models.h"
 #include "observer.h"
 #include "weather_models.h"
-#include "file_manager.h"
 #include <stdio.h>
-#include <string.h>
 #include <utils.h>
 
 class Logger : public WeatherObserver, public SettingsObserver {
@@ -15,36 +13,27 @@ public:
 	Logger(const LogConfig& l, IClock& c) : logConfig(l) , clock(c) {}
 
 	template <typename FileWriter>
-	void log(FileWriter writer) {
-		char dtBuf[25];
+	void log(FileWriter& writer) {
+		Utils::LoggableString dtStr{};
 		DateTime dt;
 
 		if (clock.now(dt)) {
-			snprintf(
-				dtBuf,
-				sizeof(dtBuf),
-				"%02u/%02u/%02u %02u:%02u:%02u",
-				dt.month, dt.date, dt.year, dt.hour, dt.minute, dt.second
-			);
+			dtStr = Utils::getLoggableString(dt);
 		} else {
-			strncpy(dtBuf, "Clock Error", sizeof(dtBuf) - 1);
+			snprintf(dtStr.data(), dtStr.size(), "%s", "Clock Error");
 		}
 
-		char weatherBuf[30] = {0};
+		Utils::LoggableString wdStr{};
+
 		if (lastReading.statusOk) {
-			snprintf(
-				weatherBuf,
-				sizeof(weatherBuf),
-				"%.1fF %.1f%%",
-				lastReading.data.temp, lastReading.data.hum
-			);
+			wdStr = Utils::getLoggableString(lastReading.data);
 		} else {
-			strncpy(weatherBuf, "Sensor Error", sizeof(weatherBuf) - 1);
+			snprintf(wdStr.data(), wdStr.size(), "%s", "Sensor Error");
 		}
 
-		char masterBuf[60];
-		snprintf(masterBuf, sizeof(masterBuf), "%s %s\n", dtBuf, weatherBuf);
-		writer.writeToFile("log.txt", masterBuf);
+		char buf[60];
+		snprintf(buf, sizeof(buf), "%s %s\n", dtStr.data(), wdStr.data());
+		writer.writeToFile("log.txt", buf);
 		lastLogTime = Utils::getTick();
 	}
 

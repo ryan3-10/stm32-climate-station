@@ -1,9 +1,10 @@
 #include "alert_system.h"
 #include "app.h"
-#include "ds3231_adapter.h"
+
+#include <sht31_sensor.h>
+#include "ds3231_clock.h"
 #include "logger.h"
 #include "settings_manager.h"
-#include "sht31_adapter.h"
 #include "system_health.h"
 #include "utils.h"
 #include "weather_station.h"
@@ -19,11 +20,11 @@ namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
 	constexpr uint32_t HEALTH_CHECK_INTERVAL = 1000;
 	Sht31 sensor;
-	Sht31Adapter sensorAdapter(sensor);
+	Sht31Sensor sensorAdapter(sensor);
 	WeatherStation ws(sensor);
 	SettingsManager settingsMan;
 	Ds3231 clock;
-	Ds3231Adapter clockAdapter(clock);
+	Ds3231Clock clockAdapter(clock);
 	FileManager fileManager;
 	Logger logger(settingsMan.getLogConfig(), clockAdapter);
 	PassiveBuzzer buzzer;

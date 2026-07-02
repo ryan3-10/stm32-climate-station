@@ -6,9 +6,9 @@
 
 #include "../Drivers/Ds3231/ds3231.h"
 
-class Ds3231Adapter : public IClock, public IHealthCheckable {
+class Ds3231Clock : public IClock, public IHealthCheckable {
 public:
-	Ds3231Adapter(Ds3231& d) : ds3231(d) {}
+	Ds3231Clock(Ds3231& d) : ds3231(d) {}
 	const char* getErrorCode() const override { return "Cl"; }
 	bool isOk() const override { return ds3231.getStatus() == Ds3231::Status::Ok; }
 	void runHealthCheck() override;
