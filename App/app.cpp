@@ -43,7 +43,7 @@ void run_app() {
 	}
 
 	if (logger.needsToLog()) {
-		logger.log();
+		logger.log<FileManager>(fileManager);
 	}
 
 	uiManager.updateHealthSummary(systemHealth.getHealthSummary());

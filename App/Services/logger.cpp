@@ -2,44 +2,10 @@
 #include "logger.h"
 #include "math.h"
 #include "utils.h"
-#include <stdio.h>
-#include <string.h>
+
 
 void Logger::init() {
 	fileManager.createFileIfNotExist("log.txt");
-}
-
-void Logger::log() {
-	char dtBuf[25];
-	DateTime dt;
-
-	if (clock.now(dt)) {
-		snprintf(
-			dtBuf,
-			sizeof(dtBuf),
-			"%02u/%02u/%02u %02u:%02u:%02u",
-			dt.month, dt.date, dt.year, dt.hour, dt.minute, dt.second
-		);
-	} else {
-		strncpy(dtBuf, "Clock Error", sizeof(dtBuf) - 1);
-	}
-
-	char weatherBuf[30] = {0};
-	if (lastReading.statusOk) {
-		snprintf(
-			weatherBuf,
-			sizeof(weatherBuf),
-			"%.1fF %.1f%%",
-			lastReading.data.temp, lastReading.data.hum
-		);
-	} else {
-		strncpy(weatherBuf, "Sensor Error", sizeof(weatherBuf) - 1);
-	}
-
-	char masterBuf[60];
-	snprintf(masterBuf, sizeof(masterBuf), "%s %s\n", dtBuf, weatherBuf);
-	fileManager.writeToFile("log.txt", masterBuf);
-	lastLogTime = Utils::getTick();
 }
 
 bool Logger::needsToLog() const {
@@ -55,7 +21,7 @@ void Logger::onSettingsChange(const Settings& settings) {
 	if (settings.log != logConfig) {
 		logConfig = settings.log;
 		if (logConfig.enabled) {
-			log();
+//			log();
 		}
 	}
 }
