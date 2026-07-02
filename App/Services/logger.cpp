@@ -3,11 +3,6 @@
 #include "math.h"
 #include "utils.h"
 
-
-void Logger::init() {
-	fileManager.createFileIfNotExist("log.txt");
-}
-
 bool Logger::needsToLog() const {
 	if (!logConfig.enabled) {
 		return false;

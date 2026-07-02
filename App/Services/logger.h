@@ -12,15 +12,7 @@
 
 class Logger : public WeatherObserver, public SettingsObserver {
 public:
-	Logger(const LogConfig& l, IClock& c, FileManager& fm)
-		: logConfig(l)
-		, clock(c)
-		, fileManager(fm)
-	{}
-
-	~Logger() = default;
-
-	void init();
+	Logger(const LogConfig& l, IClock& c) : logConfig(l) , clock(c) {}
 
 	template <typename FileWriter>
 	void log(FileWriter writer) {
@@ -64,7 +56,6 @@ public:
 private:
 	LogConfig logConfig;
 	IClock& clock;
-	FileManager& fileManager;
 	uint32_t lastLogTime;
 	SensorRead lastReading;
 };

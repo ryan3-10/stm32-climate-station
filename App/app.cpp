@@ -25,7 +25,7 @@ namespace {
 	Ds3231 clock;
 	Ds3231Adapter clockAdapter(clock);
 	FileManager fileManager;
-	Logger logger(settingsMan.getLogConfig(), clockAdapter, fileManager);
+	Logger logger(settingsMan.getLogConfig(), clockAdapter);
 	PassiveBuzzer buzzer;
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig(), buzzer);
 	UIManager uiManager(settingsMan);
