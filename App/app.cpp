@@ -1,10 +1,12 @@
 #include "alert_system.h"
 #include "app.h"
+#include "ds3231_adapter.h"
 #include "ds3231_clock.h"
 #include "file_manager.h"
 #include "logger.h"
 #include "passive_buzzer.h"
 #include "settings_manager.h"
+#include "sht31_adapter.h"
 #include "sht31_sensor.h"
 #include "system_health.h"
 #include "time_service.h"
@@ -16,15 +18,17 @@ namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
 	constexpr uint32_t HEALTH_CHECK_INTERVAL = 1000;
 	Sht31Sensor sensor;
+	Sht31Adapter sensorAdapter(sensor);
 	WeatherStation ws(sensor);
 	SettingsManager settingsMan;
 	Ds3231Clock clock;
+	Ds3231Adapter clockAdapter(clock);
 	FileManager fileManager;
-	Logger logger(settingsMan.getLogConfig(), clock, fileManager);
+	Logger logger(settingsMan.getLogConfig(), clockAdapter, fileManager);
 	PassiveBuzzer buzzer;
 	AlertSystem alertSystem(settingsMan.getTempConfig(), settingsMan.getHumConfig(), buzzer);
 	UIManager uiManager(settingsMan);
-	SystemHealth systemHealth({&sensor, &clock, &fileManager});
+	SystemHealth systemHealth({&sensorAdapter, &clockAdapter, &fileManager});
 }
 
 void run_app() {

@@ -1,9 +1,9 @@
 #ifndef INTERFACES_HEALTH_CHECKABLE_H_
 #define INTERFACES_HEALTH_CHECKABLE_H_
 
-class HealthCheckable {
+class IHealthCheckable {
 public:
-	virtual ~HealthCheckable() = default;
+	virtual ~IHealthCheckable() = default;
 	virtual const char* getErrorCode() const = 0;
 	virtual bool isOk() const = 0;
 	virtual void runHealthCheck() = 0;

@@ -2,20 +2,15 @@
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-void Sht31Sensor::runHealthCheck() {
-	float dummy;
-	getTempFAndHum(dummy, dummy);
-}
-
-SENSOR_STATUS Sht31Sensor::getTempFAndHum(float& temp, float& hum) {
+Sht31Sensor::Status Sht31Sensor::getTempFAndHum(float& temp, float& hum) {
 	uint8_t data[6];
 
 	if (requestData() != HAL_OK) {
-		status = SENSOR_STATUS::SEND_ERROR;
+		status = Status::SendError;
 	} else if (receiveData(data) != HAL_OK) {
-		status = SENSOR_STATUS::RECEIVE_ERROR;
+		status = Status::ReceiveError;
 	} else {
-		status = SENSOR_STATUS::OK;
+		status = Status::Ok;
 		temp = rawToTempF(data[0], data[1]);
 		hum = rawToHumidity(data[3], data[4]);
 	}

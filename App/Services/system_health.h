@@ -9,7 +9,7 @@
 #include <array>
 #include <stdint.h>
 
-using ComponentsArray = std::array<HealthCheckable*, 3>;
+using ComponentsArray = std::array<IHealthCheckable*, 3>;
 using HealthSummary = std::array<char, 20>;
 
 class SystemHealth {

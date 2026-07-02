@@ -4,7 +4,6 @@
 #include <stdint.h>
 
 struct WeatherData {
-	bool statusOk = true;
 	float temp = 0.0f;
 	float hum = 0.0f;
 };

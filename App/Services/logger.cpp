@@ -1,4 +1,4 @@
-#include "ds3231_clock.h"
+#include "clock.h"
 #include "logger.h"
 #include "math.h"
 #include "time_service.h"
@@ -13,7 +13,7 @@ void Logger::log() {
 	char dtBuf[25];
 	DateTime dt;
 
-	if (clock.currentDateTime(dt) == CLOCK_STATUS::OK) {
+	if (clock.now(dt)) {
 		snprintf(
 			dtBuf,
 			sizeof(dtBuf),
@@ -25,12 +25,12 @@ void Logger::log() {
 	}
 
 	char weatherBuf[30] = {0};
-	if (cachedReading.statusOk) {
+	if (lastReading.statusOk) {
 		snprintf(
 			weatherBuf,
 			sizeof(weatherBuf),
 			"%.1fF %.1f%%",
-			cachedReading.data.temp, cachedReading.data.hum
+			lastReading.data.temp, lastReading.data.hum
 		);
 	} else {
 		strncpy(weatherBuf, "Sensor Error", sizeof(weatherBuf) - 1);
@@ -38,7 +38,6 @@ void Logger::log() {
 
 	char masterBuf[60];
 	snprintf(masterBuf, sizeof(masterBuf), "%s %s\n", dtBuf, weatherBuf);
-
 	fileManager.writeToFile("log.txt", masterBuf);
 	lastLogTime = getTick();
 }

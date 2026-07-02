@@ -5,7 +5,7 @@ void WeatherStation::update() {
 	lastRead.statusOk = sensor.getTempFAndHum(
 			lastRead.data.temp,
 			lastRead.data.hum
-		) == SENSOR_STATUS::OK;
+		) == Sht31Sensor::Status::Ok;
 
 	lastReadTime = getTick();
 }

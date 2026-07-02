@@ -4,7 +4,7 @@
 #ifndef ADAPTERS_INC_FILE_MANAGER_H_
 #define ADAPTERS_INC_FILE_MANAGER_H_
 
-class FileManager : public HealthCheckable {
+class FileManager : public IHealthCheckable {
 public:
 	FRESULT createFileIfNotExist(const char* fileName);
 	FRESULT deleteNode(const char* nodeName);
