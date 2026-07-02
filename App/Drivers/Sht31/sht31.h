@@ -1,12 +1,10 @@
 #ifndef EXTERNAL_DRIVERS_SHT31_SENSOR_H_
 #define EXTERNAL_DRIVERS_SHT31_SENSOR_H_
 
-#include "data_structs.h"
-#include "health_checkable.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-class Sht31Sensor {
+class Sht31 {
 public:
 	enum class Status : uint8_t {
 		Ok,

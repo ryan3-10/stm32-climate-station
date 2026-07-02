@@ -1,8 +1,9 @@
 #include "display_engine.h"
-#include "fonts.h"
-#include "ssd1306.h"
+
 #include <stdint.h>
 #include <stdio.h>
+#include "fonts.h"
+#include "ssd1306.h"
 
 
 constexpr uint8_t BODY_START_ROW = 16;

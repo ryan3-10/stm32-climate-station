@@ -1,9 +1,10 @@
 #ifndef OLED_INC_DISPLAY_ENGINE_H_
 #define OLED_INC_DISPLAY_ENGINE_H_
 
-#include "fonts.h"
-#include "ssd1306.h"
 #include <stdint.h>
+
+#include "../Drivers/Ssd1306/fonts.h"
+#include "../Drivers/Ssd1306/ssd1306.h"
 
 enum class FONT_SIZE : uint8_t {
 	SMALL,

@@ -2,13 +2,13 @@
 #define UI_INC_UI_MANAGER_H_
 
 #include "config_screen.h"
-#include "display_engine.h"
 #include "system_health.h"
 #include "observer.h"
-#include "rotary_encoder.h"
 #include "screen.h"
 #include "settings_manager.h"
 #include "system_health.h"
+#include "display_engine.h"
+#include "rotary_encoder.h"
 
 class UIManager : public WeatherObserver {
 public:

@@ -1,11 +1,10 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include "data_structs.h"
-#include "display_engine.h"
 #include "system_health.h"
+#include "weather_models.h"
 #include <array>
-#include <optional>
+#include "display_engine.h"
 
 enum class INPUT_TYPE : uint8_t {
 	LEFT,

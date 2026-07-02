@@ -1,7 +1,7 @@
 #ifndef INC_SETTINGS_MANAGER_H_
 #define INC_SETTINGS_MANAGER_H_
 
-#include "data_structs.h"
+#include "config_models.h"
 #include "observer.h"
 
 class SettingsManager : public Subject<SettingsObserver> {

@@ -1,7 +1,8 @@
 #ifndef UTILS_INC_OBSERVER_H_
 #define UTILS_INC_OBSERVER_H_
 
-#include "data_structs.h"
+#include "config_models.h"
+#include "weather_models.h"
 #include <array>
 #include <stdint.h>
 

@@ -1,11 +1,11 @@
-#ifndef MODULES_DS3231CLOCK_DS3231_CLOCK_H_
-#define MODULES_DS3231CLOCK_DS3231_CLOCK_H_
+#ifndef DRIVERS_DS3231_DS3231_H_
+#define DRIVERS_DS3231_DS3231_H_
 
 #include "health_checkable.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 
-class Ds3231Clock {
+class Ds3231 {
 public:
 	enum class Status : uint8_t {
 		Ok,
@@ -39,4 +39,4 @@ private:
 	};
 };
 
-#endif /* MODULES_DS3231CLOCK_DS3231_CLOCK_H_ */
+#endif /* DRIVERS_DS3231_DS3231_H_ */

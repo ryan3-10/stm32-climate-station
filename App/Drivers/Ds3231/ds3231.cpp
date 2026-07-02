@@ -1,4 +1,5 @@
-#include "ds3231_clock.h"
+#include "ds3231.h"
+
 #include <array>
 #include <stdint.h>
 #include <stdio.h>
@@ -11,7 +12,7 @@ namespace {
 	constexpr uint8_t CENTURY_MASK = 1 << CENTURY_BIT;
 }
 
-Ds3231Clock::Status Ds3231Clock::setDateTime(uint8_t* inBuffer) {
+Ds3231::Status Ds3231::setDateTime(uint8_t* inBuffer) {
 	uint8_t rawBuffer[8] = {0};
 
 	// buffer[0] is the register pointer, which we want to leave at 0x00
@@ -29,7 +30,7 @@ Ds3231Clock::Status Ds3231Clock::setDateTime(uint8_t* inBuffer) {
 	return status;
 }
 
-Ds3231Clock::Status Ds3231Clock::currentDateTime(uint8_t* outBuffer) {
+Ds3231::Status Ds3231::currentDateTime(uint8_t* outBuffer) {
 	uint8_t rawBuffer[7];
 
 	// Set the register pointer to 0x00 and then read 7 bytes. Check that both succeed
@@ -56,19 +57,19 @@ Ds3231Clock::Status Ds3231Clock::currentDateTime(uint8_t* outBuffer) {
 	return status;
 }
 
-HAL_StatusTypeDef Ds3231Clock::sendData(uint8_t* data, uint8_t numBytes) {
+HAL_StatusTypeDef Ds3231::sendData(uint8_t* data, uint8_t numBytes) {
 	return HAL_I2C_Master_Transmit(hi2c, ADDRESS, data, numBytes, HAL_MAX_DELAY);
 }
 
-HAL_StatusTypeDef Ds3231Clock::receiveData(uint8_t* buffer, uint8_t numBytes) {
+HAL_StatusTypeDef Ds3231::receiveData(uint8_t* buffer, uint8_t numBytes) {
 	return HAL_I2C_Master_Receive(hi2c, ADDRESS, buffer, numBytes, HAL_MAX_DELAY);
 }
 
-uint8_t Ds3231Clock::decimalToBcd(uint8_t decimal) {
+uint8_t Ds3231::decimalToBcd(uint8_t decimal) {
 	return (decimal / 10) << 4 | decimal % 10;
 }
 
-uint8_t Ds3231Clock::bcdToDecimal(uint8_t bcd) {
+uint8_t Ds3231::bcdToDecimal(uint8_t bcd) {
 	// extract high nibble, shift it right 4, and multiply by 10 for tens place
 	uint8_t tens = ((bcd & 0xF0) >> 4) * 10;
 

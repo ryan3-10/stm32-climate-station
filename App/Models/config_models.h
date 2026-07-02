@@ -1,17 +1,7 @@
-#ifndef APP_CONFIG_H_
-#define APP_CONFIG_H_
+#ifndef MODELS_CONFIG_MODELS_H_
+#define MODELS_CONFIG_MODELS_H_
 
 #include <stdint.h>
-
-struct WeatherData {
-	float temp = 0.0f;
-	float hum = 0.0f;
-};
-
-struct SensorRead {
-	WeatherData data;
-	bool statusOk;
-};
 
 struct LogConfig {
 	uint16_t hourInt = 0;
@@ -46,4 +36,4 @@ struct Settings {
 };
 
 
-#endif /* INC_APP_CONFIG_H_ */
+#endif /* MODELS_CONFIG_MODELS_H_ */

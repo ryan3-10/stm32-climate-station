@@ -1,4 +1,5 @@
-#include "rotary_encoder.h"
+#include "../../Drivers/RotaryEncoder/rotary_encoder.h"
+
 #include <atomic>
 #include <stdint.h>
 #include <stm32f4xx_hal.h>

@@ -1,13 +1,13 @@
-#include "time_service.h"
+#include "utils.h"
 #include "weather_station.h"
 
 void WeatherStation::update() {
 	lastRead.statusOk = sensor.getTempFAndHum(
 			lastRead.data.temp,
 			lastRead.data.hum
-		) == Sht31Sensor::Status::Ok;
+		) == Sht31::Status::Ok;
 
-	lastReadTime = getTick();
+	lastReadTime = Utils::getTick();
 }
 
 void WeatherStation::notifyObservers() const {
@@ -17,5 +17,5 @@ void WeatherStation::notifyObservers() const {
 }
 
 uint32_t WeatherStation::timeSinceLastRead() {
-	return timeElapsed(lastReadTime);
+	return Utils::timeElapsed(lastReadTime);
 }

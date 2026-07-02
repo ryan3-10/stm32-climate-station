@@ -1,27 +1,28 @@
 #include "alert_system.h"
 #include "app.h"
 #include "ds3231_adapter.h"
-#include "ds3231_clock.h"
-#include "file_manager.h"
 #include "logger.h"
-#include "passive_buzzer.h"
 #include "settings_manager.h"
 #include "sht31_adapter.h"
-#include "sht31_sensor.h"
 #include "system_health.h"
-#include "time_service.h"
+#include "utils.h"
 #include "weather_station.h"
 #include "ui_manager.h"
 #include <stdint.h>
+#include "Drivers/PassiveBuzzer/passive_buzzer.h"
+#include "Drivers/Sht31/sht31.h"
+
+#include "Drivers/Ds3231/ds3231.h"
+#include "file_manager.h"
 
 namespace {
 	constexpr uint32_t READ_INTERVAL = 1000;
 	constexpr uint32_t HEALTH_CHECK_INTERVAL = 1000;
-	Sht31Sensor sensor;
+	Sht31 sensor;
 	Sht31Adapter sensorAdapter(sensor);
 	WeatherStation ws(sensor);
 	SettingsManager settingsMan;
-	Ds3231Clock clock;
+	Ds3231 clock;
 	Ds3231Adapter clockAdapter(clock);
 	FileManager fileManager;
 	Logger logger(settingsMan.getLogConfig(), clockAdapter, fileManager);

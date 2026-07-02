@@ -1,11 +1,11 @@
-#include "ds3231_clock.h"
-#include "file_manager.h"
 #include "health_checkable.h"
-#include "sht31_sensor.h"
+#include "sht31.h"
 #include "system_health.h"
-#include "time_service.h"
+#include "utils.h"
 #include <array>
 #include <string.h>
+#include "ds3231.h"
+
 
 HealthSummary SystemHealth::getHealthSummary() const {
 	if (allOk()) {
@@ -42,7 +42,7 @@ void SystemHealth::healthCheckFailed() {
 		}
 	}
 
-	lastHealthCheckTime = getTick();
+	lastHealthCheckTime = Utils::getTick();
 }
 
 void SystemHealth::healthCheckAll() {
@@ -50,7 +50,7 @@ void SystemHealth::healthCheckAll() {
 		comp->runHealthCheck();
 	}
 
-	lastHealthCheckTime = getTick();
+	lastHealthCheckTime = Utils::getTick();
 }
 
 

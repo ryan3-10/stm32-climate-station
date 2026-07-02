@@ -1,8 +1,9 @@
 #ifndef SERVICES_INC_ALERT_SYSTEM_H_
 #define SERVICES_INC_ALERT_SYSTEM_H_
 
-#include "data_structs.h"
+#include "config_models.h"
 #include "observer.h"
+
 #include "passive_buzzer.h"
 
 enum class ALERT_SYS_STATE : uint8_t {

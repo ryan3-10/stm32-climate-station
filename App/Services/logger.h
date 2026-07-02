@@ -2,9 +2,10 @@
 #define SERVICES_INC_LOGGER_H_
 
 #include "clock.h"
-#include "data_structs.h"
-#include "file_manager.h"
+#include "config_models.h"
 #include "observer.h"
+#include "weather_models.h"
+#include "file_manager.h"
 
 class Logger : public WeatherObserver, public SettingsObserver {
 public:

@@ -1,7 +1,7 @@
 #ifndef INTERFACES_WEATHER_SENSOR_H_
 #define INTERFACES_WEATHER_SENSOR_H_
 
-#include "data_structs.h"
+#include "weather_models.h"
 
 class IWeatherSensor {
 public:

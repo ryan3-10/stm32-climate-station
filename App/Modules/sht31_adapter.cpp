@@ -7,5 +7,5 @@ void Sht31Adapter::runHealthCheck() {
 }
 
 bool Sht31Adapter::getReading(WeatherData& wd) {
-	return sht31.getTempFAndHum(wd.temp, wd.hum) == Sht31Sensor::Status::Ok;
+	return sht31.getTempFAndHum(wd.temp, wd.hum) == Sht31::Status::Ok;
 }

@@ -1,7 +1,7 @@
 #include "clock.h"
 #include "logger.h"
 #include "math.h"
-#include "time_service.h"
+#include "utils.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -39,7 +39,7 @@ void Logger::log() {
 	char masterBuf[60];
 	snprintf(masterBuf, sizeof(masterBuf), "%s %s\n", dtBuf, weatherBuf);
 	fileManager.writeToFile("log.txt", masterBuf);
-	lastLogTime = getTick();
+	lastLogTime = Utils::getTick();
 }
 
 bool Logger::needsToLog() const {
@@ -47,8 +47,8 @@ bool Logger::needsToLog() const {
 		return false;
 	}
 
-	auto miliInterval = hoursToMili(logConfig.hourInt) + minToMili(logConfig.minInt);
-	return getTick() - lastLogTime >= miliInterval;
+	auto miliInterval = Utils::hoursToMili(logConfig.hourInt) + Utils::minToMili(logConfig.minInt);
+	return Utils::getTick() - lastLogTime >= miliInterval;
 }
 
 void Logger::onSettingsChange(const Settings& settings) {
