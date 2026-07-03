@@ -12,7 +12,7 @@ enum class ALERT_SYS_STATE : uint8_t {
 	MIN_TRIGGER
 };
 
-class AlertSystem : public WeatherObserver, public SettingsObserver {
+class AlertSystem : public WeatherObserver {
 public:
 	AlertSystem(const TempAlertConfig& t, const HumAlertConfig& h, PassiveBuzzer& pb)
 		: tempConfig(t), humConfig(h), buzzer(pb)
@@ -22,13 +22,14 @@ public:
 
 	void update();
 	void onWeatherUpdate(const SensorRead& reading) override;
-	void onSettingsChange(const Settings& settings) override;
-	void setConfig(const TempAlertConfig& t) { tempConfig = t; }
-	void setConfig(const HumAlertConfig& h) { humConfig = h; }
+	void setConfig(const TempAlertConfig& t);
+	void setConfig(const HumAlertConfig& h);
 	ALERT_SYS_STATE getTempState() const { return tempState; }
 	ALERT_SYS_STATE getHumState() const { return humState; }
 
 private:
+	void updateState();
+	SensorRead lastReading;
 	TempAlertConfig tempConfig;
 	HumAlertConfig humConfig;
 	PassiveBuzzer& buzzer;

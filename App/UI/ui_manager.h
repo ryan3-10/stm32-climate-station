@@ -9,32 +9,30 @@
 #include "system_health.h"
 #include "display_engine.h"
 #include "rotary_encoder.h"
+#include "ui_models.h"
+#include <optional>
 
 class UIManager : public WeatherObserver {
 public:
-	UIManager(SettingsManager& sm) : settingsManager(sm) {}
 	void handleInputs();
-	void render();
+	std::optional<Submission> handleInput(INPUT_TYPE input);
 	void onWeatherUpdate(const SensorRead& reading) override;
-	void updateHealthSummary(HealthSummary newSummary);
-	bool isDirty() { return dirtyFlag; }
+	void setHealthSummary(HealthSummary newSummary);
+	void update();
 
 private:
-	void handleEvent(EVENT_TYPE event);
-	void submitLogConfig();
-	void submitTempConfig();
-	void submitHumConfig();
+	struct ScreenSet {
+		HomeScreen home;
+		ConfigScreen log{LogLayout(), EVENT_TYPE::LOG_CONFIG_SAVED};
+		ConfigScreen temp{TempAlertLayout(), EVENT_TYPE::TEMP_CONFIG_SAVED};
+		ConfigScreen hum{HumAlertLayout(), EVENT_TYPE::HUM_CONFIG_SAVED};
+		MenuScreen menu{{&home, &log, &temp, &hum}};
+	};
 
-	SettingsManager& settingsManager;
-	HealthSummary currentlyDisplayedHealth;
-	RotaryEncoder rotaryEncoder;
+	HealthSummary displayedHealth;
 	bool dirtyFlag = true;
-	HomeScreen homeScreen;
-	ConfigScreen logScreen{LogLayout(), EVENT_TYPE::LOG_CONFIG_SAVED};
-	ConfigScreen tempAlertsScreen{TempAlertLayout(), EVENT_TYPE::TEMP_CONFIG_SAVED};
-	ConfigScreen humAlertsScreen{HumAlertLayout(), EVENT_TYPE::HUM_CONFIG_SAVED};
-	MenuScreen menuScreen{{&homeScreen, &logScreen, &tempAlertsScreen, &humAlertsScreen}};
-	Screen* currentScreen = &homeScreen;
+	ScreenSet screens;
+	Screen* currentScreen = &screens.home;
 	DisplayEngine engine;
 };
 

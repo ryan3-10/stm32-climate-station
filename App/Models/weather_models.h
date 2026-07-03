@@ -7,8 +7,8 @@ struct WeatherData {
 };
 
 struct SensorRead {
-	WeatherData data;
-	bool statusOk;
+	WeatherData data {};
+	bool statusOk = false;
 };
 
 #endif /* MODELS_WEATHER_MODELS_H_ */

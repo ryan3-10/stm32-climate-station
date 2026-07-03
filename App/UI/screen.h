@@ -1,33 +1,12 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
+#include <array>
+#include "config_models.h"
+#include "display_engine.h"
 #include "system_health.h"
 #include "weather_models.h"
-#include <array>
-#include "display_engine.h"
-
-enum class INPUT_TYPE : uint8_t {
-	LEFT,
-	ENTER,
-	RIGHT
-};
-
-enum class EVENT_TYPE : uint8_t {
-	NONE,
-	HOME_LEFT,
-	MENU_ITEM_SELECTED,
-	LOG_CONFIG_SAVED,
-	TEMP_CONFIG_SAVED,
-	HUM_CONFIG_SAVED
-};
-
-struct ConfigScreenLayout {
-	const char* header;
-	uint16_t MAX_VALUE;
-	const char* preData1;
-	const char* preData2;
-	const char postData;
-};
+#include "ui_models.h"
 
 class Screen {
 public:

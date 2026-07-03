@@ -11,7 +11,7 @@ public:
 	const char* getErrorCode() const override { return "Se"; }
 	bool isOk() const override { return sht31.getStatus() == Sht31::Status::Ok; }
 	void runHealthCheck() override;
-	bool getReading(WeatherData& wd) override;
+	bool getWeather(WeatherData& wd) override;
 
 private:
 	Sht31& sht31;

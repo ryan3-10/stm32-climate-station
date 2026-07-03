@@ -6,6 +6,6 @@ void Sht31Sensor::runHealthCheck() {
 	sht31.getTempFAndHum(dummy, dummy);
 }
 
-bool Sht31Sensor::getReading(WeatherData& wd) {
+bool Sht31Sensor::getWeather(WeatherData& wd) {
 	return sht31.getTempFAndHum(wd.temp, wd.hum) == Sht31::Status::Ok;
 }

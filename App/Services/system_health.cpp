@@ -6,6 +6,11 @@
 #include <string.h>
 #include "ds3231.h"
 
+void SystemHealth::update() {
+	if (Utils::timeElapsed(lastHealthCheckTime) >= INTERVAL) {
+		healthCheckFailed();
+	}
+}
 
 HealthSummary SystemHealth::getHealthSummary() const {
 	if (allOk()) {

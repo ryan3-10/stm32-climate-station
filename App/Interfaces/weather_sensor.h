@@ -6,7 +6,7 @@
 class IWeatherSensor {
 public:
 	virtual ~IWeatherSensor() = default;
-	virtual bool getReading(WeatherData& wd) = 0;
+	virtual bool getWeather(WeatherData& wd) = 0;
 };
 
 

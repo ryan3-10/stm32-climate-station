@@ -1,97 +1,56 @@
 #include "ui_manager.h"
+#include "ui_models.h"
 #include "system_health.h"
+#include <optional>
 
-void UIManager::render() {
-	currentScreen->render(engine, currentlyDisplayedHealth.data());
-	dirtyFlag = false;
-}
-
-void UIManager::handleInputs() {
-	// handle button press
-	if (rotaryEncoder.buttonWasPressed()) {
-		dirtyFlag = true;
-		auto event = currentScreen->handleInput(INPUT_TYPE::ENTER);
-		handleEvent(event);
-	}
-
-	// Handle rotary click inputs
-	auto localEncoderPos = rotaryEncoder.readPos();
-	if (localEncoderPos != 0) {
-		dirtyFlag = true;
-		INPUT_TYPE input = localEncoderPos > 0 ? INPUT_TYPE::RIGHT : INPUT_TYPE::LEFT;
-
-		uint32_t absoluteClicks = std::abs(localEncoderPos);
-		for (uint32_t i = 0; i < absoluteClicks; ++i) {
-			currentScreen->handleInput(input);
-		}
+void UIManager::update() {
+	if (dirtyFlag) {
+		currentScreen->render(engine, displayedHealth.data());
+		dirtyFlag = false;
 	}
 }
 
-void UIManager::handleEvent(EVENT_TYPE event) {
+std::optional<Submission> UIManager::handleInput(INPUT_TYPE input) {
+	std::optional<Submission> result = std::nullopt;
+	auto event = currentScreen->handleInput(input);
+
 	switch (event) {
 	case EVENT_TYPE::NONE:
 		break;
 	case EVENT_TYPE::HOME_LEFT:
-		currentScreen = &menuScreen;
+		currentScreen = &screens.menu;
 		break;
 	case EVENT_TYPE::MENU_ITEM_SELECTED:
-		currentScreen = menuScreen.getSelection();
+		currentScreen = screens.menu.getSelection();
 		break;
 	case EVENT_TYPE::LOG_CONFIG_SAVED:
-		submitLogConfig();
-		currentScreen = &homeScreen;
+		result = {SubmissionType::Log, screens.log.getConfigEdit()};
+		currentScreen = &screens.home;
 		break;
 	case EVENT_TYPE::TEMP_CONFIG_SAVED:
-		submitTempConfig();
-		currentScreen = &homeScreen;
+		result = {SubmissionType::Temp, screens.temp.getConfigEdit()};
+		currentScreen = &screens.home;
 		break;
 	case EVENT_TYPE::HUM_CONFIG_SAVED:
-		submitHumConfig();
-		currentScreen = &homeScreen;
+		result = {SubmissionType::Hum, screens.hum.getConfigEdit()};
+		currentScreen = &screens.home;
 		break;
 	}
+
+	dirtyFlag = true;
+	return result;
 }
 
-void UIManager::updateHealthSummary(HealthSummary newSummary) {
-	if (newSummary != currentlyDisplayedHealth) {
-		currentlyDisplayedHealth = newSummary;
+void UIManager::setHealthSummary(HealthSummary newSummary) {
+	if (newSummary != displayedHealth) {
+		displayedHealth = newSummary;
 		dirtyFlag = true;
 	}
 }
 
-void UIManager::submitLogConfig() {
-	logScreen.submitChanges(
-		[this] (uint16_t d1, uint16_t d2, bool en)
-		{
-			settingsManager.setLogConfig({d1, d2, en});
-		}
-	);
-	settingsManager.notifyObservers();
-}
-
-void UIManager::submitTempConfig() {
-	tempAlertsScreen.submitChanges(
-		[this] (uint16_t d1, uint16_t d2, bool en)
-		{
-			settingsManager.setTempConfig({d1, d2, en});
-		}
-	);
-	settingsManager.notifyObservers();
-}
-
-void UIManager::submitHumConfig() {
-	humAlertsScreen.submitChanges(
-		[this] (uint16_t d1, uint16_t d2, bool en)
-		{
-			settingsManager.setHumConfig({d1, d2, en});
-		}
-	);
-	settingsManager.notifyObservers();
-}
-
 void UIManager::onWeatherUpdate(const SensorRead& reading) {
-	homeScreen.update(reading);
-	if (currentScreen == &homeScreen) {
+	screens.home.update(reading);
+	if (currentScreen == &screens.home) {
 		dirtyFlag = true;
 	}
 }

@@ -40,8 +40,8 @@ void MenuScreen::drawBody(DisplayEngine& engine) const {
 }
 
 EVENT_TYPE HomeScreen::handleInput(INPUT_TYPE input) {
-	// Any input from the home screen just exits the home screen
-	return EVENT_TYPE::HOME_LEFT;
+	// Enter exits the home screen, anything else does nothing
+	return input == INPUT_TYPE::ENTER ? EVENT_TYPE::HOME_LEFT : EVENT_TYPE::NONE;
 }
 
 EVENT_TYPE MenuScreen::handleInput(INPUT_TYPE input) {

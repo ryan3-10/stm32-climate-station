@@ -5,11 +5,11 @@
 void ConfigScreen::drawBody(DisplayEngine& engine) const {
 	char line1[16];
 	char line2[16];
-	const char* line3 = en ? "Enabled" : "Disabled";
+	const char* line3 = config.en ? "Enabled" : "Disabled";
 
 	// construct the lines
-	snprintf(line1, sizeof(line1), "%s%02i%c", layout.preData1, d1, layout.postData);
-	snprintf(line2, sizeof(line2), "%s%02i%c", layout.preData2, d2, layout.postData);
+	snprintf(line1, sizeof(line1), "%s%02i%c", layout.preData1, config.d1, layout.postData);
+	snprintf(line2, sizeof(line2), "%s%02i%c", layout.preData2, config.d2, layout.postData);
 
 	// print each line, highlighting the one that cursorPos points to
 	engine.setFont(FONT_SIZE::MED);
@@ -45,13 +45,13 @@ EVENT_TYPE ConfigScreen::handleInput(INPUT_TYPE input) {
 void ConfigScreen::stepUp() {
 	switch (cursorPos) {
 		case 0:
-			d1 = d1 == layout.MAX_VALUE ? 0 : d1 + 1;
+			config.d1 = config.d1 == layout.MAX_VALUE ? 0 : config.d1 + 1;
 			break;
 		case 1:
-			d2 = d2 == layout.MAX_VALUE ? 0 : d2 + 1;
+			config.d2 = config.d2 == layout.MAX_VALUE ? 0 : config.d2 + 1;
 			break;
 		case 2:
-			en = !en;
+			config.en = !config.en;
 			break;
 	}
 }
@@ -59,13 +59,13 @@ void ConfigScreen::stepUp() {
 void ConfigScreen::stepDown() {
 	switch (cursorPos) {
 		case 0:
-			d1 = d1 == 0 ? layout.MAX_VALUE : d1 - 1;
+			config.d1 = config.d1 == 0 ? layout.MAX_VALUE : config.d1 - 1;
 			break;
 		case 1:
-			d2 = d2 == 0 ? layout.MAX_VALUE : d2 - 1;
+			config.d2 = config.d2 == 0 ? layout.MAX_VALUE : config.d2 - 1;
 			break;
 		case 2:
-			en = !en;
+			config.en = !config.en;
 			break;
 	}
 }
