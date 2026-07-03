@@ -13,9 +13,8 @@ public:
 	FRESULT mount();
 	FRESULT unmount();
 	FRESULT getStats(uint32_t& totalSectors, uint32_t& freeSectors);
-	bool isHardwareErr() const;
 	const char* getErrorCode() const override { return "Sd"; }
-	virtual bool isOk() const override { return !isHardwareErr(); }
+	virtual bool isOk() const override { return status == FR_OK; }
 	void runHealthCheck() override;
 
 private:

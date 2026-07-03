@@ -17,7 +17,6 @@ void Application::init(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
 	sht31.init(hi2c);
 	ds3231.init(hi2c);
 	fileManager.mount();
-	fileManager.createFileIfNotExist("log.txt");
 	buzzer.init(pvmTimer, TIM_CHANNEL_1);
 	buzzer.setPattern(standardPattern2);
 
