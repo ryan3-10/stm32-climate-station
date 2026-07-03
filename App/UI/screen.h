@@ -1,12 +1,11 @@
 #ifndef SCREEN_H_
 #define SCREEN_H_
 
-#include <array>
 #include "config_models.h"
 #include "display_engine.h"
-#include "system_health.h"
 #include "weather_models.h"
 #include "ui_models.h"
+#include <array>
 
 class Screen {
 public:

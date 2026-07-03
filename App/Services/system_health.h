@@ -5,9 +5,6 @@
 #include "utils.h"
 #include <array>
 #include <stdint.h>
-#include "ds3231.h"
-#include "sht31.h"
-
 
 using HealthSummary = std::array<char, 20>;
 

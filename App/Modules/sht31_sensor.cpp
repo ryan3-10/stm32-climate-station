@@ -1,4 +1,4 @@
-#include <sht31_sensor.h>
+#include "sht31_sensor.h"
 #include "weather_sensor.h"
 
 void Sht31Sensor::runHealthCheck() {

@@ -8,31 +8,23 @@
 
 static constexpr uint8_t MAX_OBSERVERS = 5;
 
-class WeatherObserver {
+class Observer {
 public:
-	WeatherObserver() = default;
-	virtual ~WeatherObserver() = default;
+	Observer() = default;
+	virtual ~Observer() = default;
 	virtual void onWeatherUpdate(const SensorRead& data) = 0;
 };
 
-class SettingsObserver {
-public:
-	SettingsObserver() = default;
-	virtual ~SettingsObserver() = default;
-	virtual void onSettingsChange(const Settings& settings) = 0;
-};
-
-template <typename ObserverType>
 class Subject {
 public:
 	Subject() = default;
 	virtual ~Subject() = default;
 
-	void addObserver(ObserverType* observer) { observers.at(count++) = observer; }
+	void addObserver(Observer* observer) { observers.at(count++) = observer; }
 	virtual void notifyObservers() const = 0;
 
 protected:
-	std::array<ObserverType*, MAX_OBSERVERS> observers{};
+	std::array<Observer*, MAX_OBSERVERS> observers{};
 	uint8_t count = 0;
 };
 

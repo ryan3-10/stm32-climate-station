@@ -3,7 +3,6 @@
 
 #include "config_models.h"
 #include "observer.h"
-
 #include "passive_buzzer.h"
 
 enum class ALERT_SYS_STATE : uint8_t {
@@ -12,14 +11,9 @@ enum class ALERT_SYS_STATE : uint8_t {
 	MIN_TRIGGER
 };
 
-class AlertSystem : public WeatherObserver {
+class AlertSystem : public Observer {
 public:
-	AlertSystem(const TempAlertConfig& t, const HumAlertConfig& h, PassiveBuzzer& pb)
-		: tempConfig(t), humConfig(h), buzzer(pb)
-	{}
-
-	~AlertSystem() = default;
-
+	AlertSystem(PassiveBuzzer& b) : buzzer(b) {}
 	void update();
 	void onWeatherUpdate(const SensorRead& reading) override;
 	void setConfig(const TempAlertConfig& t);
@@ -29,10 +23,11 @@ public:
 
 private:
 	void updateState();
-	SensorRead lastReading;
-	TempAlertConfig tempConfig;
-	HumAlertConfig humConfig;
+
 	PassiveBuzzer& buzzer;
+	SensorRead lastReading{};
+	TempAlertConfig tempConfig{};
+	HumAlertConfig humConfig{};
 	ALERT_SYS_STATE tempState = ALERT_SYS_STATE::NO_TRIGGER;
 	ALERT_SYS_STATE humState = ALERT_SYS_STATE::NO_TRIGGER;
 };

@@ -1,4 +1,4 @@
-#include "../../Drivers/PassiveBuzzer/passive_buzzer.h"
+#include "passive_buzzer.h"
 
 #include "utils.h"
 

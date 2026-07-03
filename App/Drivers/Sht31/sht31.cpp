@@ -1,7 +1,6 @@
+#include "sht31.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
-
-#include "sht31.h"
 
 Sht31::Status Sht31::getTempFAndHum(float& temp, float& hum) {
 	uint8_t data[6];

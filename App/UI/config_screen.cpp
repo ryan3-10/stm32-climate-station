@@ -3,13 +3,14 @@
 #include <stdio.h>
 
 void ConfigScreen::drawBody(DisplayEngine& engine) const {
+	auto [d1, d2, en] = config;
 	char line1[16];
 	char line2[16];
-	const char* line3 = config.en ? "Enabled" : "Disabled";
+	const char* line3 = en ? "Enabled" : "Disabled";
 
 	// construct the lines
-	snprintf(line1, sizeof(line1), "%s%02i%c", layout.preData1, config.d1, layout.postData);
-	snprintf(line2, sizeof(line2), "%s%02i%c", layout.preData2, config.d2, layout.postData);
+	snprintf(line1, sizeof(line1), "%s%02i%c", layout.preData1, d1, layout.postData);
+	snprintf(line2, sizeof(line2), "%s%02i%c", layout.preData2, d2, layout.postData);
 
 	// print each line, highlighting the one that cursorPos points to
 	engine.setFont(FONT_SIZE::MED);

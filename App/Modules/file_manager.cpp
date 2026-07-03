@@ -1,10 +1,10 @@
 #include "file_manager.h"
-#include <algorithm>
 #include <fatfs.h>
-#include <stdio.h>
 #include <string.h>
 
 void FileManager::runHealthCheck() {
+	// Unfortunately all we can do with the current library.
+	// Need to reset the program if this becomes unhealthy during runtime
 	if (!isMounted) {
 		mount();
 	}
@@ -88,31 +88,5 @@ FRESULT FileManager::getStats(uint32_t& totalSectors, uint32_t& freeSectors) {
 
 	return status;
 }
-//    //Let's get some statistics from the SD card
-//    DWORD free_clusters, free_sectors, total_sectors;
-//
-//    FATFS* getFreeFs;
-//
-//    fres = f_getfree("", &free_clusters, &getFreeFs);
-//    if (fres != FR_OK) {
-//		printf("f_getfree error (%i)\r\n", fres);
-//		while(1);
-//    }
-//
-//    //Formula comes from ChaN's documentation
-//    total_sectors = (getFreeFs->n_fatent - 2) * getFreeFs->csize;
-//    free_sectors = free_clusters * getFreeFs->csize;
-//
-//    printf("SD card stats:\r\n%10lu KiB total drive space.\r\n%10lu KiB available.\r\n", total_sectors / 2, free_sectors / 2);
-//
-//
-//
-//
-//
-//
-//
-//      //We're done, so de-mount the drive
-//      f_mount(NULL, "", 0);
-
 
 

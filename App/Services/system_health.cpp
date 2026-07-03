@@ -1,10 +1,7 @@
-#include "health_checkable.h"
-#include "sht31.h"
 #include "system_health.h"
 #include "utils.h"
 #include <array>
 #include <string.h>
-#include "ds3231.h"
 
 void SystemHealth::update() {
 	if (Utils::timeElapsed(lastHealthCheckTime) >= INTERVAL) {

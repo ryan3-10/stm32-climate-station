@@ -1,4 +1,4 @@
-#include "../../Drivers/RotaryEncoder/rotary_encoder.h"
+#include "rotary_encoder.h"
 
 #include <atomic>
 #include <stdint.h>

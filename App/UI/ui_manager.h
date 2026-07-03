@@ -2,17 +2,14 @@
 #define UI_INC_UI_MANAGER_H_
 
 #include "config_screen.h"
-#include "system_health.h"
+#include "display_engine.h"
 #include "observer.h"
 #include "screen.h"
-#include "settings_manager.h"
 #include "system_health.h"
-#include "display_engine.h"
-#include "rotary_encoder.h"
 #include "ui_models.h"
 #include <optional>
 
-class UIManager : public WeatherObserver {
+class UIManager : public Observer {
 public:
 	void handleInputs();
 	std::optional<Submission> handleInput(INPUT_TYPE input);
@@ -23,9 +20,9 @@ public:
 private:
 	struct ScreenSet {
 		HomeScreen home;
-		ConfigScreen log{LogLayout(), EVENT_TYPE::LOG_CONFIG_SAVED};
-		ConfigScreen temp{TempAlertLayout(), EVENT_TYPE::TEMP_CONFIG_SAVED};
-		ConfigScreen hum{HumAlertLayout(), EVENT_TYPE::HUM_CONFIG_SAVED};
+		ConfigScreen log{logLayout, EVENT_TYPE::LOG_CONFIG_SAVED};
+		ConfigScreen temp{tempAlertLayout, EVENT_TYPE::TEMP_CONFIG_SAVED};
+		ConfigScreen hum{humAlertLayout, EVENT_TYPE::HUM_CONFIG_SAVED};
 		MenuScreen menu{{&home, &log, &temp, &hum}};
 	};
 

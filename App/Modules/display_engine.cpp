@@ -1,12 +1,13 @@
 #include "display_engine.h"
 
-#include <stdint.h>
-#include <stdio.h>
 #include "fonts.h"
 #include "ssd1306.h"
+#include <stdint.h>
+#include <stdio.h>
 
-
-constexpr uint8_t BODY_START_ROW = 16;
+namespace {
+	constexpr uint8_t BODY_START_ROW = 16;
+}
 
 void DisplayEngine::clear() const {
 	SSD1306_Clear();

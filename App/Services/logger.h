@@ -5,17 +5,13 @@
 #include "config_models.h"
 #include "observer.h"
 #include "weather_models.h"
+#include "utils.h"
 #include <stdio.h>
-#include <utils.h>
 
 template <typename FileWriter>
-class Logger : public WeatherObserver {
+class Logger : public Observer {
 public:
-	Logger(const LogConfig& l, IClock& c, FileWriter& f)
-		: logConfig(l)
-		, clock(c)
-		, fileWriter(f)
-	{}
+	Logger(IClock& c, FileWriter& f) : clock(c), fileWriter(f) {}
 
 	void update();
 	void setConfig(const LogConfig& l);
@@ -26,17 +22,12 @@ private:
 	bool needsToLog() const;
 	void log();
 
-	LogConfig logConfig;
 	IClock& clock;
 	FileWriter& fileWriter;
+	LogConfig logConfig{};
+	SensorRead lastReading{};
 	uint32_t lastLogTime = 0;
-	SensorRead lastReading {};
 };
-
-#include "clock.h"
-#include "logger.h"
-#include "math.h"
-#include "utils.h"
 
 template <typename FileWriter>
 void Logger<FileWriter>::update() {
@@ -85,6 +76,7 @@ void Logger<FileWriter>::setConfig(const LogConfig& l) {
 	if (l != logConfig) {
 		logConfig = l;
 
+		// Log immediately at config change set to enabled
 		if (logConfig.enabled) {
 			log();
 		}

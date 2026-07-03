@@ -2,9 +2,8 @@
 #define ADAPTERS_DS3231_ADAPTER_H_
 
 #include "clock.h"
+#include "ds3231.h"
 #include "health_checkable.h"
-
-#include "../Drivers/Ds3231/ds3231.h"
 
 class Ds3231Clock : public IClock, public IHealthCheckable {
 public:

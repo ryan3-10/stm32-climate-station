@@ -27,6 +27,31 @@ struct ConfigScreenLayout {
 	const char postData;
 };
 
+inline ConfigScreenLayout logLayout = {
+	.header 		= "Log Config",
+	.MAX_VALUE 		= 99,
+	.preData1 		= "Hr:",
+	.preData2 		= "Min:",
+	.postData 		= ' '
+};
+
+inline ConfigScreenLayout tempAlertLayout = {
+	.header 		= "Temp Alerts",
+	.MAX_VALUE 		= 200,
+	.preData1 		= "Max: ",
+	.preData2 		= "Min: ",
+	.postData 		= 'F'
+};
+
+
+inline ConfigScreenLayout humAlertLayout = {
+	.header 		= "Hum Alerts",
+	.MAX_VALUE 		= 100,
+	.preData1 		= "Max: ",
+	.preData2 		= "Min: ",
+	.postData 		= '%'
+};
+
 struct ConfigEdit {
 	uint16_t d1 = 0;
 	uint16_t d2 = 0;

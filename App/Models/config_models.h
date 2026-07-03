@@ -29,11 +29,5 @@ struct TempAlertConfig {
 	bool enabled = false;
 };
 
-struct Settings {
-	LogConfig log{};
-	TempAlertConfig tempAlert{};
-	HumAlertConfig humAlert{};
-};
-
 
 #endif /* MODELS_CONFIG_MODELS_H_ */

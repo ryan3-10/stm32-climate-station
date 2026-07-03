@@ -5,7 +5,7 @@
 #ifndef SERVICES_WEATHER_STATION_H_
 #define SERVICES_WEATHER_STATION_H_
 
-class WeatherStation : public Subject<WeatherObserver> {
+class WeatherStation : public Subject {
 public:
 	WeatherStation(IWeatherSensor& s) : sensor(s) {}
 	void update();

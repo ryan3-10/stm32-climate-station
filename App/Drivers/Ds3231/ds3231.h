@@ -1,7 +1,6 @@
 #ifndef DRIVERS_DS3231_DS3231_H_
 #define DRIVERS_DS3231_DS3231_H_
 
-#include "health_checkable.h"
 #include <stdint.h>
 #include <stm32f4xx_hal.h>
 

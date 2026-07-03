@@ -28,8 +28,4 @@ private:
 	EVENT_TYPE onSave;
 };
 
-ConfigScreenLayout LogLayout();
-ConfigScreenLayout TempAlertLayout();
-ConfigScreenLayout HumAlertLayout();
-
 #endif /* UI_INC_CONFIG_SCREEN_H_ */
