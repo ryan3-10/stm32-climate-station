@@ -11,7 +11,7 @@ public:
 	const char* getErrorCode() const override { return "Cl"; }
 	bool isOk() const override { return ds3231.getStatus() == Ds3231::Status::Ok; }
 	void runHealthCheck() override;
-	bool now(DateTime& dt) override;
+	bool now(DateTime::Model& dt) override;
 
 private:
 	Ds3231& ds3231;

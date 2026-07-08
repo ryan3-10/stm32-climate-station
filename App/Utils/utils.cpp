@@ -1,7 +1,7 @@
 #include "utils.h"
 #include <stdio.h>
 
-Utils::LoggableString Utils::getLoggableString(const DateTime& dt) {
+Utils::LoggableString Utils::getLoggableString(const DateTime::Model& dt) {
 	LoggableString result{};
 	snprintf(
 		result.data(),

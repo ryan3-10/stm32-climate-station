@@ -8,6 +8,8 @@
 #include "utils.h"
 #include <stdio.h>
 
+using namespace Utils;
+
 template <typename FileWriter>
 class Logger : public Observer {
 public:
@@ -19,56 +21,51 @@ public:
 
 
 private:
-	bool needsToLog() const;
-	void log();
-
+	static constexpr uint8_t CLK_CHECK_INT = 250;
+	void log(const LoggableString& clockStamp);
+	bool backupNeedToLogCheck() const;
+	uint32_t minuteInt() { return (logConfig.hourInt * 3600) + (logConfig.minInt * 60); }
 	IClock& clock;
 	FileWriter& fileWriter;
 	LogConfig logConfig{};
 	SensorRead lastReading{};
-	uint32_t lastLogTime = 0;
+	DateTime nextLogTime{};
+	uint32_t lastLogTick = 0; // backup used if clock is in error state
+	uint32_t lastClkCheckTick = 0; // for checking the time every CLK_CHECK_INT milis
 };
 
 template <typename FileWriter>
 void Logger<FileWriter>::update() {
-	if (needsToLog()) {
-		log();
+	if (!logConfig.enabled || timeElapsed(lastClkCheckTick) < CLK_CHECK_INT) {
+		return;
+	}
+
+	lastClkCheckTick = getTick();
+	DateTime::Model now;
+	auto clockOk = clock.now(now);
+
+	if (clockOk && DateTime{now} >= nextLogTime) {
+		log(getLoggableString(now));
+		nextLogTime = DateTime{now} + minuteInt();
+	} else if (!clockOk && backupNeedToLogCheck()) {
+			log({"Clock Error"});
 	}
 }
 
 template <typename FileWriter>
-bool Logger<FileWriter>::needsToLog() const {
-	if (!logConfig.enabled) {
-		return false;
-	}
-
-	auto miliInterval = Utils::hoursToMili(logConfig.hourInt) + Utils::minToMili(logConfig.minInt);
-	return Utils::getTick() - lastLogTime >= miliInterval;
-}
-
-template <typename FileWriter>
-void Logger<FileWriter>::log() {
-	Utils::LoggableString dtStr{};
-	DateTime dt;
-
-	if (clock.now(dt)) {
-		dtStr = Utils::getLoggableString(dt);
-	} else {
-		snprintf(dtStr.data(), dtStr.size(), "%s", "Clock Error");
-	}
-
-	Utils::LoggableString wdStr{};
+void Logger<FileWriter>::log(const LoggableString& clockStamp) {
+	LoggableString wdStr{};
 
 	if (lastReading.statusOk) {
-		wdStr = Utils::getLoggableString(lastReading.data);
+		wdStr = getLoggableString(lastReading.data);
 	} else {
 		snprintf(wdStr.data(), wdStr.size(), "%s", "Sensor Error");
 	}
 
 	char buf[60];
-	snprintf(buf, sizeof(buf), "%s %s\n", dtStr.data(), wdStr.data());
+	snprintf(buf, sizeof(buf), "%s %s\n", clockStamp.data(), wdStr.data());
 	fileWriter.writeToFile("log.txt", buf);
-	lastLogTime = Utils::getTick();
+	lastLogTick = getTick();
 }
 
 template <typename FileWriter>
@@ -76,13 +73,22 @@ void Logger<FileWriter>::setConfig(const LogConfig& l) {
 	if (l != logConfig) {
 		logConfig = l;
 
-		// Log immediately at config change set to enabled
+		// Log next update if config is enabled
 		if (logConfig.enabled) {
-			log();
+			DateTime::Model now;
+			if (clock.now(now))
+				nextLogTime.setData(now);
+			else
+				logConfig.enabled = false; // disable if clock is faulty
 		}
 	}
 }
 
+template <typename FileWriter>
+bool Logger<FileWriter>::backupNeedToLogCheck() const {
+	auto miliInterval = hoursToMili(logConfig.hourInt) + minToMili(logConfig.minInt);
+	return timeElapsed(lastLogTick) >= miliInterval;
+}
 
 
 #endif /* SERVICES_INC_LOGGER_H_ */

@@ -1,5 +1,6 @@
 #include "application.h"
 #include "ui_models.h"
+#include "date_time.h"
 
 void Application::run() {
 	ws.update();
@@ -30,6 +31,13 @@ void Application::init(I2C_HandleTypeDef* hi2c, TIM_HandleTypeDef* pvmTimer) {
 
 	// Initial ws run so we don't wait in run_app on the first read
 	ws.init();
+
+	DateTime::Model dt;
+	clock.now(dt);
+	DateTime og{dt};
+	auto epochSec = og.toEpochSeconds();
+	DateTime reformed = og;
+	reformed.fromEpochSeconds(epochSec);
 }
 
 void Application::handleSubmission(Submission sub) {
