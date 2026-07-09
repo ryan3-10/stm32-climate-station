@@ -63,7 +63,7 @@ void Logger<FileWriter>::log(const LoggableString& clockStamp) {
 	}
 
 	char buf[60];
-	snprintf(buf, sizeof(buf), "%s %s\n", clockStamp.data(), wdStr.data());
+	snprintf(buf, sizeof(buf), "%s - %s\n", clockStamp.data(), wdStr.data());
 	fileWriter.writeToFile("log.txt", buf);
 	lastLogTick = getTick();
 }

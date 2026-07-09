@@ -17,7 +17,7 @@ Utils::LoggableString Utils::getLoggableString(const WeatherData& wd) {
 	snprintf(
 		result.data(),
 		result.size(),
-		"%.1fF %.1f%%",
+		"Temp: %.1fF Humidity: %.1f%%",
 		wd.temp, wd.hum
 	);
 	return result;
