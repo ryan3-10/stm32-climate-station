@@ -1,0 +1,255 @@
+# Weather Station
+
+This project is a compact embedded weather station built around an STM32F407-based development board. It measures temperature and humidity with a sensor, presents the data on an OLED display, and allows the user configure alert thresholds and logging settings through a simple menu system. The system also keeps time with an RTC and can store logged measurements to an SD card for later review.
+
+I built this project as a hands-on way to learn embedded systems design from the ground up. It brought together low-level driver development, hardware communication over I2C and SPI, real-time UI handling, file system integration, and software architecture decisions that are common in firmware projects. What distinguishes this project is that it is not just a demo of a single sensor; it is a small but complete embedded system with multiple interacting modules.
+
+---
+
+## Hardware Used
+- STM32F407-based development board
+- SHT31 temperature and humidity sensor
+- SSD1306 OLED display
+- DS3231 RTC
+- SD card and module
+- Rotary encoder
+- Passive Buzzer
+
+---
+
+## Features
+
+- Real-time temperature and humidity monitoring
+- Health checks on I2C and SPI components
+- OLED graphical interface with a menu-driven UI
+- Rotary encoder-based navigation and input handling
+- Configurable temperature and humidity alerts
+- RTC-based timekeeping
+- SD card data logging
+- Modular C++ architecture for embedded firmware
+
+## Key Components
+### Weather Station
+
+The weather station gets weather data from the SHT31 sensor and, through the observer pattern, pushes the latest data to all observers. The observers are the user interface, the logger, and the alert system.
+
+### User Interface
+
+The user interface is designed to be simple and practical. The main screen shows the current temperature and humidity, while the menu system provides access to configuration options such as logging intervals and alert thresholds.
+
+Typical UI flow:
+
+- Home screen for live weather data 
+
+![Alt Text](Photos/home.png)
+
+- Menu screen for navigation
+
+![Alt Text](Photos/menu.png)
+
+- Configuration screens for logging and alert settings
+
+![Alt Text](Photos/log.png)
+- Return to the main display after saving changes
+
+### Logger
+
+The system logs readings to the SD card so data can be reviewed after collection. The logging logic is intended to be lightweight and deterministic, which is an important constraint in embedded firmware.
+
+Logged measurements are written in the following format:
+```text
+07/08/26 17:59:47 - Temp: 77.0F Humidity: 42.1%
+```
+If the RTC is in a state of error, "Clock Error" will be logged in the place of the date and time. Similarly, if the weather sensor is in a state of error, "Sensor Error" will be logged in place of the weather data.
+
+### Alert System
+Each loop, the system evaluates temperature and humidity readings against configured max and min thresholds. If any of these thresholds are passed, the alarm system is triggered, sounding the passive buzzer alarm. The passive buzzer beeps in a pattern similar to that of an alarm clock, using an internal FSM to to determine when to start and stop.
+
+### Health Checks
+The program keeps track of which hardware components are healthy and which ones need troubleshooting. These health checks are runn on each I2C and SPI component (besides the OLED display), specifically, the SD Module, the RTC, and the weather sensor. Not checking the OLED display's health was a design choice made because if the OLED display is not working, there is nowhere to display error information.
+
+As seen in the [User Interface Section](#user-interface) photos, when all components are up and running, the string "System Ok" is displayed on the header of each screen. If any components are unhealthy, the header will instead display "Err:", followed by the error code(s) representing the unhealthy component(s). The component to error code mapping is as follows:
+
+- SD Module -> "Sd"
+- DS3231 Clock -> "Cl"
+- SHT31 Sensor -> "Se"
+
+On startup, all 3 components are immediately checked. After that, the health of each one will be updated whenever that particular component is used. For example, the SHT31's health will update whenever it is polled for weather. If any components are in an error state, the user should first ensure that that component is correctly wired according to the 
+[Hardware Wiring](#hardware-wiring) section.
+
+The SHT31 and DS3231 can be disconnected and reconnected while the system is running. Their health status updates automatically, and normal operation resumes once communication is restored. On the other hand, a program reboot is required if the SD module is plugged in mid-program and logging is desired (unless it was already removed at startup. In this case, plugging it in will cause it to be successfully mounted, and it will show as healthy on the health check monitor). This is due to the mounting logic in the 3rd-party library not being reset if the module is removed after a successful mount.
+
+---
+
+## Software Architecture
+- App/ contains the application logic, UI, services, models, and modules (my code along with integrated third-party display and SD drivers)
+- Core/ contains the STM32 startup code and main entry point
+- Drivers/ contains the HAL and peripheral support code
+- FATFS/ contains the FatFS integration and SD card-related support
+- Middlewares/ contains CubeMX-generated third-party libraries and middleware components
+
+### /App Architecture Diagram
+
+    High-Level Application Logic
+    Services depend only on application interfaces
+    ┌────────────────────────────────────────────────────────────┐
+    │                        Services                            │
+    │                                                            │
+    │WeatherStation   Logger   AlertSystem   UIManager HealthSys |
+    └──────────────────────────────┬─────────────────────────────┘
+                                │
+                                ▼
+    Hardware Abstractions
+    Modules implement the interfaces that the Services depend on
+    ┌────────────────────────────────────────────────────────────┐
+    │                        Modules                             │
+    │                                                            │
+    │  SHT31Sensor   DisplayEngine   Ds3231Clock   FileManager   │
+    │                                                            │
+    │  • Combine one or more drivers                             │
+    │  • Implement application interfaces                        │
+    │  • Hide hardware-specific behavior                         │
+    └──────────────────────────────┬─────────────────────────────┘
+                                │
+                                ▼
+    Low-Level Hardware Access
+    Drivers perform register-level communication using the STM32 HAL
+    ┌────────────────────────────────────────────────────────────┐
+    │                        Drivers                             │
+    │                                                            │
+    │           SHT31   DS3231   SSD1306   SD SPI                │
+    │                                                            │
+    │  • Register-level communication                            │
+    │  • HAL wrapper functions                                   │
+    │  • Reusable across projects                                │
+    └──────────────────────────────┬─────────────────────────────┘
+                                │
+                                ▼
+    Hardware Abstraction Layer
+    STM32 HAL Provides peripheral APIs used by the drivers
+    ┌────────────────────────────────────────────────────────────┐
+    │                       STM32 HAL                            │
+    └──────────────────────────────┬─────────────────────────────┘
+                                │
+                                ▼
+    ┌────────────────────────────────────────────────────────────┐
+    │                        Hardware                            │
+    │                                                            │
+    │ STM32F407 • SHT31 • DS3231 • SSD1306 • SD Card • Encoder   │
+    └────────────────────────────────────────────────────────────┘
+
+---
+
+## Design Decisions
+
+Several design choices were made to keep the firmware predictable and suitable for embedded hardware:
+
+- Dynamic memory allocation was avoided to eliminate heap fragmentation concerns and keep memory usage predictable.
+- The code favors explicit state handling and small, focused components over overly abstract patterns
+- Hardware interaction is separated from application logic so the system is easier to maintain
+- The update loop is structured around periodic processing rather than heavy multitasking
+- Sampling and UI refresh rates were chosen to balance responsiveness with stability
+
+### Software Patterns Used
+#### Observer Pattern
+The observer pattern is the key overarching pattern used in this system. It helped the overall program to remain loosely coupled by allowing the subject (the WeatherStation class) to push its data to its observers (the UI, Logger, and AlertSystem classes) without either one knowing of the other's implementation details.
+
+#### Template Method Pattern
+The template method pattern was in the Screen class. This pattern minimized repeated code by allowing the base "Screen" class to define a template for rendering itself, and the derived classes to implement only the parts of that template that vary between them.
+
+---
+
+## Challenges
+
+This project came with several practical challenges that had to be handled in order to improve the overall implementation:
+
+- SD card initialization and file system integration
+- I2C debugging and device communication issues
+- RTC behavior and timekeeping validation
+- OLED rendering and display timing constraints
+- Debugging intermittent hardware or sensor issues
+
+---
+
+## Key Takeaways
+
+This project strengthened my understanding of embedded software development in a way that goes beyond writing a single driver. It showed how important interface design, timing, and hardware constraints are when building a complete system.
+
+- Using one I2C bus for multiple components can drastically reduce the number of wires required
+- Leveraging well-tested third-party libraries is often more practical than reimplementing commodity components.
+- Being able to read and understand datasheets is a crucial part of building an embedded system
+- Separation of concerns is key to creating a clean and maintainable codebase
+
+---
+
+## Build Instructions
+
+The project is intended for STM32 development using the GNU Arm Embedded toolchain and STM32CubeIDE-style build flow.
+
+### Recommended setup
+- STM32CubeIDE or a compatible STM32 build environment
+- GNU Arm Embedded Toolchain
+- STM32 HAL / CMSIS support files already included in the repository structure
+- A compatible STM32F407-based board and the [Hardware](#hardware) listed above
+
+### Build Steps
+1. Open the project in STM32CubeIDE or your preferred embedded IDE.
+2. Build the firmware using the provided Makefiles or project configuration.
+3. Flash the generated .elf file to the target board.
+4. Connect the sensors, OLED, RTC, and SD card according to the [hardware wiring](#hardware-wiring) described below
+
+## Hardware Wiring
+### Rotary Encoder
+- Output A -> PD9
+- Output B -> PD11
+- Switch (Push-button pin) -> PD12
+- VCC -> 3.3V
+- GND -> Ground
+
+### SD Module (SPI)
+- GND -> Ground
+- MISO -> PB14
+- CLK -> PB13
+- MOSI -> PB12
+- CS -> PB15
+- 3v3 -> 3.3V
+
+### Passive Buzzer
+- GND -> Ground
+- PWM -> PE9
+
+### DS3231/SSD1306/SHT31 (Shared I2C Bus)
+- VCC/VIN -> 3.3V
+- GND -> Ground
+- SCL -> PB6
+- SDA -> PB7
+- SHT31 AD -> Ground (For setting the sensor to the correct address)
+
+---
+
+## Drivers
+
+A significant portion of this project consists of reusable low-level drivers for hardware peripherals. These drivers were written so that the application logic can remain focused on behavior rather than low-level register details.
+
+### Custom Drivers (written by me)
+- I2C-based SHT31 sensor
+- I2C-based DS3231 RTC
+- Rotary encoder for input handling
+- Passive Buzzer for alert feedback
+
+### Third-party drivers (integrated and lightly modified)
+- SPI-based SD card access
+- OLED display driver and framebuffer logic
+
+The third-party drivers were incorporated into the project and modified where necessary to fit the application's architecture. The original source code for each can be found below. All application logic - including wrappers around the 3rd party drivers, hardware integration, and the custom drivers listed above were developed by me.
+
+### External References
+SHT31 datasheet - https://sensirion.com/media/documents/213E6A3B/63A5A569/Datasheet_SHT3x_DIS.pdf
+
+DS3231 datasheet - https://www.analog.com/media/en/technical-documentation/data-sheets/ds3231.pdf
+
+A tutorial page with downloadable source code for the OLED library - https://controllerstech.com/oled-display-using-i2c-stm32/
+
+SD driver original repo - https://github.com/kiwih/cubeide-sd-card/blob/master/cubeide-sd-card/FATFS/Target/user_diskio_spi.c
+
+---
