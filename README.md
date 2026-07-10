@@ -28,7 +28,10 @@ I built this project as a hands-on way to learn embedded systems design from the
 - SD card data logging
 - Modular C++ architecture for embedded firmware
 
+---
+
 ## Key Components
+
 ### Weather Station
 
 The weather station gets weather data from the SHT31 sensor and, through the observer pattern, pushes the latest data to all observers. The observers are the user interface, the logger, and the alert system.
@@ -161,13 +164,23 @@ The template method pattern was in the Screen class. This pattern minimized repe
 
 ## Challenges
 
-This project came with several practical challenges that had to be handled in order to improve the overall implementation:
+This project presented several practical challenges that had to be addressed throughout development.
 
-- SD card initialization and file system integration
-- I2C debugging and device communication issues
-- RTC behavior and timekeeping validation
-- OLED rendering and display timing constraints
-- Debugging intermittent hardware or sensor issues
+### Rotary Encoder Driver Implementation
+
+Although it's relatively small, the rotary encoder driver proved to be the most difficult to implement. During my initial implementation, I observed seemingly random state transitions with the A/B pins when turning the rotary encoder, and struggled to get the driver to accurately determine the direction of rotation. After several lengthy debugging sessions using printf statements to track the A/B pin states, I was eventually able to identify a consistent three-state pattern that it transitioned through when turning each direction. I implemented the driver to check for both patterns on every interrupt. The resulting driver reliably detected the direction of each input.
+
+### Interpreting Datasheets
+
+The SHT31 sensor and the DS3231 RTC drivers in this project are custom and written by me. This required me to work through the datasheets for each device, which initially felt overwhelming. Both datasheets are 20+ pages long. One of the biggest challenges was learning to distinguish between information that was essential for implementing the driver and information that was simply background or reference material.
+
+One thing in particular that threw me for a loop was how differently the two devices expose their functionality. For the SHT31, the master sends a measurement command and later reads back the result once the sensor has completed the measurement. I initially expected the DS3231 to work the same way. Instead, its datasheet describes a register map rather than a set of commands. The master simply writes the starting register address, which updates the RTC's internal register pointer, and then reads or writes as many consecutive bytes as needed. Looking back, the difference makes complete sense. The SHT31 performs measurements on demand, so it naturally exposes command-based operations. The DS3231, on the other hand, continuously maintains its internal state, so interacting with it is simply a matter of reading from or writing to the appropriate registers.
+
+### Following Software Design Principles
+
+Good, clean software design has always been important to me, but I found it increasingly difficult to follow all design principles as my project grew larger. There was one point in the development of my project where I noticed that the UIManager class was starting to do too much, badly violating the single responsibility principle. At that time, it was not only responsible for controlling the OLED display, but also for detecting and handling input (it held a reference to the rotary encoder), and even making configuration changes when the user submitted them. I eventually decided to delegate the input detection and configuration editing to the Application class. This improved separation of responsibilities. The Application class now had to know some of the UIManager's implementation details so that it could get the edited configurations and then save them to the appropriate service.
+
+There were several other instances like this throughout the project where there was no single "correct" solution. Instead, I had to weigh competing design principles and choose the tradeoffs that best fit the project. That experience gave me a much better appreciation for how software architecture often involves balancing competing priorities rather than simply following a set of rigid rules.
 
 ---
 
