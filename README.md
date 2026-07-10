@@ -6,6 +6,30 @@ I built this project as a hands-on way to learn embedded systems design from the
 
 ---
 
+## Photos
+
+### Assembled Hardware
+
+![Alt Text](Photos/hardware.jpg)
+
+### Home Screen
+- Home screen for live weather data 
+
+![Alt Text](Photos/home.jpg)
+
+### Menu Screen
+- Menu screen for navigation
+
+![Alt Text](Photos/menu.jpg)
+
+### Config Screens
+- Configuration screens for logging and alert settings
+- Return to the main display after saving changes
+- Other configuration screens are almost identical (just with different data to configure)
+
+![Alt Text](Photos/log.jpg)
+
+
 ## Hardware Used
 - STM32F407-based development board
 - SHT31 temperature and humidity sensor
