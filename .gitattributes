@@ -1,0 +1,7 @@
+Core/** linguist-vendored
+Debug/** linguist-vendored
+Drivers/** linguist-vendored
+FATFS/** linguist-vendored
+Middleware/**
+Apps/Drivers/Ssd1306/** linguist-vendored
+Apps/Drivers/UserDiskioSpi** linguist-vendored
