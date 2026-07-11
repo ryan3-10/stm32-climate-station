@@ -1,10 +1,15 @@
 # Weather Station
 
-This project is a compact embedded weather station built around an STM32F407-based development board. It measures temperature and humidity with a sensor, presents the data on an OLED display, and allows the user configure alert thresholds and logging settings through a simple menu system. The system also keeps time with an RTC and can store logged measurements to an SD card for later review.
+This project is an embedded weather station built around an STM32F407-based development board. It measures temperature and humidity with a sensor, presents the data on an OLED display, and allows the user configure alert thresholds and logging settings through a simple menu system. The system also keeps time with an RTC and can store logged measurements to an SD card for later review.
 
 I built this project as a hands-on way to learn embedded systems design from the ground up. It brought together low-level driver development, hardware communication over I2C and SPI, real-time UI handling, file system integration, and software architecture decisions that are common in firmware projects. What distinguishes this project is that it is not just a demo of a single sensor; it is a small but complete embedded system with multiple interacting modules.
 
 ---
+
+## Demo Video
+Click the thumbnail below to watch a 3-minute demonstration of the weather station's core functionality, including UI navigation, configurable alerts, SD card logging, and peripheral fault detection.
+
+[![Weather Station Demo](Photos/thumbnail.jpg)](https://www.youtube.com/watch?v=XWI5tC8mv-U)
 
 ## Photos
 
@@ -59,25 +64,6 @@ I built this project as a hands-on way to learn embedded systems design from the
 ### Weather Station
 
 The weather station gets weather data from the SHT31 sensor and, through the observer pattern, pushes the latest data to all observers. The observers are the user interface, the logger, and the alert system.
-
-### User Interface
-
-The user interface is designed to be simple and practical. The main screen shows the current temperature and humidity, while the menu system provides access to configuration options such as logging intervals and alert thresholds.
-
-Typical UI flow:
-
-- Home screen for live weather data 
-
-![Alt Text](Photos/home.png)
-
-- Menu screen for navigation
-
-![Alt Text](Photos/menu.png)
-
-- Configuration screens for logging and alert settings
-
-![Alt Text](Photos/log.png)
-- Return to the main display after saving changes
 
 ### Logger
 
