@@ -170,6 +170,13 @@ The observer pattern is the key overarching pattern used in this system. It help
 #### Template Method Pattern
 The template method pattern was in the Screen class. This pattern minimized repeated code by allowing the base "Screen" class to define a template for rendering itself, and the derived classes to implement only the parts of that template that vary between them.
 
+### Tradeoffs
+#### Blocking I2C and SPI Calls
+Rather than using DMA or interrupt-based I2C and SPI transfers, this project uses blocking HAL calls to reduce code complexity and improve maintainability. This application is not sufficiently time-critical for blocking transfers to negatively impact its functionality or responsiveness. The third-party libraries integrated into the project were also designed to use blocking HAL calls, and modifying them to support DMA or interrupt-driven communication would have significantly increased development time with little practical benefit.
+
+#### Interrupts for the Rotary Encoder Driver
+Because rotary encoder inputs can occur rapidly, interrupts were used instead of polling to ensure encoder events were not missed while the CPU was busy performing other tasks. Although this increased the complexity of the driver, polling would have resulted in a sluggish and unresponsive user interface. In this case, the improved responsiveness justified the additional implementation complexity.
+
 ---
 
 ## Challenges
