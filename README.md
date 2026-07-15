@@ -217,16 +217,14 @@ This project strengthened my understanding of embedded software development in a
 The project is intended for STM32 development using the GNU Arm Embedded toolchain and STM32CubeIDE-style build flow.
 
 ### Recommended setup
-- STM32CubeIDE or a compatible STM32 build environment
-- GNU Arm Embedded Toolchain
+- STM32CubeIDE
 - STM32 HAL / CMSIS support files already included in the repository structure
-- A compatible STM32F407-based board and the [Hardware](#hardware) listed above
+- STM32F407-based board and the [Hardware](#hardware) listed above
 
 ### Build Steps
-1. Open the project in STM32CubeIDE or your preferred embedded IDE.
-2. Build the firmware using the provided Makefiles or project configuration.
-3. Flash the generated .elf file to the target board.
-4. Connect the sensors, OLED, RTC, and SD card according to the [hardware wiring](#hardware-wiring) described below
+1. Clone the repo
+2. Open the project in STM32CubeIDE
+3. Build and flash the firmware by selecting '''Run''' -> '''Run As''' -> '''STM32 C/C++ Application'''
 
 ## Hardware Wiring
 ### Rotary Encoder
