@@ -224,7 +224,7 @@ The project is intended for STM32 development using the GNU Arm Embedded toolcha
 ### Build Steps
 1. Clone the repo
 2. Open the project in STM32CubeIDE
-3. Build and flash the firmware by selecting '''Run''' -> '''Run As''' -> '''STM32 C/C++ Application'''
+3. Build and flash the firmware by selecting ```Run``` -> ```Run As``` -> ```STM32 C/C++ Application```
 
 ## Hardware Wiring
 ### Rotary Encoder
