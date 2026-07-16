@@ -52,7 +52,7 @@ uint8_t DateTime::daysInMonth(uint8_t month, uint8_t year) const {
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 	};
 
-	return DAYS_PER_MONTH[month];
+	return DAYS_PER_MONTH[month - 1];
 }
 
 uint32_t DateTime::toEpochSeconds() const {
@@ -103,6 +103,11 @@ DateTime DateTime::fromEpochSeconds(uint32_t seconds) const {
 
 	// Find the month
 	while (true) {
+		if (result.dat.month > 12) {
+			result.dat.month = 1;
+			++result.dat.year;
+		}
+
 		uint8_t daysThisMonth = daysInMonth(result.dat.month, result.dat.year);
 
 		if (totalDays < daysThisMonth)
