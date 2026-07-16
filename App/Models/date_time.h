@@ -1,7 +1,6 @@
 #ifndef MODELS_DATE_TIME_H_
 #define MODELS_DATE_TIME_H_
 
-#include <cassert>
 #include <stdint.h>
 
 class DateTime {
@@ -17,7 +16,7 @@ public:
 	};
 
 	DateTime() = default;
-	DateTime(Model m) : dat(m) { assert(isValidModel(m)); }
+	DateTime(Model m) : dat(m) {}
 	const Model& getData() const { return dat; }
 	void setData(const Model& model) { dat = model; }
 	uint32_t toEpochSeconds() const;
