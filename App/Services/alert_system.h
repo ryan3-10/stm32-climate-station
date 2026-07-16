@@ -18,8 +18,6 @@ public:
 	void onWeatherUpdate(const SensorRead& reading) override;
 	void setConfig(const TempAlertConfig& t);
 	void setConfig(const HumAlertConfig& h);
-	ALERT_SYS_STATE getTempState() const { return tempState; }
-	ALERT_SYS_STATE getHumState() const { return humState; }
 
 private:
 	void updateState();
