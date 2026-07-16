@@ -19,7 +19,7 @@ public:
 	DateTime() = default;
 	DateTime(Model m) : dat(m) { assert(isValidModel(m)); }
 	const Model& getData() const { return dat; }
-	void setData(const Model& model) { assert(isValidModel(model)); dat = model; }
+	void setData(const Model& model) { dat = model; }
 	uint32_t toEpochSeconds() const;
 	DateTime fromEpochSeconds(uint32_t seconds);
 	bool operator==(const DateTime& other) const;
