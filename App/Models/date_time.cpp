@@ -12,6 +12,7 @@ bool DateTime::operator==(const DateTime& other) const {
 	return dat.second == oth.second
 		&& dat.minute == oth.minute
 		&& dat.hour == oth.hour
+		&& dat.date == oth.date
 		&& dat.month == oth.month
 		&& dat.year == oth.year;
 }
