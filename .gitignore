@@ -14,3 +14,4 @@ Release/
 .mxproject
 .project
 potential_refactors.txt
+build-tests/
