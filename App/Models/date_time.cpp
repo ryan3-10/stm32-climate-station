@@ -73,7 +73,7 @@ uint32_t DateTime::toEpochSeconds() const {
          + dat.second;
 }
 
-DateTime DateTime::fromEpochSeconds(uint32_t seconds) {
+DateTime DateTime::fromEpochSeconds(uint32_t seconds) const {
 	DateTime result{EPOCH};
 
 	// Break into days + time of day

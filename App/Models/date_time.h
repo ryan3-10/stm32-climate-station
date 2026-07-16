@@ -20,7 +20,7 @@ public:
 	const Model& getData() const { return dat; }
 	void setData(const Model& model) { dat = model; }
 	uint32_t toEpochSeconds() const;
-	DateTime fromEpochSeconds(uint32_t seconds);
+	DateTime fromEpochSeconds(uint32_t seconds) const;
 	bool operator==(const DateTime& other) const;
 	bool operator>(const DateTime& oth) const;
 	bool operator<(const DateTime& oth) const;
