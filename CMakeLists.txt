@@ -26,6 +26,8 @@ add_executable(tests
     App/Utils/utils.cpp
     tests/system_health_test.cpp
     App/Services/system_health.cpp
+    tests/weather_station_test.cpp
+    App/Services/weather_station.cpp
 )
 
 target_link_libraries(tests gtest gtest_main)
