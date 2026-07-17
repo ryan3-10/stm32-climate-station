@@ -14,11 +14,12 @@ public:
 	SystemHealth(const ComponentsArray& c) : comps(c) {}
 	void update();
 	HealthSummary getHealthSummary() const;
-	bool allOk() const;
-	void healthCheckFailed();
 	void healthCheckAll();
 
 private:
+	bool allOk() const;
+	void healthCheckFailed();
+
 	static constexpr uint32_t INTERVAL = 1000;
 	ComponentsArray comps;
 	uint32_t lastHealthCheckTime = 0;
