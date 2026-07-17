@@ -23,6 +23,7 @@ add_executable(tests
     App/Models/date_time.cpp
     tests/logger_test.cpp
     App/Services/logger.h
+    App/Utils/utils.cpp
 )
 
 target_link_libraries(tests gtest gtest_main)
@@ -31,7 +32,8 @@ target_include_directories(tests PRIVATE
     App/Models
     App/Interfaces
     App/Services
+    tests/Mocks
     App/Utils
-    Drivers/STM32F4xx_HAL_Driver/Inc)
+)
 
 gtest_discover_tests(tests)
