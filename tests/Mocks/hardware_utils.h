@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+// Mock Hardware functions to ensure that timeElapsed checks will
+// always evaluate to true for testing
 namespace HardwareUtils {
     inline uint32_t getTick() { return UINT32_MAX; }
     inline uint32_t timeElapsed(uint32_t) { return UINT32_MAX; }
