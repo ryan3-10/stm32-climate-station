@@ -1,7 +1,7 @@
 #include "date_time.h"
 #include <gtest/gtest.h>
 
-TEST(DateTimeTest, EpochSeconds) {
+TEST(DateTimeTest, ConvertsToAndFromEpochSeconds) {
     // Test toEpochSeconds with Epoch model
     DateTime dt1({0, 0, 0, 6, 1, 1, 0});
     EXPECT_EQ(dt1.toEpochSeconds(), 0);
@@ -14,14 +14,14 @@ TEST(DateTimeTest, EpochSeconds) {
     EXPECT_EQ(dt1, dt2);
 }
 
-TEST(DateTimeTest, FebruaryConversion) {
+TEST(DateTimeTest, HandlesFebruaryCorrectly) {
     DateTime dt({0, 0, 0, 1, 1, 2, 0});
 
     EXPECT_EQ(dt.toEpochSeconds(), 2678400u);
     EXPECT_EQ(dt.fromEpochSeconds(dt.toEpochSeconds()), dt);
 }
 
-TEST(DateTimeTest, EqualTo) {
+TEST(DateTimeTest, EvaluatesEqualTo) {
     DateTime::Model model {};
     auto modelCopy = model;
 
@@ -66,7 +66,7 @@ TEST(DateTimeTest, EqualTo) {
     EXPECT_FALSE(dt1 == dt2);
 }
 
-TEST(DateTimeTest, GreaterThan) {
+TEST(DateTimeTest, EvaulatesGreatherThan) {
     DateTime::Model model {};
     auto modelCopy = model;
 
@@ -111,7 +111,7 @@ TEST(DateTimeTest, GreaterThan) {
     EXPECT_TRUE(dt2 > dt1);
 }
 
-TEST(DateTimeTest, LessThan) {
+TEST(DateTimeTest, EvaulatesLessThan) {
     DateTime::Model model {};
     auto modelCopy = model;
 
@@ -156,7 +156,7 @@ TEST(DateTimeTest, LessThan) {
     EXPECT_TRUE(dt1 < dt2);
 }
 
-TEST(DateTimeTest, Addition) {
+TEST(DateTimeTest, PerformsAddition) {
     DateTime::Model model {0, 0, 0, 6, 1, 1, 0};
     DateTime dt1{model};
 
