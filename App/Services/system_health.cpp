@@ -39,7 +39,7 @@ bool SystemHealth::allOk() const {
 
 void SystemHealth::healthCheckFailed() {
 	for (auto& comp : comps) {
-		if (!comp->isOk()) {
+		if (comp && !comp->isOk()) {
 			comp->runHealthCheck();
 		}
 	}
@@ -49,7 +49,9 @@ void SystemHealth::healthCheckFailed() {
 
 void SystemHealth::healthCheckAll() {
 	for (auto& comp : comps) {
-		comp->runHealthCheck();
+		if (comp) {
+			comp->runHealthCheck();
+		}
 	}
 
 	lastHealthCheckTime = HardwareUtils::getTick();
