@@ -1,31 +1,7 @@
-#include "health_checkable.h"
+#include "dependency_mocks.h"
 #include "system_health.h"
 #include <gtest/gtest.h>
 #include <string>
-
-class HealthCheckablemock : public IHealthCheckable {
-public:
-    HealthCheckablemock(const std::string& err, bool startingOkFlag)
-        : errorCode(err)
-        , okFlag(startingOkFlag)
-    {}
-
-    const char* getErrorCode() const override {
-        return errorCode.data();
-    }
-
-    bool isOk() const override {
-        return okFlag;
-    }
-
-    void runHealthCheck() override {
-        hasBeenChecked = true;
-    }
-
-    std::string errorCode;
-    bool okFlag;
-    bool hasBeenChecked = false;
-};
 
 TEST(SystemHealthTest, OnlyHealthChecksErrorsOnUpdate) {
     HealthCheckablemock mockStatusOk{"", true};

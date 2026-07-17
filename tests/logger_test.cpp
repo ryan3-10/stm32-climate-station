@@ -1,29 +1,7 @@
-#include "clock.h"
+#include "dependency_mocks.h"
 #include "logger.h"
 #include <gtest/gtest.h>
 #include <string.h>
-
-class ClockMock : public IClock {
-public:    
-    bool now(DateTime::Model& dt) override {
-        dt = dateTime;
-        return statusOk;
-    }
-
-    DateTime::Model dateTime{};
-    bool statusOk = true;
-};
-
-class FileWriterMock {
-public:
-    void writeToFile(const char* fileName, const char* text) {
-        lastFileWrittenTo = fileName;
-        lastWrittenString = text;
-    }
-
-    std::string lastFileWrittenTo = "";
-    std::string lastWrittenString = "";
-};
 
 TEST(LoggerTest, DoesNotLogWhenDisabled) {
     ClockMock clockMock;
