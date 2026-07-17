@@ -26,7 +26,7 @@ private:
 	static constexpr uint8_t CLK_CHECK_INT = 250;
 	void log(const LoggableString& clockStamp);
 	bool backupNeedToLogCheck() const;
-	uint32_t minuteInt() { return (logConfig.hourInt * 3600) + (logConfig.minInt * 60); }
+	uint32_t secondInt() { return (logConfig.hourInt * 3600) + (logConfig.minInt * 60); }
 	IClock& clock;
 	FileWriter& fileWriter;
 	LogConfig logConfig{};
@@ -48,7 +48,7 @@ void Logger<FileWriter>::update() {
 
 	if (clockOk && DateTime{now} >= nextLogTime) {
 		log(getLoggableString(now));
-		nextLogTime = DateTime{now} + minuteInt();
+		nextLogTime = DateTime{now} + secondInt();
 	} else if (!clockOk && backupNeedToLogCheck()) {
 			log({"Clock Error"});
 	}
