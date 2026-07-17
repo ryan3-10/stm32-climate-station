@@ -59,6 +59,34 @@ Click the thumbnail below to watch a 3-minute demonstration of the weather stati
 
 ---
 
+## Unit Testing
+
+The repository includes unit tests that verify business logic without requiring real hardware. These tests use mock classes to simulate hardware behavior, so they can be run entirely on your development machine.
+
+To run the unit tests from the project root, use the following commands:
+
+### macOS / Linux
+
+```bash
+mkdir -p build-tests
+cd build-tests
+cmake ..
+make
+ctest --verbose
+```
+
+### Windows
+
+```powershell
+cmake -S . -B build-tests
+cmake --build build-tests
+ctest --test-dir build-tests --output-on-failure --verbose
+```
+
+If your Windows setup uses a different generator (for example, MinGW or Ninja), you may need to specify it with the `-G` option when running `cmake`.
+
+---
+
 ## Key Components
 
 ### Weather Station
