@@ -24,6 +24,8 @@ add_executable(tests
     tests/logger_test.cpp
     App/Services/logger.h
     App/Utils/utils.cpp
+    tests/system_health_test.cpp
+    App/Services/system_health.cpp
 )
 
 target_link_libraries(tests gtest gtest_main)
