@@ -1,9 +1,9 @@
+#ifndef ADAPTERS_SHT31_TO_HC_SENSOR_H_
+#define ADAPTERS_SHT31_TO_HC_SENSOR_H_
+
 #include "health_checkable.h"
 #include "sht31.h"
 #include "weather_sensor.h"
-
-#ifndef ADAPTERS_SHT31_TO_HC_SENSOR_H_
-#define ADAPTERS_SHT31_TO_HC_SENSOR_H_
 
 class Sht31Sensor : public IHealthCheckable, public IWeatherSensor {
 public:

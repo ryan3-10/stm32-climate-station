@@ -3,12 +3,14 @@
 
 #include "clock.h"
 #include "config_models.h"
+#include "hardware_utils.h"
 #include "observer.h"
 #include "weather_models.h"
 #include "utils.h"
 #include <stdio.h>
 
 using namespace Utils;
+using namespace HardwareUtils;
 
 template <typename FileWriter>
 class Logger : public Observer {

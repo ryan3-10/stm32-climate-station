@@ -2,7 +2,7 @@
 #define SERVICES_SYSTEM_HEALTH_H_
 
 #include "health_checkable.h"
-#include "utils.h"
+#include "hardware_utils.h"
 #include <array>
 #include <stdint.h>
 

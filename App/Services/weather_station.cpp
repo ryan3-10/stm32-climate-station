@@ -1,9 +1,9 @@
-#include "utils.h"
+#include "hardware_utils.h"
 #include "weather_station.h"
 #include <cmath>
 
 void WeatherStation::update() {
-	if (Utils::timeElapsed(lastReadTime) < INTERVAL) {
+	if (HardwareUtils::timeElapsed(lastReadTime) < INTERVAL) {
 		return;
 	}
 
@@ -30,7 +30,7 @@ void WeatherStation::notifyObservers() const {
 SensorRead WeatherStation::getReading() {
 	SensorRead newRead {};
 	newRead.statusOk = sensor.getWeather(newRead.data);
-	lastReadTime = Utils::getTick();
+	lastReadTime = HardwareUtils::getTick();
 	return newRead;
 }
 

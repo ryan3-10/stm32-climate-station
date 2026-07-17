@@ -1,6 +1,6 @@
 #include "passive_buzzer.h"
 
-#include "utils.h"
+#include "hardware_utils.h"
 
 void PassiveBuzzer::init(TIM_HandleTypeDef* pt, uint8_t ch) {
 	pvmTimer = pt;
@@ -23,12 +23,12 @@ void PassiveBuzzer::runPattern() {
 		pattern.index = 0;
 		soundBuzzer();
 		pattern.state = PATTERN_STATE::ACTIVE;
-		pattern.timestamp = Utils::getTick();
+		pattern.timestamp = HardwareUtils::getTick();
 	case PATTERN_STATE::ACTIVE:
-		if (Utils::timeElapsed(pattern.timestamp) >= pattern.stepDurs[pattern.index]) {
+		if (HardwareUtils::timeElapsed(pattern.timestamp) >= pattern.stepDurs[pattern.index]) {
 			pattern.index = pattern.index < pattern.length - 1 ? pattern.index + 1 : 0;
 			toggleBuzzer();
-			pattern.timestamp = Utils::getTick();
+			pattern.timestamp = HardwareUtils::getTick();
 		}
 	}
 }

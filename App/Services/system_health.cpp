@@ -1,10 +1,10 @@
 #include "system_health.h"
-#include "utils.h"
+#include "hardware_utils.h"
 #include <array>
 #include <string.h>
 
 void SystemHealth::update() {
-	if (Utils::timeElapsed(lastHealthCheckTime) >= INTERVAL) {
+	if (HardwareUtils::timeElapsed(lastHealthCheckTime) >= INTERVAL) {
 		healthCheckFailed();
 	}
 }
@@ -44,7 +44,7 @@ void SystemHealth::healthCheckFailed() {
 		}
 	}
 
-	lastHealthCheckTime = Utils::getTick();
+	lastHealthCheckTime = HardwareUtils::getTick();
 }
 
 void SystemHealth::healthCheckAll() {
@@ -52,7 +52,7 @@ void SystemHealth::healthCheckAll() {
 		comp->runHealthCheck();
 	}
 
-	lastHealthCheckTime = Utils::getTick();
+	lastHealthCheckTime = HardwareUtils::getTick();
 }
 
 
