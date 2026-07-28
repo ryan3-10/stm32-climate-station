@@ -257,7 +257,7 @@ The project is intended for STM32 development using the GNU Arm Embedded toolcha
 ## Hardware Wiring
 ### Rotary Encoder
 - Output A -> PD9
-- Output B -> PD11
+- Output B -> PD10
 - Switch (Push-button pin) -> PD12
 - VCC -> 3.3V
 - GND -> Ground
