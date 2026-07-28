@@ -266,8 +266,8 @@ The project is intended for STM32 development using the GNU Arm Embedded toolcha
 - GND -> Ground
 - MISO -> PB14
 - CLK -> PB13
-- MOSI -> PB12
-- CS -> PB15
+- MOSI -> PB15
+- CS -> PB12
 - 3v3 -> 3.3V
 
 ### Passive Buzzer
