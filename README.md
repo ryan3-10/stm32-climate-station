@@ -304,7 +304,7 @@ SHT31 datasheet - https://sensirion.com/media/documents/213E6A3B/63A5A569/Datash
 
 DS3231 datasheet - https://www.analog.com/media/en/technical-documentation/data-sheets/ds3231.pdf
 
-A tutorial page with downloadable source code for the OLED library - https://controllerstech.com/oled-display-using-i2c-stm32/
+Page with downloadable source code for the OLED library, along with a brief guide on using it - https://controllerstech.com/oled-display-using-i2c-stm32/
 
 SD driver original repo - https://github.com/kiwih/cubeide-sd-card/blob/master/cubeide-sd-card/FATFS/Target/user_diskio_spi.c
 
