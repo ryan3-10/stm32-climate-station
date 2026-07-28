@@ -1,6 +1,6 @@
 # Weather Station
 
-This project is an embedded weather station built around an STM32F407-based development board. It measures temperature and humidity with a sensor, presents the data on an OLED display, and allows the user configure alert thresholds and logging settings through a simple menu system. The system also keeps time with an RTC and can store logged measurements to an SD card for later review.
+This project is an embedded weather station built around an STM32F407-based development board. It measures temperature and humidity with a sensor, presents the data on an OLED display, and allows the user to configure alert thresholds and logging settings through a simple menu system. The system also keeps time with an RTC and can store logged measurements to an SD card for later review.
 
 I built this project as a hands-on way to learn embedded systems design from the ground up. It brought together low-level driver development, hardware communication over I2C and SPI, real-time UI handling, file system integration, and software architecture decisions that are common in firmware projects. What distinguishes this project is that it is not just a demo of a single sensor; it is a small but complete embedded system with multiple interacting modules.
 
